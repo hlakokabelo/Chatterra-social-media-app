@@ -10,6 +10,7 @@ export interface IPost {
   title: string;
   content: string;
   image_url: string;
+  avatar_url: string | null;
   created_at: string;
 }
 const fetchPosts = async (): Promise<IPost[]> => {
@@ -27,7 +28,7 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
     queryFn: fetchPosts,
   });
 
-  if (isLoading) <div>Loading posts...</div>;
+  if (isLoading) return <div>Loading posts...</div>;
 
   if (error) return <div>Error: {error.message}</div>;
 
