@@ -7,7 +7,9 @@ interface INavBarProps {}
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const { user, signOut, signInWithGitHub } = useAuth();
+  const displayName = user?.user_metadata.user_name || user?.email;
 
+  console.log(user);
   return (
     <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
@@ -44,6 +46,37 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             </Link>
           </div>
 
+          {/**Auth */}
+          <div className="hidden md:flex items-center">
+            {user ? (
+              <div className="flex items-center space-x-4">
+                {user.user_metadata.avatar_url && (
+                  <div>
+                    <img
+                      src={user.user_metadata.avatar_url}
+                      className="w-8 h-8 rounded-full object-cover"
+                      alt="user Avatar"
+                    />
+                  </div>
+                )}
+                <span className="text-gray-300">{displayName}</span>
+                <button
+                  onClick={signOut}
+                  className="cursor-pointer bg-red-500 px-3 py-1 rounded"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={signInWithGitHub}
+                className="cursor-pointer bg-blue-500 px-3 py-1 rounded"
+              >
+                Sign in with GitHub
+              </button>
+            )}
+          </div>
+
           {/**Mobile menu btn */}
           <div className="md:hidden">
             <button
@@ -77,11 +110,6 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      {/**Auth */}
-      <div>
-        <button onClick={signInWithGitHub}>Sign In with Github</button>
       </div>
 
       {/**Mobile menu links */}

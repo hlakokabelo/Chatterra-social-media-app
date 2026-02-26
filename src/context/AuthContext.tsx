@@ -18,11 +18,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(session?.user ?? null);
     });
 
+    //Listen to any changes in supabase.auth
     const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user ?? null);
     });
 
+    //prevents memory leaks
     return () => {
+      console.log({list:listener})
       listener.subscription.unsubscribe();
     };
   }, []);
