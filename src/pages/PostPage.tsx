@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 
 interface IPostPageProps {}
 
-const PostPage: React.FunctionComponent<IPostPageProps> = (props) => {
+const PostPage: React.FunctionComponent<IPostPageProps> = () => {
   const { id } = useParams<{ id: string }>();
 
   return (

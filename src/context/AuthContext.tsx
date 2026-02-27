@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     //prevents memory leaks
     return () => {
-      console.log({list:listener})
       listener.subscription.unsubscribe();
     };
   }, []);

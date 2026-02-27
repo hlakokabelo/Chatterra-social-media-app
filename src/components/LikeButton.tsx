@@ -96,9 +96,11 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
   const likes = votes?.filter((vote) => vote.vote === 1).length;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
+  const btnDisabled = user ? false : true;
   return (
     <div className="flex items-center space-x-4 my-4">
       <button
+        disabled={btnDisabled}
         onClick={() => mutate(1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
           userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
@@ -107,6 +109,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
         👍 {likes}
       </button>
       <button
+        disabled={btnDisabled}
         onClick={() => mutate(-1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
           userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
