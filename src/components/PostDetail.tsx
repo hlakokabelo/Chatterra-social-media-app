@@ -3,6 +3,7 @@ import type { IPost } from "./PostList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
+import CommentSection from "./CommentSection";
 
 interface IPostDetailProps {
   postId: number;
@@ -44,7 +45,8 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
         posted on: {new Date(data!.created_at).toLocaleDateString()}
       </p>
 
-      <LikeButton postId={postId}/>
+      <LikeButton postId={postId} />
+      <CommentSection postId={Number(postId)} />
     </div>
   );
 };
