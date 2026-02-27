@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
 import CommentSection from "./CommentSection";
+import { formatTimeStamp } from "../utils/util";
 
 interface IPostDetailProps {
   postId: number;
@@ -42,7 +43,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
       <p className="text-gray-400">{data?.content}</p>
 
       <p className="text-gray-500 text-sm">
-        posted on: {new Date(data!.created_at).toLocaleDateString()}
+        posted: {formatTimeStamp(data!.created_at)}
       </p>
 
       <LikeButton postId={postId} />

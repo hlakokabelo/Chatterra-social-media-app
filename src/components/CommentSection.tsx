@@ -1,7 +1,8 @@
 import * as React from "react";
 import { useAuth } from "../context/AuthContext";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
+import CommentItem from "./CommentItem";
 
 interface ICommentSectionProps {
   postId: number;
@@ -11,7 +12,7 @@ interface INewComment {
   parent_comment_id: number | null;
 }
 
-interface IComment {
+export interface IComment {
   post_id: number;
   user_id: string;
   author: string;
@@ -55,7 +56,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
 }) => {
   const [newComentText, setNewCommentText] = React.useState<string>("");
   const { user } = useAuth();
-
+  const queryClient = useQueryClient();
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (newComment: INewComment) => {
       return createComment(
@@ -64,6 +65,9 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
         user?.id,
         user?.user_metadata.user_name,
       );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
     },
   });
 
@@ -80,10 +84,36 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     isLoading,
     error,
   } = useQuery<IComment[], Error>({
-    queryKey: ["votes", postId],
+    queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
     refetchInterval: 15000, //10secs
   });
+  /* Map of Comments - Organize Replies - Return Tree  */
+  const buildCommentTree = (
+    flatComments: IComment[],
+  ): (IComment & { children?: IComment[] })[] => {
+    //map stores comments and commentID
+    // comment migth also have a variable called children
+    const map = new Map<number, IComment & { children?: IComment[] }>();
+    const roots: (IComment & { children?: IComment[] })[] = [];
+
+    flatComments.forEach((comment) => {
+      map.set(comment.id, { ...comment, children: [] });
+    });
+
+    flatComments.forEach((comment) => {
+      if (comment.parent_comment_id) {
+        const parent = map.get(comment.parent_comment_id);
+        if (parent) {
+          parent.children!.push(map.get(comment.id)!);
+        }
+      } else {
+        roots.push(map.get(comment.id)!);
+      }
+    });
+
+    return roots;
+  };
 
   if (isLoading) {
     return <div> Loading comments...</div>;
@@ -93,6 +123,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     return <div> Error: {error.message}</div>;
   }
 
+  const commentTree = comments ? buildCommentTree(comments) : [];
   return (
     <div className="mt-6">
       <h3 className="text-2xl font-semibold mb-4">Comments</h3>
@@ -118,6 +149,13 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
       ) : (
         <p className="mb-4 text-gray-600">Log in to comment</p>
       )}
+
+      {/* Comments Display Section */}
+      <div className="space-y-4">
+        {commentTree.map((comment_, key) => (
+          <CommentItem key={key} comment={comment_} postId={postId} />
+        ))}
+      </div>
     </div>
   );
 };

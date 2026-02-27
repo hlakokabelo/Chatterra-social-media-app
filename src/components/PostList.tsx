@@ -12,12 +12,12 @@ export interface IPost {
   image_url: string;
   avatar_url: string | null;
   created_at: string;
+  comment_count?: number;
+  like_count?: number;
 }
 const fetchPosts = async (): Promise<IPost[]> => {
   const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .rpc("get_posts_with_counts")
 
   if (error) throw new Error(error?.message);
   return data as IPost[];
@@ -32,7 +32,6 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
 
   if (error) return <div>Error: {error.message}</div>;
 
-  
   return (
     <div className="flex flex-wrap gap-6 justify-center">
       {data?.map((post, key) => (
