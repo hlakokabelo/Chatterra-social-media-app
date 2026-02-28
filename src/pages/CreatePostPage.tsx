@@ -5,8 +5,8 @@ interface ICreatePostPageProps {}
 
 const CreatePostPage: React.FunctionComponent<ICreatePostPageProps> = () => {
   return (
-    <div className="pt-20 sm:pt-0">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+    <div className=" sm:pt-0">
+      <h2 className="text-4xl font-bold mb-15 text-center bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
         Create New Post
       </h2>
       <CreatePost />

@@ -5,6 +5,10 @@ import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
 import CommentSection from "./CommentSection";
 import { formatTimeStamp } from "../utils/util";
+import { useNavigate } from "react-router";
+import Loading from "./Loading";
+import { FaUser } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 interface IPostDetailProps {
   postId: number;
@@ -21,30 +25,55 @@ const fetchPostById = async (id: number): Promise<IPost> => {
   return data as IPost;
 };
 const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
+  const navigate = useNavigate();
+  if (isNaN(postId)) {
+    navigate("/");
+  }
   const { data, error, isLoading } = useQuery<IPost, Error>({
     queryKey: ["post", postId],
     queryFn: () => fetchPostById(postId),
   });
 
-  if (isLoading) return <div>Loading posts...</div>;
+  if (isLoading) return <Loading title="Loading post" />;
 
   if (error) return <div>Error: {error.message}</div>;
-
+  const { user } = useAuth();
   return (
     <div className="space-y-6">
       <div className="lg:ml-[56vh] md:flex flex-col justify-center">
-        <h2 className="text-6xl font-bold mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        {data?.avatar_url ? (
+          <div className="flex border-transparent border-b-blue-300 border pb-1.5">
+            <img
+              src={data?.avatar_url}
+              alt="User Avatar"
+              className="w-[35px] h-[35px] rounded-full object-cover"
+            />
+            <p
+              className="ml-1.5 cursor-pointer"
+              onClick={() => navigate(`/u/${user?.user_metadata.user_name}`)}
+            >
+              {user?.user_metadata.user_name}
+            </p>
+          </div>
+        ) : (
+          <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]">
+            <FaUser className="w-[35px] h-[25px]" />
+          </div>
+        )}
+        <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
           {data?.title}
         </h2>
-        <div className="">
+        <div className="max-w-[25rem] max-h-[26rem] mb-[5rem]">
           <img
             src={data?.image_url}
             alt={data?.title}
-            className="mt-4 w-[30rem] h-[30rem] border-amber-50 border-4 rounded object-cover"
+            className="mt-4 border-amber-50 border-4 rounded object-cover"
           />
         </div>
         <div className=" flex flex-col mt-2.5">
-          <p className="text-gray-400">{data?.content}</p>
+          <p className="text-gray-400 mb-2 max-w-[35rem] text-wrap">
+            {data?.content}
+          </p>
 
           <p className=" text-cyan-700 text-sm">
             posted: {formatTimeStamp(data!.created_at)}

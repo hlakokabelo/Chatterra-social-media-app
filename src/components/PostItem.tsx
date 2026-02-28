@@ -2,12 +2,16 @@ import * as React from "react";
 import type { IPost } from "./PostList";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../utils/util";
+import { FaUser } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 interface IPostItemProps {
   post: IPost;
 }
 
 const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
+ 
+ const {user}= useAuth()
   return (
     <div className=" mb-6  sm:w-[35rem] relative group">
       <div className="absolute -inset-1 rounded-[20px] bg-gradient-to-r from-pink-600 to-purple-600 blur-sm opacity-0 group-hover:opacity-50 transition duration-300 pointer-events-none"></div>
@@ -22,11 +26,13 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
                 className="w-[35px] h-[35px] rounded-full object-cover"
               />
             ) : (
-              <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]" />
-            )}{" "}
+              <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]">
+                <FaUser className="w-[35px] h-[25px]" />
+              </div>
+            )}
             <div className="flex flex-col flex-1">
               <div className="text-[20px] leading-[22px] font-semibold mt-2 mb-4 ml-3">
-                <span className="text-amber-300 text-1">username</span>
+                <span className="text-amber-300 text-1">{user?.user_metadata.user_name}</span>
               </div>
             </div>
           </div>

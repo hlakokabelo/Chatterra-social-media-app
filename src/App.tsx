@@ -6,6 +6,8 @@ import PostPage from "./pages/PostPage";
 import CreateCommunityPage from "./pages/CreateCommunityPage";
 import CommunitiesPage from "./pages/CommunitiesPage";
 import CommunityPage from "./pages/CommunityPage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
@@ -14,12 +16,30 @@ function App() {
       <div className="container mx-auto px-4 py-6">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<PostPage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
+
+          {/*Communities */}
           <Route path="/community/:id" element={<CommunityPage />} />
-          <Route path="/create" element={<CreatePostPage />} />
           <Route path="/community/create" element={<CreateCommunityPage />} />
           <Route path="/communities" element={<CommunitiesPage />} />
 
+          {/*Posts*/}
+          <Route path="/post/:id" element={<PostPage />} />
+          <Route path="/create" element={<CreatePostPage />} />
+
+          {/*User Info*/}
+          <Route path="/u/:username" element={<>coming soon</>} />
+          <Route path="/user/:username" element={<>coming soon</>} />
+
+          <Route
+            path="/*"
+            element={
+              <>
+                <div>not found</div>
+              </>
+            }
+          />
         </Routes>
       </div>
     </div>

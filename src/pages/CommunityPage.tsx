@@ -7,7 +7,7 @@ interface ICommunityPageProps {}
 const CommunityPage: React.FunctionComponent<ICommunityPageProps> = () => {
   const { id } = useParams<{ id: string }>();
   return (
-    <div className="pt-20 grid justify-evenly gap-y-[4rem]">
+    <div className="grid justify-evenly gap-y-[4rem]">
     
       <CommunityDisplay communityId={Number(id)} />
     </div>

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../supabase-client";
 import PostItem from "./PostItem";
+import Loading from "./Loading";
 
 interface IPostListProps {}
 
@@ -27,7 +28,7 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
     queryFn: fetchPosts,
   });
 
-  if (isLoading) return <div>Loading posts...</div>;
+  if (isLoading) return <Loading title="fetching posts"/>;
 
   if (error) return <div>Error: {error.message}</div>;
 

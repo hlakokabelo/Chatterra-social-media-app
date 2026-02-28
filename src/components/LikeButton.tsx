@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
+import Loading from "./Loading";
 
 interface ILikeButtonProps {
   postId: number;
@@ -61,6 +62,7 @@ const fetchVotes = async (postId: number): Promise<IVote[]> => {
 
 const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
   const { user } = useAuth();
+  const [showError, setShowError] = React.useState<boolean>(false);
 
   const queryClient = useQueryClient();
 
@@ -85,23 +87,28 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
   });
 
   if (isLoading) {
-    return <div> Loading votes...</div>;
+    return <Loading title="Loading likes"/>;
   }
 
   if (error) {
     return <div> Error: {error.message}</div>;
   }
 
+  const submitLike = (like: number) => {
+    if (user ? false : true) return setShowError(true);
+
+    alert("true");
+    mutate(like);
+  };
+
   const dislikes = votes?.filter((vote) => vote.vote === -1).length;
   const likes = votes?.filter((vote) => vote.vote === 1).length;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
-  const btnDisabled = user ? false : true;
   return (
     <div className="flex items-center space-x-4 my-4">
       <button
-        disabled={btnDisabled}
-        onClick={() => mutate(1)}
+        onClick={() => submitLike(1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
           userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
         }`}
@@ -109,14 +116,19 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
         👍 {likes}
       </button>
       <button
-        disabled={btnDisabled}
-        onClick={() => mutate(-1)}
+        onClick={() => submitLike(-1)}
         className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
           userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
         }`}
       >
         👎 {dislikes}
       </button>
+      {showError && (
+        <a className="text-red-600" href="/sign-in">
+          {" "}
+          Log-in to like post
+        </a>
+      )}{" "}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import CommentItem from "./CommentItem";
+import Loading from "./Loading";
 
 interface ICommentSectionProps {
   postId: number;
@@ -116,7 +117,8 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   };
 
   if (isLoading) {
-    return <div> Loading comments...</div>;
+    return      <Loading title="Fetching comments"/>;
+    
   }
 
   if (error) {

@@ -101,6 +101,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         </label>{" "}
         <input
           type="text"
+          value={title}
           id="title"
           required
           className="w-full border border-white/10 bg-transparent p-2 rounded"
@@ -114,27 +115,28 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         <textarea
           id="content"
           rows={5}
+          value={content}
           required
           className="w-full border border-white/10 bg-transparent p-2 rounded"
           onChange={(e) => setContent(e.target.value)}
         />{" "}
         <div>
           <select
-            className="w-70 px-4 py-2 rounded-xl border border-gray-300 
+            className="w-[14rem] px-4 py-2 text-center rounded-xl border border-gray-300 
        text-gray-800 
-         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+         focus:outline-none mb-2.5 mt-2.5  focus:ring-2 focus:ring-blue-500 focus:border-blue-500
          transition duration-200 ease-in-out
          shadow-sm"
             id="community"
             onChange={handleCommunityChange}
           >
-            <option className="text-center" value={""}>
+            <option className="" value={""}>
               {" "}
-              -- Choose a Community --{" "}
+              Choose a Community{" "}
             </option>
 
             {communities?.map((community, key) => (
-              <option className="text-center" key={key} value={community.id}>
+              <option className="min-w-[4px]" key={key} value={community.id}>
                 {community.name}
               </option>
             ))}
