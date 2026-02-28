@@ -67,7 +67,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
     setCommunityId(value ? Number(value) : null);
   };
 
-  const { mutate, data, status, isError, isPending } = useMutation({
+  const { mutate, data, isError, isPending } = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
       console.log(data);

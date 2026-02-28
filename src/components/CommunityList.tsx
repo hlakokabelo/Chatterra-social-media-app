@@ -21,7 +21,7 @@ export const fetchCommunities = async (): Promise<ICommunity[]> => {
   return data as ICommunity[];
 };
 
-const CommunityList: React.FunctionComponent<ICommunityListProps> = (props) => {
+const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
   const { data, error, isLoading } = useQuery<ICommunity[], Error>({
     queryKey: ["communities"],
     queryFn: fetchCommunities,
