@@ -1,7 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
+import { fetchCommunities, type ICommunity } from "./CommunityList";
+import { useNavigate } from "react-router";
 
 interface ICreatePostProps {}
 
@@ -10,6 +12,7 @@ interface IPostInput {
   content: string;
   imageFile: File;
   avatar_url: string | null;
+  community_id?: number | null;
 }
 const createPost = async (post: IPostInput) => {
   //uploade image
@@ -45,8 +48,32 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   const [content, setContent] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
-  const { mutate, status, isError, isPending } = useMutation({
+  const navigate = useNavigate();
+  const clearForm = (): void => {
+    setTitle("");
+    setContent("");
+    setSelectedFile(null);
+  };
+  /** Community functionality*/
+  const [communityId, setCommunityId] = React.useState<number | null>(null);
+
+  const { data: communities } = useQuery<ICommunity[], Error>({
+    queryKey: ["communities"],
+    queryFn: fetchCommunities,
+  });
+
+  const handleCommunityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setCommunityId(value ? Number(value) : null);
+  };
+
+  const { mutate, data, status, isError, isPending } = useMutation({
     mutationFn: createPost,
+    onSuccess: () => {
+      console.log(data);
+      clearForm();
+      navigate("/");
+    },
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +90,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         content,
         imageFile: selectedFile,
         avatar_url: user?.user_metadata.avatar_url || null,
+        community_id: communityId,
       });
   };
   return (
@@ -90,6 +118,28 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           className="w-full border border-white/10 bg-transparent p-2 rounded"
           onChange={(e) => setContent(e.target.value)}
         />{" "}
+        <div>
+          <select
+            className="w-70 px-4 py-2 rounded-xl border border-gray-300 
+       text-gray-800 
+         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+         transition duration-200 ease-in-out
+         shadow-sm"
+            id="community"
+            onChange={handleCommunityChange}
+          >
+            <option className="text-center" value={""}>
+              {" "}
+              -- Choose a Community --{" "}
+            </option>
+
+            {communities?.map((community, key) => (
+              <option className="text-center" key={key} value={community.id}>
+                {community.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <label className="block mb-2 font-medium" htmlFor="image">
           Upload image
         </label>

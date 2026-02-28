@@ -51,11 +51,11 @@ export function formatTimeStamp(
     return ` ${timeStr}`; // e.g. "Yesterday 14:35"
   }
   if (diffDays === 1) {
-    return `Yesterday ${timeStr}`; // e.g. "Yesterday 14:35"
-  }
+     // e.g. "Yesterday 14:35"
+  
 
   // Within last 7 days → short day name + time
-  if (diffDays <= 6) {
+  
     const dayShort = dayNames[date.getDay()];
     return `${dayShort} ${timeStr}`; // e.g. "Thu 14:35"
   }
