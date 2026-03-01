@@ -1,28 +1,46 @@
-
+import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function SignUpPage() {
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const { signInWithGitHub, signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
+  const onSubmitForm = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    alert(username + " " + email + " " + password);
+  };
+
+  const signUpWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    signInWithGoogle();
+
+  };
+  const signUpWithGitHub = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    signInWithGitHub();
+    navigate("/");
+  };
   return (
     <div className="flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl">
+       
 
-        {/* Logo / Brand */}
-        <h1 className="text-xl font-bold tracking-tight text-white mb-6">
-          <span>Social</span>
-          <span className="text-indigo-500">.media</span>
-        </h1>
-
-        <h2 className="text-2xl font-semibold text-white mb-2">
+        <h2 className="text-center text-2xl font-semibold text-white mb-2">
           Create account
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
-          Join the community
-        </p>
-
+      
         {/* OAuth Buttons */}
         <div className="space-y-3 mb-6">
           <button
             type="button"
+            onClick={(e) => signUpWithGoogle(e)}
             className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
             <FaGoogle className="text-red-500" />
@@ -30,6 +48,7 @@ export default function SignUpPage() {
           </button>
 
           <button
+            onClick={(e) => signUpWithGitHub(e)}
             type="button"
             className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
@@ -46,10 +65,13 @@ export default function SignUpPage() {
         </div>
 
         {/* Email Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={onSubmitForm}>
           <div>
             <label className="text-sm text-zinc-400">Username</label>
             <input
+              required
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
               type="text"
               className="mt-1 w-full bg-zinc-800 text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="username"
@@ -59,6 +81,9 @@ export default function SignUpPage() {
           <div>
             <label className="text-sm text-zinc-400">Email</label>
             <input
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               className="mt-1 w-full bg-zinc-800 text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="you@example.com"
@@ -68,6 +93,9 @@ export default function SignUpPage() {
           <div>
             <label className="text-sm text-zinc-400">Password</label>
             <input
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               type="password"
               className="mt-1 w-full bg-zinc-800 text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="••••••••"
@@ -88,7 +116,6 @@ export default function SignUpPage() {
             Sign in
           </a>
         </p>
-
       </div>
     </div>
   );

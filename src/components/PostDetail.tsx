@@ -26,6 +26,7 @@ const fetchPostById = async (id: number): Promise<IPost> => {
 };
 const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
   const navigate = useNavigate();
+   const { user } = useAuth();
   if (isNaN(postId)) {
     navigate("/");
   }
@@ -37,12 +38,12 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
   if (isLoading) return <Loading title="Loading post" />;
 
   if (error) return <div>Error: {error.message}</div>;
-  const { user } = useAuth();
+ 
   return (
     <div className="space-y-6">
       <div className="lg:ml-[56vh] md:flex flex-col justify-center">
         {data?.avatar_url ? (
-          <div className="flex border-transparent border-b-blue-300 border pb-1.5">
+          <div className="flex border-transparent sm:w-[45%] border-b-blue-300 border pb-1.5">
             <img
               src={data?.avatar_url}
               alt="User Avatar"

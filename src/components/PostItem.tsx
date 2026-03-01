@@ -48,7 +48,7 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
           <div className="text-2xl ml-2 leading-[22px] font-semibold mt-2">
             <p> {post.title}</p>
           </div>
-          <div className="grid grid-cols-3 w-[15rem] justify-around mt-3.5">
+          <div className="grid ml-2 grid-cols-3 w-[15rem] justify-around mt-3.5">
             <span className="cursor-pointer h-10 w-[50px] px-1 flex items-center justify-center font-extrabold rounded-lg">
               <span className="ml-2 text-nowrap">
                 {formatTimeStamp(post.created_at, false) ?? 0}

@@ -114,7 +114,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
 
       {comment.children && comment.children.length > 0 && (
         <div>
-          <button
+          <button className=""
             title={isCollapsed ? "Hide Replies" : "Show Replies"}
             onClick={() => setIsCollapsed((prev) => !prev)}
           >
@@ -127,6 +127,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
                 stroke="currentColor"
                 className="w-4 h-4"
                 color="green"
+            
               >
                 <path
                   strokeLinecap="round"

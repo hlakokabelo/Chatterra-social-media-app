@@ -117,8 +117,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   };
 
   if (isLoading) {
-    return      <Loading title="Fetching comments"/>;
-    
+    return <Loading title="Fetching comments" />;
   }
 
   if (error) {

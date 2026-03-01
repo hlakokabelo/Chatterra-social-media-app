@@ -6,7 +6,7 @@ interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const { user, signOut, signInWithGitHub } = useAuth();
+  const { user, signOut } = useAuth();
   const displayName = user?.user_metadata.user_name || user?.email;
 
   const navigate = useNavigate();
@@ -56,13 +56,15 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             {user ? (
               <div className="flex items-center space-x-4">
                 {user.user_metadata.avatar_url && (
-                  <div>
+                  <Link 
+                  className="cursor-pointer"
+                      to={("/profile")}>
                     <img
                       src={user.user_metadata.avatar_url}
                       className="w-8 h-8 rounded-full object-cover"
                       alt="user Avatar"
                     />
-                  </div>
+                  </Link>
                 )}
                 <span className="text-gray-300">{displayName}</span>
                 <button
@@ -74,10 +76,10 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
               </div>
             ) : (
               <button
-                onClick={signInWithGitHub}
+                onClick={()=>navigate('/sign-in')}
                 className="cursor-pointer bg-blue-500 px-3 py-1 rounded"
               >
-                Sign in with GitHub
+                Sign in
               </button>
             )}
           </div>
