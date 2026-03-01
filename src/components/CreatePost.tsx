@@ -104,6 +104,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           value={title}
           id="title"
           required
+          maxLength={20}
           className="w-full border border-white/10 bg-transparent p-2 rounded"
           onChange={(e) => setTitle(e.target.value)}
         />{" "}

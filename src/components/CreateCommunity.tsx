@@ -47,6 +47,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
           type="text"
           id="name"
           value={name}
+          maxLength={20}
           onChange={(e) => setName(e.target.value)}
           className="w-full border border-white/10 bg-transparent p-2 rounded"
           required
