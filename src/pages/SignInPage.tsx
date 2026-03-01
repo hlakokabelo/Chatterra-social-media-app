@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const { signInWithGitHub, signInWithGoogle } = useAuth();
   const { signInWithEmail } = useAuth();
   const navigate = useNavigate();
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -14,12 +16,43 @@ export default function SignInPage() {
     const { success } = await signInWithEmail(email, password);
     if (success) return navigate("/");
   };
+
+  const signUpWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    signInWithGoogle();
+  };
+  const signUpWithGitHub = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    signInWithGitHub();
+    navigate("/");
+  };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">
       <div className="w-full max-w-md bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
         <h1 className="text-2xl font-semibold text-white mb-2">Welcome back</h1>
         <p className="text-sm text-zinc-400 mb-6">Sign in to continue</p>
 
+        {/* OAuth Buttons */}
+        <div className="space-y-3 mb-6">
+          <button
+            type="button"
+            onClick={(e) => signUpWithGoogle(e)}
+            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+          >
+            <FaGoogle className="text-red-500" />
+            Continue with Google
+          </button>
+
+          <button
+            onClick={(e) => signUpWithGitHub(e)}
+            type="button"
+            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+          >
+            <FaGithub />
+            Continue with GitHub
+          </button>
+        </div>
         <form onSubmit={(e) => onSubmitForm(e)} className="space-y-4">
           <div>
             <label className="text-sm text-zinc-400">Email</label>

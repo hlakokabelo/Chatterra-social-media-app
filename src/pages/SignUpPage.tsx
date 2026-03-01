@@ -28,6 +28,7 @@ export default function SignUpPage() {
     signInWithGitHub();
     navigate("/");
   };
+
   return (
     <div className="flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl">

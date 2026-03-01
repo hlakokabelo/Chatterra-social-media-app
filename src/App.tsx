@@ -39,6 +39,7 @@ function App() {
 
           {/* Catch-all route */}
           <Route path="*" element={<PageNotFound />} />
+          <Route path="robot.txt" element={<>text</>} />
         </Routes>
       </div>
     </div>

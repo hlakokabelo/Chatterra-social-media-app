@@ -15,6 +15,16 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
     setMenuOpen(false);
     navigate(destination);
   };
+
+  const mobileMenuClick = () => {
+    if (user) {
+      signOut();
+      setMenuOpen((prev) => !prev);
+      return;
+    }
+
+    goToUrl("/sign-in");
+  };
   return (
     <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
@@ -75,7 +85,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           </div>
 
           {/**Mobile menu btn */}
-          <div className="md:hidden">
+          <div className="md:hidden ">
             <button
               className="text-gray-300 focus:outline-none"
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -115,11 +125,11 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
         <span className="text-gray-300">{displayName}</span>
       </div>
       {menuOpen && (
-        <div className="md:hidden bg-[rgba(10,10,10,0.9)]">
+        <div className="md:hidden absolute right-0 bg-[rgba(10,10,10,0.9)]">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <p
               className={`block px-3 py-2 rounded-md text-base font-medium ${user ? "text-red-700" : "text-green-500"} hover:text-white hover:bg-gray-700`}
-              onClick={() => (user ? signOut() : goToUrl("/sign-in"))}
+              onClick={mobileMenuClick}
             >
               {user ? "Log-out" : "Sign-in/Sign-up"}
             </p>
