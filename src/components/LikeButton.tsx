@@ -97,7 +97,6 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
   const submitLike = (like: number) => {
     if (user ? false : true) return setShowError(true);
 
-    alert("true");
     mutate(like);
   };
 

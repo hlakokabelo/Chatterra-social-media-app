@@ -1,13 +1,18 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const onSubmitForm = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const { signInWithEmail } = useAuth();
+  const navigate = useNavigate();
+  const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    alert(email+" "+password)
+    const { success } = await signInWithEmail(email, password);
+    if (success) return navigate("/");
   };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">

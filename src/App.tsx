@@ -9,6 +9,7 @@ import CommunityPage from "./pages/CommunityPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
       <div className="container mx-auto px-4 py-6">
         <Routes>
           <Route path="/" element={<Home />} />
+
+          {/*Auth */}
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
 
@@ -32,16 +35,10 @@ function App() {
           {/*User Info*/}
           <Route path="/u/:username" element={<>coming soon</>} />
           <Route path="/user/:username" element={<>coming soon</>} />
-          <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/profile" element={<ProfilePage />} />
 
-          <Route
-            path="/*"
-            element={
-              <>
-                <div>not found</div>
-              </>
-            }
-          />
+          {/* Catch-all route */}
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
     </div>

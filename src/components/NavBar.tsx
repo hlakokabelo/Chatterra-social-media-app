@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import UserProfilePhoto from "./UserProfilePhoto";
 
 interface INavBarProps {}
 
@@ -15,7 +16,6 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
     navigate(destination);
   };
   return (
-    
     <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
@@ -55,17 +55,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           <div className="hidden md:flex items-center">
             {user ? (
               <div className="flex items-center space-x-4">
-                {user.user_metadata.avatar_url && (
-                  <Link 
-                  className="cursor-pointer"
-                      to={("/profile")}>
-                    <img
-                      src={user.user_metadata.avatar_url}
-                      className="w-8 h-8 rounded-full object-cover"
-                      alt="user Avatar"
-                    />
-                  </Link>
-                )}
+                <UserProfilePhoto user={user} />
                 <span className="text-gray-300">{displayName}</span>
                 <button
                   onClick={signOut}
@@ -76,7 +66,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
               </div>
             ) : (
               <button
-                onClick={()=>navigate('/sign-in')}
+                onClick={() => navigate("/sign-in")}
                 className="cursor-pointer bg-blue-500 px-3 py-1 rounded"
               >
                 Sign in
@@ -120,9 +110,19 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
       </div>
 
       {/**Mobile menu links */}
+      <div className="flex md:hidden absolute right-13 top-4">
+        <UserProfilePhoto user={user} />
+        <span className="text-gray-300">{displayName}</span>
+      </div>
       {menuOpen && (
         <div className="md:hidden bg-[rgba(10,10,10,0.9)]">
           <div className="px-2 pt-2 pb-3 space-y-1">
+            <p
+              className={`block px-3 py-2 rounded-md text-base font-medium ${user ? "text-red-700" : "text-green-500"} hover:text-white hover:bg-gray-700`}
+              onClick={() => (user ? signOut() : goToUrl("/sign-in"))}
+            >
+              {user ? "Log-out" : "Sign-in/Sign-up"}
+            </p>
             <p
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/")}

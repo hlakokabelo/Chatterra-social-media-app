@@ -1,12 +1,21 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
-import type { User } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
+
+interface Isign {
+  success: boolean;
+  data?: {
+    user: User | null;
+    session?: Session | null;
+  };
+  error?: any;
+}
 
 interface AuthContextType {
-  signInWithEmail: (email: string, password: string) => void;
+  signInWithEmail: (email: string, password: string) => Promise<Isign>;
   signInWithGoogle: () => void;
   signInWithGitHub: () => void;
-  signUpWithEmail: (email: string, password: string) => void;
+  signUpWithEmail: (email: string, password: string) => Promise<Isign>;
   user: User | null;
   signOut: () => void;
 }
@@ -33,7 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // Sign up
-  const signUpWithEmail = async (email: string, password: string) => {
+  const signUpWithEmail = async (
+    email: string,
+    password: string,
+  ): Promise<Isign> => {
     const { data, error } = await supabase.auth.signUp({
       email: email.toLowerCase(),
       password: password,
@@ -43,12 +55,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error signing up: ", error);
       return { success: false, error };
     }
-
+    console.log(data);
+    setUser(data.user);
     return { success: true, data };
   };
 
   // Sign in
-  const signInWithEmail = async (email: string, password: string) => {
+  const signInWithEmail = async (
+    email: string,
+    password: string,
+  ): Promise<Isign> => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase(),
@@ -63,6 +79,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // If no error, return success
       console.log("Sign-in success:", data);
+      setUser(data.user);
+
       return { success: true, data }; // Return the user data
     } catch (error: any) {
       // Handle unexpected issues
