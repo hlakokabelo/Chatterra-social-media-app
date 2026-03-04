@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import {formatTimeStamp} from '../utils/formatTimeStamp.tsx'
+import { useNavigate } from "react-router";
 
 interface ICommentItemProps {
   comment: IComment & { children?: IComment[] };
@@ -18,14 +19,12 @@ const createReply = async (
   newReply: IReplyComment,
   postId: number,
   userId?: string,
-  author?: string,
 ) => {
-  if (!userId || !author) throw new Error("You must be logged in to reply");
+  if (!userId) throw new Error("You must be logged in to reply");
 
   const { error } = await supabase.from("comments").insert({
     post_id: postId,
     user_id: userId,
-    author: author,
     content: newReply.content,
     parent_comment_id: newReply.parent_comment_id,
   });
@@ -45,14 +44,13 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   );
   const { user } = useAuth();
   const queryClient = useQueryClient();
-
+const navigate = useNavigate()
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (newComment: IReplyComment) => {
       return createReply(
         newComment,
         postId,
         user?.id,
-        user?.user_metadata.user_name,
       );
     },
     onSuccess: () => {
@@ -76,8 +74,9 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
       <div className="mb-2">
         <div className="flex items-center space-x-2">
           {/**Display commenter username */}
-          <span className="text-sm font-bold text-blue-400">
-            {comment?.author}
+          <span
+          onClick={()=>navigate("/u/"+comment?.username)} className="cursor-pointer text-sm font-bold text-blue-400">
+            {comment?.username}
           </span>
           <span className="text-xs text-gray-500">
         

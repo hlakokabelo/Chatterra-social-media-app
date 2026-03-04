@@ -9,6 +9,7 @@ interface ICreateCommunityProps {}
 interface ICommunity {
   name: string;
   description: string;
+  user_id: string;
 }
 
 const createCommunity = async (community: ICommunity) => {
@@ -20,7 +21,9 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   const { user } = useAuth();
   const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
-  const [errorMessage, setErrorMessage] = React.useState<string>(user?"":"Log in to create community");
+  const [errorMessage, setErrorMessage] = React.useState<string>(
+    user ? "" : "Log in to create community",
+  );
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutate, isPending, isError } = useMutation({
@@ -34,7 +37,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   const handleOnSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (user) return mutate({ name, description });
+    if (user) return mutate({ name, description, user_id: user?.id });
     setErrorMessage("Log in to create community");
   };
   return (

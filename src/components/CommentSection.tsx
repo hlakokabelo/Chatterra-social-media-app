@@ -16,25 +16,23 @@ interface INewComment {
 export interface IComment {
   post_id: number;
   user_id: string;
-  author: string;
   content: string;
   parent_comment_id: number | null;
   created_at: string;
   id: number;
+  username?: string;
 }
 
 const createComment = async (
   newComment: INewComment,
   postId: number,
   userId?: string,
-  author?: string,
 ) => {
-  if (!userId || !author) throw new Error("You must be logged in to comment");
+  if (!userId) throw new Error("You must be logged in to comment");
 
   const { error } = await supabase.from("comments").insert({
     post_id: postId,
     user_id: userId,
-    author: author,
     content: newComment.content,
     parent_comment_id: newComment.parent_comment_id,
   });
@@ -43,11 +41,17 @@ const createComment = async (
 };
 
 const fetchComments = async (postId: number): Promise<IComment[]> => {
-  const { data } = await supabase
+  /*   const { data } = await supabase
     .from("comments")
     .select("*")
     .eq("post_id", postId)
     .order("created_at", { ascending: true });
+ */
+  const { data, error } = await supabase.rpc("get_post_comments", {
+    p_post_id: postId,
+  });
+
+  if (error) console.error(error);
 
   return data as IComment[];
 };
@@ -60,12 +64,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   const queryClient = useQueryClient();
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (newComment: INewComment) => {
-      return createComment(
-        newComment,
-        postId,
-        user?.id,
-        user?.user_metadata.user_name,
-      );
+      return createComment(newComment, postId, user?.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
