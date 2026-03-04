@@ -5,7 +5,6 @@ const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnemtsZXFlYmtleXpkdGdhd2JyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTk4MDgwMywiZXhwIjoyMDg3NTU2ODAzfQ.Zmwh5on21cGkc5NfoNmtOASuI0pKP8OS2mRqlCv4m6s" as string;
 
 export const supabase = createClient(supabaseURL, supabaseAnonKey);
-
 const randomPastDate = (days = 14) =>
   new Date(Date.now() - Math.random() * 1000 * 60 * 60 * 24 * days);
 

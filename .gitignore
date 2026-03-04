@@ -14,7 +14,6 @@ dist-ssr
 
 .env
 
-seed
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +25,5 @@ seed
 *.njsproj
 *.sln
 *.sw?
+src/seed/seed.ts
+/src/seed
