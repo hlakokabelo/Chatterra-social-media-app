@@ -1,22 +1,36 @@
-import { Link } from "react-router";
+import * as React from "react";
+import { useNavigate } from "react-router";
 
-export default function PageNotFound() {
+interface IPostNotFoudProps {
+  title?: string;
+}
+
+const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({ title="Page" }) => {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen rounded-2xl min--screen flex flex-col items-center justify-center bg-gray-400 text-black px-6">
-      <h1 className="text-8xl font-bold mb-4">404</h1>
+    <div className="min-h-[60vh] flex items-center justify-center px-6">
+      <div className="text-center max-w-md">
+        <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          404
+        </h1>
 
-      <p className="text-2xl mb-6 text-black text-center max-w-lg">
-        oops...
-        <br />
-        page not found
-      </p>
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-3">
+          {title} not found
+        </h2>
 
-      <Link
-        to="/"
-        className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition duration-300"
-      >
-        Return Home
-      </Link>
+        <p className="text-gray-200 dark:text-gray-400 mb-6">
+          Either it was deleted, never existed
+        </p>
+
+        <p
+          onClick={() => navigate("/")}
+          className="cursor-pointer inline-block bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition"
+        >
+          Back to feed
+        </p>
+      </div>
     </div>
   );
-}
+};
+
+export default PostNotFoud;

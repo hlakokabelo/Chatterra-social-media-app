@@ -3,9 +3,12 @@ import * as React from "react";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import Loading from "./Loading";
+import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router";
 
 interface ILikeButtonProps {
   postId: number;
+  user_id: string | undefined;
 }
 interface IVote {
   id: number;
@@ -51,6 +54,13 @@ const submitVote = async (
   }
 };
 
+const deletePost = async (postId: number) => {
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
+
+  if (error) {
+    console.error(error);
+  }
+};
 const fetchVotes = async (postId: number): Promise<IVote[]> => {
   const { data } = await supabase
     .from("votes")
@@ -60,9 +70,13 @@ const fetchVotes = async (postId: number): Promise<IVote[]> => {
   return data as IVote[];
 };
 
-const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
+const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
+  postId,
+  user_id,
+}) => {
   const { user } = useAuth();
   const [showError, setShowError] = React.useState<boolean>(false);
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
@@ -73,6 +87,15 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["votes", postId] });
+    },
+  });
+
+  const { mutate: deletePostMutate } = useMutation({
+    mutationFn: () => {
+      return deletePost(postId);
+    },
+    onSuccess: () => {
+      navigate("/");
     },
   });
 
@@ -87,7 +110,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
   });
 
   if (isLoading) {
-    return <Loading title="Loading likes"/>;
+    return <Loading title="Loading likes" />;
   }
 
   if (error) {
@@ -100,6 +123,9 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
     mutate(like);
   };
 
+  const deletHandle = () => {
+    deletePostMutate();
+  };
   const dislikes = votes?.filter((vote) => vote.vote === -1).length;
   const likes = votes?.filter((vote) => vote.vote === 1).length;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
@@ -122,6 +148,11 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({ postId }) => {
       >
         👎 {dislikes}
       </button>
+      {user?.id === user_id && (
+        <div className="ml-5.5" onClick={deletHandle}>
+          <MdDeleteForever />
+        </div>
+      )}
       {showError && (
         <a className="text-red-600" href="/sign-in">
           {" "}

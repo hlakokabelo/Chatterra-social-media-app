@@ -8,6 +8,7 @@ import { formatTimeStamp } from "../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
 import Loading from "./Loading";
 import { FaUser } from "react-icons/fa";
+import PostNotFoud from "../pages/PageNotFound";
 
 interface IPostDetailProps {
   postId: number;
@@ -44,7 +45,10 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
 
   if (isLoading) return <Loading title="Loading post" />;
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error)
+    return (
+      <PostNotFoud title="Post"/>
+    );
 
   return (
     <div className="space-y-6">
@@ -66,7 +70,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
             <FaUser className="w-[35px] h-[25px]" />
           </div>
         )}
-        <h2 className="text-4xl m-2.5 font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        <h2 className="text-3xl mt-2.5 mb-2.5 font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
           {data?.title}
         </h2>
         {data?.image_url && (
@@ -87,7 +91,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
             posted: {formatTimeStamp(data!.created_at)}
           </p>
 
-          <LikeButton postId={postId} />
+          <LikeButton postId={postId} user_id={data?.user_id} />
         </div>
       </div>
       <CommentSection postId={Number(postId)} />

@@ -15,6 +15,7 @@ export interface IPost {
   created_at: string;
   comment_count?: number;
   like_count?: number;
+  user_id?: string;
   username?: string;
 }
 const fetchPosts = async (): Promise<IPost[]> => {

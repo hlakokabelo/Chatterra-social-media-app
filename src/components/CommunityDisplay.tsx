@@ -3,6 +3,7 @@ import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import type { IPost } from "./PostList";
 import PostItem from "./PostItem";
+import PostNotFoud from "../pages/PageNotFound";
 
 interface ICommunityDisplayProps {
   communityId: number;
@@ -25,6 +26,7 @@ export const fetchCommunityPost = async (
 
   if (error) throw new Error(error.message);
 
+  if(!data[0].communities?.name)  throw new Error("Community exists not")
   console.log(data);
   return data as PostWithCommunity[];
 };
@@ -38,12 +40,7 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
 
   if (isLoading)
     return <div className="text-center py-4">Loading communities...</div>;
-  if (error)
-    return (
-      <div className="text-center text-red-500 py-4">
-        Error: {error.message}
-      </div>
-    );
+  if (error) return <PostNotFoud title="Community" />;
   return (
     <div className="grid justify-evenly gap-y-[4rem]">
       <h2 className="text-4xl  text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">

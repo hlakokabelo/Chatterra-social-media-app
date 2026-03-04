@@ -6,40 +6,49 @@ import { fetchCommunities, type ICommunity } from "./CommunityList";
 import { useNavigate } from "react-router";
 
 interface ICreatePostProps {}
-
+let postId: number = 0;
 interface IPostInput {
   title: string;
   content: string;
-  imageFile: File;
+  imageFile: File | null;
   avatar_url: string | null;
   community_id?: number | null;
-  user_id?: number | null;
+  user_id?: string | null;
 }
 const createPost = async (post: IPostInput) => {
   //uploade image
   const { imageFile } = post;
-  const filePath = `${post.title}--${Date.now()}--${imageFile.name}`;
-  const { error: uploadError } = await supabase.storage
-    .from("post-images")
-    .upload(filePath, imageFile);
+  let image_url: string | null = "";
+  if (imageFile) {
+    const filePath = `${post.title}--${Date.now()}--${imageFile.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from("post-images")
+      .upload(filePath, imageFile);
 
-  if (uploadError) return new Error(uploadError.message);
+    if (uploadError) return new Error(uploadError.message);
 
-  //get imageUrl
-  const { data: ImageData } = await supabase.storage
-    .from("post-images")
-    .getPublicUrl(filePath);
-
+    //get imageUrl
+    const { data: ImageData } = await supabase.storage
+      .from("post-images")
+      .getPublicUrl(filePath);
+    image_url = ImageData.publicUrl;
+  }
   //upload post
+  if (image_url === "") image_url = null;
   const { imageFile: _, ...payloadVariables } = post;
   let payload = {
     ...payloadVariables,
-    image_url: ImageData.publicUrl,
+    image_url: image_url,
   };
 
-  const { data, error } = await supabase.from("posts").insert(payload);
+  const { data, error } = await supabase
+    .from("posts")
+    .insert(payload)
+    .select()
+    .single();
 
   if (error) throw new Error(error.message);
+  postId = data.id;
   return data;
 };
 
@@ -71,12 +80,11 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
     setCommunityId(value ? Number(value) : null);
   };
 
-  const { mutate, data, isError, isPending } = useMutation({
+  const { mutate, isError, isPending } = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
-      console.log(data);
       clearForm();
-      navigate("/");
+      navigate("/post/" + postId);
     },
   });
 
@@ -90,14 +98,14 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
     event.preventDefault();
     if (!user) return setErrorMessage("Log in to create post");
 
-    if (selectedFile)
-      return mutate({
-        title,
-        content,
-        imageFile: selectedFile,
-        avatar_url: user?.user_metadata.avatar_url || null,
-        community_id: communityId,
-      });
+    return mutate({
+      title,
+      content,
+      imageFile: selectedFile,
+      avatar_url: user?.user_metadata.avatar_url || null,
+      community_id: communityId,
+      user_id: user.id,
+    });
   };
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
@@ -161,7 +169,6 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           id="image"
           disabled={!user}
           type="file"
-          required
           accept="image/*"
           className="w-full border border-white/10 bg-transparent p-2 rounded"
           onChange={handleFileChange}
