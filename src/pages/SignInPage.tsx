@@ -6,26 +6,30 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { signInWithGitHub, signInWithGoogle } = useAuth();
-  const { signInWithEmail } = useAuth();
+  const { signInWithGitHub, signInWithGoogle, signInWithEmail } = useAuth();
+
   const navigate = useNavigate();
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { success } = await signInWithEmail(email, password);
-    if (success) return navigate("/");
+    signInWithEmail(email, password);
+
   };
 
-  const signUpWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    signInWithGoogle();
+    const { error } = await signInWithGoogle();
+
+    if (error) setErrorMessage(error);
   };
-  const signUpWithGitHub = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    signInWithGitHub();
-    navigate("/");
+    const { error } = await signInWithGitHub();
+
+    if (error) setErrorMessage(error);
   };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">
@@ -38,7 +42,7 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={(e) => signUpWithGoogle(e)}
-            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+            className=" cursor-pointer w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
             <FaGoogle className="text-red-500" />
             Continue with Google
@@ -47,7 +51,7 @@ export default function SignInPage() {
           <button
             onClick={(e) => signUpWithGitHub(e)}
             type="button"
-            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+            className=" cursor-pointer w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
             <FaGithub />
             Continue with GitHub
@@ -84,12 +88,16 @@ export default function SignInPage() {
           </button>
         </form>
 
-        <p className="text-sm text-zinc-400 mt-6 text-center">
+        <div className="text-sm text-zinc-400 mt-6 text-center">
           Don’t have an account?{" "}
-          <a href="/sign-up" className="text-indigo-400 hover:text-indigo-300">
+          <div
+            onClick={() => navigate("/sign-up")}
+            className="cursor-pointer text-indigo-400 hover:text-indigo-300"
+          >
             Sign up
-          </a>
-        </p>
+          </div>
+        </div>
+        <p className="text-red-500 "> {errorMessage}</p>
       </div>
     </div>
   );

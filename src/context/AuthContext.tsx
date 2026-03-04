@@ -11,23 +11,35 @@ interface Isign {
   error?: any;
 }
 
+export interface IUserProfile {
+  username: string;
+  id: string;
+  display_name: string;
+  avatar_url: string;
+  bio: string;
+}
+
 interface AuthContextType {
   signInWithEmail: (email: string, password: string) => Promise<Isign>;
-  signInWithGoogle: () => void;
-  signInWithGitHub: () => void;
+  signInWithGoogle: () => Promise<Isign>;
+  signInWithGitHub: () => Promise<Isign>;
   signUpWithEmail: (email: string, password: string) => Promise<Isign>;
   user: User | null;
   signOut: () => void;
+  getProfile: (user: User | null | undefined) => Promise<void>;
+  userProfile: IUserProfile | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      getProfile(session?.user);
     });
 
     //Listen to any changes in supabase.auth
@@ -40,6 +52,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       listener.subscription.unsubscribe();
     };
   }, []);
+
+  //
+  const getProfile = async (
+    userProfile: User | null | undefined,
+  ): Promise<void> => {
+    const id = userProfile?.id || user?.id;
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", id)
+      .single();
+    console.log(data);
+    setUserProfile(data);
+  };
 
   // Sign up
   const signUpWithEmail = async (
@@ -55,8 +81,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error signing up: ", error);
       return { success: false, error };
     }
-    console.log(data);
     setUser(data.user);
+
     return { success: true, data };
   };
 
@@ -78,9 +104,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       // If no error, return success
-      console.log("Sign-in success:", data);
-      setUser(data.user);
+      console.log({ google: data });
 
+      setUser(data.user);
       return { success: true, data }; // Return the user data
     } catch (error: any) {
       // Handle unexpected issues
@@ -92,11 +118,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const signInWithGitHub = () => {
-    supabase.auth.signInWithOAuth({ provider: "github" });
+  const signInWithGitHub = async (): Promise<Isign> => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
   };
-  const signInWithGoogle = () => {
-    supabase.auth.signInWithOAuth({ provider: "google" });
+  const signInWithGoogle = async (): Promise<Isign> => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) return { success: false, error: error.message };
+
+    return { success: true };
   };
 
   const signOut = () => {
@@ -104,12 +140,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const contextValue = {
+    userProfile,
     signInWithEmail,
     signInWithGoogle,
     signUpWithEmail,
     user,
     signInWithGitHub,
     signOut,
+    getProfile,
   };
 
   return (

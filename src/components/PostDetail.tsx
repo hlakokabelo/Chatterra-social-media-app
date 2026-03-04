@@ -4,11 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
 import CommentSection from "./CommentSection";
-import { formatTimeStamp } from "../utils/util";
+import { formatTimeStamp } from "../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
 import Loading from "./Loading";
 import { FaUser } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext";
 
 interface IPostDetailProps {
   postId: number;
@@ -22,11 +21,19 @@ const fetchPostById = async (id: number): Promise<IPost> => {
 
   if (error) throw new Error(error.message);
 
+  // fetch user avatar_url & user
+  const { data: profileData } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", data.user_id)
+    .single();
+  data.avatar_url = profileData.avatar_url;
+  data.username = profileData.username;
   return data as IPost;
 };
 const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
   const navigate = useNavigate();
-   const { user } = useAuth();
+
   if (isNaN(postId)) {
     navigate("/");
   }
@@ -38,40 +45,40 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
   if (isLoading) return <Loading title="Loading post" />;
 
   if (error) return <div>Error: {error.message}</div>;
- 
+
   return (
     <div className="space-y-6">
       <div className="lg:ml-[56vh] md:flex flex-col justify-center">
         {data?.avatar_url ? (
-          <div className="flex border-transparent sm:w-[45%] border-b-blue-300 border pb-1.5">
+          <div
+            onClick={() => navigate(`/u/${data.username}`)}
+            className="flex cursor-pointer border-transparent sm:w-[45%]  pb-1.5"
+          >
             <img
               src={data?.avatar_url}
               alt="User Avatar"
               className="w-[35px] h-[35px] rounded-full object-cover"
             />
-            <p
-              className="ml-1.5 cursor-pointer"
-              onClick={() => navigate(`/u/${user?.user_metadata.user_name}`)}
-            >
-              {user?.user_metadata.user_name}
-            </p>
+            <p className="ml-1.5 cursor-pointer">{data.username}</p>
           </div>
         ) : (
           <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]">
             <FaUser className="w-[35px] h-[25px]" />
           </div>
         )}
-        <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        <h2 className="text-4xl m-2.5 font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
           {data?.title}
         </h2>
-        <div className="max-w-[25rem] max-h-[26rem] mb-[5rem]">
-          <img
-            src={data?.image_url}
-            alt={data?.title}
-            className="mt-4 border-amber-50 border-4 rounded object-cover"
-          />
-        </div>
-        <div className=" flex flex-col mt-2.5">
+        {data?.image_url && (
+          <div className="mb-2.5">
+            <img
+              src={data?.image_url}
+              alt={data?.title}
+              className="mt-4 max-h-[30rem] rounded object-cover"
+            />
+          </div>
+        )}
+        <div className=" flex flex-col">
           <p className="text-gray-400 mb-2 max-w-[35rem] text-wrap">
             {data?.content}
           </p>

@@ -15,6 +15,7 @@ export interface IPost {
   created_at: string;
   comment_count?: number;
   like_count?: number;
+  username?: string;
 }
 const fetchPosts = async (): Promise<IPost[]> => {
   const { data, error } = await supabase.rpc("get_posts_with_counts");
@@ -28,7 +29,7 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
     queryFn: fetchPosts,
   });
 
-  if (isLoading) return <Loading title="fetching posts"/>;
+  if (isLoading) return <Loading title="fetching posts" />;
 
   if (error) return <div>Error: {error.message}</div>;
 

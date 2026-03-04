@@ -13,6 +13,7 @@ interface IPostInput {
   imageFile: File;
   avatar_url: string | null;
   community_id?: number | null;
+  user_id?: number | null;
 }
 const createPost = async (post: IPostInput) => {
   //uploade image
@@ -47,6 +48,9 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   const [title, setTitle] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string>(
+    user ? "" : "Log in to create post",
+  );
 
   const navigate = useNavigate();
   const clearForm = (): void => {
@@ -84,8 +88,10 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
 
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
+    if (!user) return setErrorMessage("Log in to create post");
+
     if (selectedFile)
-      mutate({
+      return mutate({
         title,
         content,
         imageFile: selectedFile,
@@ -95,6 +101,8 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
+      <p className="text-center text-red-500">{errorMessage}</p>
+
       <div>
         <label htmlFor="title" className="block mb-2 font-medium">
           Title
@@ -102,6 +110,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         <input
           type="text"
           value={title}
+          disabled={!user}
           id="title"
           required
           maxLength={20}
@@ -116,6 +125,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         <textarea
           id="content"
           rows={5}
+          disabled={!user}
           value={content}
           required
           className="w-full border border-white/10 bg-transparent p-2 rounded"
@@ -123,6 +133,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         />{" "}
         <div>
           <select
+            disabled={!user}
             className="w-[14rem] px-4 py-2 text-center rounded-xl border border-gray-300 
        text-gray-800 
          focus:outline-none mb-2.5 mt-2.5  focus:ring-2 focus:ring-blue-500 focus:border-blue-500
@@ -148,6 +159,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
         </label>
         <input
           id="image"
+          disabled={!user}
           type="file"
           required
           accept="image/*"

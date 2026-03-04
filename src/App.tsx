@@ -10,6 +10,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
 import PageNotFound from "./pages/PageNotFound";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 function App() {
   return (
@@ -19,9 +20,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {/*Auth */}
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/sign-up" element={<SignUpPage />} />
+          {/*Register */}
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/sign-up" element={<SignUpPage />} />
+      
 
           {/*Communities */}
           <Route path="/community/:id" element={<CommunityPage />} />
@@ -35,11 +37,12 @@ function App() {
           {/*User Info*/}
           <Route path="/u/:username" element={<>coming soon</>} />
           <Route path="/user/:username" element={<>coming soon</>} />
-          <Route path="/profile" element={<ProfilePage />} />
 
           {/* Catch-all route */}
           <Route path="*" element={<PageNotFound />} />
           <Route path="robot.txt" element={<>text</>} />
+
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </div>
     </div>

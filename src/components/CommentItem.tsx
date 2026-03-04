@@ -3,7 +3,7 @@ import type { IComment } from "./CommentSection";
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
-import {formatTimeStamp} from '../utils/util.tsx'
+import {formatTimeStamp} from '../utils/formatTimeStamp.tsx'
 
 interface ICommentItemProps {
   comment: IComment & { children?: IComment[] };

@@ -7,26 +7,34 @@ export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, seterrorMessage] = useState<string>("");
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const { signInWithGitHub, signInWithGoogle, signUpWithEmail } = useAuth();
   const navigate = useNavigate();
+
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const { success } = await signUpWithEmail(email, password);
-    if (success) return navigate("/");
+  
+    const {error}= await signUpWithEmail(email, password);
+    if(error)
+    seterrorMessage(String(error))
   };
 
-  const signUpWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     signInWithGoogle();
+
+    const { error } = await signInWithGitHub();
+
+    if (error) throw new Error(error);
   };
-  const signUpWithGitHub = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    signInWithGitHub();
-    navigate("/");
+    const { error } = await signInWithGitHub();
+    alert("suck")
+    if (error) seterrorMessage(error);
   };
 
   return (
@@ -41,7 +49,7 @@ export default function SignUpPage() {
           <button
             type="button"
             onClick={(e) => signUpWithGoogle(e)}
-            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+            className=" cursor-pointer w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
             <FaGoogle className="text-red-500" />
             Continue with Google
@@ -50,7 +58,7 @@ export default function SignUpPage() {
           <button
             onClick={(e) => signUpWithGitHub(e)}
             type="button"
-            className="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
+            className=" cursor-pointer w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 py-2 rounded-lg transition"
           >
             <FaGithub />
             Continue with GitHub
@@ -105,7 +113,7 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors text-white py-2 rounded-lg font-medium"
+              className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition-colors text-white py-2 rounded-lg font-medium"
             >
               Sign Up
             </button>
@@ -121,12 +129,17 @@ export default function SignUpPage() {
           </div>
         )}
 
-        <p className="text-sm text-zinc-400 mt-6 text-center">
+        <div className="text-sm text-zinc-400 mt-6 text-center">
           Already have an account?{" "}
-          <a href="/sign-in" className="text-indigo-400 hover:text-indigo-300">
+          <div
+            onClick={() => navigate("/sign-in")}
+            className="cursor-pointer text-indigo-400 hover:text-indigo-300"
+          >
             Sign in
-          </a>
-        </p>
+          </div>
+        </div>
+
+        <div className="text-red-500 "> {errorMessage}</div>
       </div>
     </div>
   );

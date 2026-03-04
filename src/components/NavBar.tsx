@@ -7,8 +7,8 @@ interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const { user, signOut } = useAuth();
-  const displayName = user?.user_metadata.user_name || user?.email;
+  const { user, signOut, userProfile } = useAuth();
+  const displayName = userProfile?.username || userProfile?.display_name;
 
   const navigate = useNavigate();
   const goToUrl = (destination: string) => {
@@ -77,7 +77,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             ) : (
               <button
                 onClick={() => navigate("/sign-in")}
-                className="cursor-pointer bg-blue-500 px-3 py-1 rounded"
+                className=" cursor-pointer bg-blue-500 px-3 py-1 rounded"
               >
                 Sign in
               </button>
@@ -87,7 +87,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           {/**Mobile menu btn */}
           <div className="md:hidden ">
             <button
-              className="text-gray-300 focus:outline-none"
+              className=" cursor-pointer text-gray-300 focus:outline-none"
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label="Toggle menu"
             >
@@ -128,31 +128,31 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
         <div className="md:hidden absolute right-0 bg-[rgba(10,10,10,0.9)]">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <p
-              className={`block px-3 py-2 rounded-md text-base font-medium ${user ? "text-red-700" : "text-green-500"} hover:text-white hover:bg-gray-700`}
+              className={` cursor-pointer block px-3 py-2 rounded-md text-base font-medium ${user ? "text-red-700" : "text-green-500"} hover:text-white hover:bg-gray-700`}
               onClick={mobileMenuClick}
             >
               {user ? "Log-out" : "Sign-in/Sign-up"}
             </p>
             <p
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/")}
             >
               Home
             </p>
             <p
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/create")}
             >
               Create Post
             </p>
             <p
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/communities")}
             >
               Communities
             </p>
             <p
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/community/create")}
             >
               Create comunity
