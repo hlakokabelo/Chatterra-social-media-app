@@ -40,6 +40,14 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             >
               Home
             </Link>
+            {user && (
+              <Link
+                className="text-gray-300 hover:text-white transition-colors"
+                to={"/profile"}
+              >
+                Profile
+              </Link>
+            )}
             <Link
               className="text-gray-300 hover:text-white transition-colors"
               to={"/create"}
@@ -130,6 +138,14 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             >
               {user ? "Log-out" : "Sign-in/Sign-up"}
             </p>
+            {user && (
+              <p
+                className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+                onClick={() => goToUrl("/profile")}
+              >
+                Profile page
+              </p>
+            )}
             <p
               className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
               onClick={() => goToUrl("/")}

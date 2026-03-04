@@ -13,13 +13,13 @@ const UserProfilePhoto: React.FunctionComponent<IUserProfilePhotoProps> = ({
   const { userProfile } = useAuth();
   return (
     <>
-      {user && user?.user_metadata?.avatar_url && (
+      {user && userProfile?.avatar_url && (
         <Link
-          className="cursor-pointer flex md:hidden absolute right-6"
-    to={"/profile"}
+          className="cursor-pointer flex"
+          to={"/profile"}
         >
           <img
-            src={user.user_metadata.avatar_url}
+            src={userProfile?.avatar_url}
             className="w-8 h-8 rounded-full object-cover"
             alt="user Avatar"
           />

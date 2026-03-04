@@ -35,6 +35,7 @@ const createPost = async (post: IPostInput) => {
   }
   //upload post
   if (image_url === "") image_url = null;
+  
   const { imageFile: _, ...payloadVariables } = post;
   let payload = {
     ...payloadVariables,

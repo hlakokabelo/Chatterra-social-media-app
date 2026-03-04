@@ -10,8 +10,29 @@ interface IUserProfile {
   bio: string;
   username: string;
   display_name: string;
+  avatar_url?: string;
 }
-const upDateProfile = async (profile: IUserProfile, id: string | undefined) => {
+const upDateProfile = async (
+  profile: IUserProfile,
+  id: string | undefined,
+  profilePic: File | null,
+) => {
+  let image_url = "";
+  if (profilePic) {
+    const filePath = `${profilePic.name}-4-4-${Date.now()}-3-3-${profilePic.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from("post-images")
+      .upload(filePath, profilePic);
+
+    if (uploadError) return new Error(uploadError.message);
+
+    //get imageUrl
+    const { data: ImageData } = await supabase.storage
+      .from("post-images")
+      .getPublicUrl(filePath);
+    image_url = ImageData.publicUrl;
+  }
+  if (image_url !== "") profile.avatar_url = image_url;
   await supabase.from("profiles").update(profile).eq("id", id);
 };
 
@@ -28,7 +49,14 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
   const [username, setUsername] = React.useState<string>("");
   const [infoEdited, setInfoEdited] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
+  const [profilePic, setProfilePic] = React.useState<File | null>(null);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfilePic(e.target.files[0]);
+    }
+    setInfoEdited(true);
+  };
   React.useEffect(() => {
     if (userProfile) {
       setDisplayName(userProfile.display_name);
@@ -39,7 +67,8 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
 
   const { mutate } = useMutation({
     mutationFn: (profile: IUserProfile) => {
-      return upDateProfile(profile, userProfile?.id);
+      console.log(profilePic);
+      return upDateProfile(profile, userProfile?.id, profilePic);
     },
     onSuccess: () => reFetchProfile(getProfile),
   });
@@ -156,7 +185,18 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
                 onChange={(e) => handleOnChange(e)}
               />
             </div>
-
+            <div>
+              <label htmlFor="image">Select Profile pic</label>
+              <input
+                id="image"
+                disabled={!editing}
+                type="file"
+                accept="image/*"
+                placeholder="choose profile pic"
+                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
+                onChange={handleFileChange}
+              />
+            </div>
             {/* <div>
               <label className="text-sm text-zinc-400" htmlFor="password">
                 Password

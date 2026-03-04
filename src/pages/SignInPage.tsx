@@ -15,6 +15,7 @@ export default function SignInPage() {
     e.preventDefault();
 
     signInWithEmail(email, password);
+    navigate("/profile")
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -22,6 +23,8 @@ export default function SignInPage() {
     const { error } = await signInWithGoogle();
 
     if (error) setErrorMessage(error);
+    navigate("/profile")
+
   };
   const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -29,6 +32,7 @@ export default function SignInPage() {
     const { error } = await signInWithGitHub();
 
     if (error) setErrorMessage(error);
+    navigate("/profile")
   };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">

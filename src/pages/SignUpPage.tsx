@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, seterrorMessage] = useState<string>("");
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -15,10 +14,10 @@ export default function SignUpPage() {
 
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    const {error}= await signUpWithEmail(email, password);
-    if(error)
-    seterrorMessage(String(error))
+
+    const { error } = await signUpWithEmail(email, password);
+    if (error) seterrorMessage(String(error));
+    else navigate("/profile");
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,13 +27,15 @@ export default function SignUpPage() {
     const { error } = await signInWithGitHub();
 
     if (error) throw new Error(error);
+    else navigate("/profile");
   };
   const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const { error } = await signInWithGitHub();
-    alert("suck")
+
     if (error) seterrorMessage(error);
+    else navigate("/profile");
   };
 
   return (
@@ -75,18 +76,6 @@ export default function SignUpPage() {
         {/* Email Form */}
         {showForm && (
           <form className="space-y-4" onSubmit={onSubmitForm}>
-            <div>
-              <label className="text-sm text-zinc-400">Username</label>
-              <input
-                required
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-                type="text"
-                className="mt-1 w-full bg-zinc-800 text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="username"
-              />
-            </div>
-
             <div>
               <label className="text-sm text-zinc-400">Email</label>
               <input
