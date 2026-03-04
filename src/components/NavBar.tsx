@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import UserProfilePhoto from "./UserProfilePhoto";
-
+import image from "../assets/icon3.svg";
 interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
@@ -28,9 +28,10 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
     <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="font-mono text-xl font-bold text-white">
-            Social<span className="text-purple-500">.media </span>
-          </Link>
+          <Link to="/" className="flex font-mono text-xl font-bold text-white">
+           <img 
+          className="w-[25px] mr-2" src={image} alt="" />
+          Chatterra</Link>
 
           {/**Desktop links */}
           <div className="hidden md:flex items-center space-x-8">
