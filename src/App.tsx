@@ -21,9 +21,10 @@ function App() {
           <Route path="/" element={<Home />} />
 
           {/*Register */}
+          <Route element={<PrivateRoutes />}>
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/sign-up" element={<SignUpPage />} />
-      
+          </Route>
 
           {/*Communities */}
           <Route path="/community/:id" element={<CommunityPage />} />

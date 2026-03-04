@@ -9,8 +9,6 @@ interface IPostItemProps {
 }
 
 const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
-  
- 
   return (
     <div className=" mb-6  sm:max-w-[35rem] relative group">
       <div className="absolute -inset-1 rounded-[20px] bg-gradient-to-r from-pink-600 to-purple-600 blur-sm opacity-0 group-hover:opacity-50 transition duration-300 pointer-events-none"></div>
@@ -31,9 +29,7 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
             )}
             <div className="flex flex-col flex-1">
               <div className="text-[20px] leading-[22px] font-semibold mt-2 mb-4 ml-3">
-                <span className="text-amber-300 text-1">
-                  {post.username}
-                </span>
+                <span className="text-amber-300 text-1">{post.username}</span>
               </div>
             </div>
           </div>

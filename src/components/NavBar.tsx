@@ -7,8 +7,7 @@ interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const { user, signOut, userProfile } = useAuth();
-  const displayName = userProfile?.username || userProfile?.display_name;
+  const { user, signOut } = useAuth();
 
   const navigate = useNavigate();
   const goToUrl = (destination: string) => {
@@ -66,7 +65,6 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             {user ? (
               <div className="flex items-center space-x-4">
                 <UserProfilePhoto user={user} />
-                <span className="text-gray-300">{displayName}</span>
                 <button
                   onClick={signOut}
                   className="cursor-pointer bg-red-500 px-3 py-1 rounded"
@@ -122,7 +120,6 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
       {/**Mobile menu links */}
       <div className="flex md:hidden absolute right-13 top-4">
         <UserProfilePhoto user={user} />
-        <span className="text-gray-300">{displayName}</span>
       </div>
       {menuOpen && (
         <div className="md:hidden absolute right-0 bg-[rgba(10,10,10,0.9)]">

@@ -15,7 +15,6 @@ export default function SignInPage() {
     e.preventDefault();
 
     signInWithEmail(email, password);
-
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {

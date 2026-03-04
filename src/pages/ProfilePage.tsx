@@ -22,7 +22,7 @@ const reFetchProfile = async (getProfile: any) => {
 const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
   const { user, userProfile, getProfile } = useAuth();
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [password, setPassword] = React.useState<string>("-------");
+  // const [password, setPassword] = React.useState<string>("-------");
   const [display_name, setDisplayName] = React.useState<string>("-------");
   const [bio, setBio] = React.useState<string>("my bio");
   const [username, setUsername] = React.useState<string>("");
@@ -101,9 +101,10 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
       case "display_name":
         setDisplayName(value);
         break;
-      case "password":
+      /*    case "password":
         setPassword(value);
         break;
+    */
     }
   };
   if (!user) return <Navigate to="/" />;
@@ -156,7 +157,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-sm text-zinc-400" htmlFor="password">
                 Password
               </label>
@@ -168,7 +169,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
                 value={password}
                 onChange={(e) => handleOnChange(e)}
               />
-            </div>
+            </div> */}
           </div>
 
           <div>

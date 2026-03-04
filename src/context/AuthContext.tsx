@@ -63,7 +63,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .select("*")
       .eq("id", id)
       .single();
-    console.log(data);
     setUserProfile(data);
   };
 
@@ -99,18 +98,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Handle Supabase error explicitly
       if (error) {
-        console.error("Sign-in error:", error.message); // Log the error for debugging
         return { success: false, error: error.message }; // Return the error
       }
-
-      // If no error, return success
-      console.log({ google: data });
 
       setUser(data.user);
       return { success: true, data }; // Return the user data
     } catch (error: any) {
       // Handle unexpected issues
-      console.error("Unexpected error during sign-in:", error.message);
       return {
         success: false,
         error: "An unexpected error occurred. Please try again.",
@@ -124,6 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (error) return { success: false, error: error.message };
+
     return { success: true };
   };
   const signInWithGoogle = async (): Promise<Isign> => {
