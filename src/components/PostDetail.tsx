@@ -45,10 +45,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
 
   if (isLoading) return <Loading title="Loading post" />;
 
-  if (error)
-    return (
-      <PostNotFoud title="Post"/>
-    );
+  if (error) return <PostNotFoud title="Post" />;
 
   return (
     <div className="space-y-6">

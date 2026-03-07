@@ -11,6 +11,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
+import PublicProfilePage from "./pages/PublicProfilePage ";
 
 function App() {
   return (
@@ -36,8 +37,8 @@ function App() {
           <Route path="/create" element={<CreatePostPage />} />
 
           {/*User Info*/}
-          <Route path="/u/:username" element={<>coming soon</>} />
-          <Route path="/user/:username" element={<>coming soon</>} />
+          <Route path="/user/:username" element={<PublicProfilePage />} />
+          <Route path="/u/:username" element={<PublicProfilePage />} />
 
           {/* Catch-all route */}
           <Route path="*" element={<PageNotFound />} />

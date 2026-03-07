@@ -3,11 +3,13 @@ import type { IComment } from "./CommentSection";
 import { useAuth } from "../context/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
-import {formatTimeStamp} from '../utils/formatTimeStamp.tsx'
+import { formatTimeStamp } from "../utils/formatTimeStamp.tsx";
 import { useNavigate } from "react-router";
 
+type ICommentChild = IComment & { children?: IComment[] };
+
 interface ICommentItemProps {
-  comment: IComment & { children?: IComment[] };
+  comment: IComment & { children?: ICommentChild[] };
   postId: number;
 }
 interface IReplyComment {
@@ -15,6 +17,26 @@ interface IReplyComment {
   parent_comment_id: number | null;
 }
 
+const handleHashedComment = (comment: ICommentChild): boolean => {
+  const isHighlighted = window.location.hash === `#comment-${comment.id}`;
+
+  if (isHighlighted) return true;
+  else if (comment.children) {
+    let value = false;
+    for (const child of comment.children) {
+      value = window.location.hash === `#comment-${child.id}`;
+
+      if (value) break;
+      else if (handleHashedComment(child)) {
+        value = true;
+      }
+    }
+    return value;
+    // Output: 1, 2
+  }
+
+  return false;
+};
 const createReply = async (
   newReply: IReplyComment,
   postId: number,
@@ -44,21 +66,17 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   );
   const { user } = useAuth();
   const queryClient = useQueryClient();
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (newComment: IReplyComment) => {
-      return createReply(
-        newComment,
-        postId,
-        user?.id,
-      );
+      return createReply(newComment, postId, user?.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
 
       setReplyText("");
       setShowReply(false);
-      setIsCollapsed(true)
+      setIsCollapsed(true);
     },
   });
 
@@ -69,17 +87,34 @@ const navigate = useNavigate()
     mutate({ content: replyText, parent_comment_id: comment.id });
   };
 
+  const isHighlighted = window.location.hash === `#comment-${comment.id}`;
+
+  React.useEffect(() => {
+    //parent comment collapse is true by default so ignore 
+    if (comment.parent_comment_id) {
+      const val = handleHashedComment(comment);
+      setIsCollapsed(val);
+    }
+  }, []);
   return (
-    <div className="pl-4 border-l border-white/10">
+    <div
+      id={`comment-${comment.id}`}
+      className={`border-l rounded-lg p-4 ${
+        isHighlighted
+          ? "border-purple-500 ring-1 ring-purple-500"
+          : "border-l-zinc-700"
+      }`}
+    >
       <div className="mb-2">
         <div className="flex items-center space-x-2">
           {/**Display commenter username */}
           <span
-          onClick={()=>navigate("/u/"+comment?.username)} className="cursor-pointer text-sm font-bold text-blue-400">
+            onClick={() => navigate("/u/" + comment?.username)}
+            className="cursor-pointer text-sm font-bold text-blue-400"
+          >
             {comment?.username}
           </span>
           <span className="text-xs text-gray-500">
-        
             {formatTimeStamp(comment?.created_at)}
           </span>
         </div>
@@ -113,7 +148,8 @@ const navigate = useNavigate()
 
       {comment.children && comment.children.length > 0 && (
         <div>
-          <button className=""
+          <button
+            className=""
             title={isCollapsed ? "Hide Replies" : "Show Replies"}
             onClick={() => setIsCollapsed((prev) => !prev)}
           >
@@ -126,7 +162,6 @@ const navigate = useNavigate()
                 stroke="currentColor"
                 className="w-4 h-4"
                 color="green"
-            
               >
                 <path
                   strokeLinecap="round"

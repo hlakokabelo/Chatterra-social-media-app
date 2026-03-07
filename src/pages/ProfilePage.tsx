@@ -3,6 +3,7 @@ import { Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
+ import imageCompression from "browser-image-compression";
 
 interface IProfilePageProps {}
 
@@ -21,14 +22,14 @@ const upDateProfile = async (
   if (profilePic) {
     const filePath = `${profilePic.name}-4-4-${Date.now()}-3-3-${profilePic.name}`;
     const { error: uploadError } = await supabase.storage
-      .from("post-images")
+      .from("avatars")
       .upload(filePath, profilePic);
 
     if (uploadError) return new Error(uploadError.message);
 
     //get imageUrl
     const { data: ImageData } = await supabase.storage
-      .from("post-images")
+      .from("avatars")
       .getPublicUrl(filePath);
     image_url = ImageData.publicUrl;
   }
@@ -50,13 +51,32 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
   const [infoEdited, setInfoEdited] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [profilePic, setProfilePic] = React.useState<File | null>(null);
+  const [usernameAvailable, setUsernameAvailable] = React.useState<
+    boolean | null
+  >(null);
+  const [availableUsername, setAvailableUsername] = React.useState<string>("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setProfilePic(e.target.files[0]);
-    }
-    setInfoEdited(true);
-  };
+  const inputStyle = editing
+    ? "mt-1 w-full px-4 py-2 bg-zinc-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+    : "mt-1 w-full px-4 py-2 border border-blue-500 rounded-lg bg-zinc-900 text-zinc-300";
+
+const handleFileChange = async (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  if (e.target.files && e.target.files[0]) {
+    const image = e.target.files[0];
+
+    const compressed = await imageCompression(image, {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 512,
+      useWebWorker: true,
+    });
+
+    setProfilePic(compressed);
+  }
+
+  setInfoEdited(true);
+};
   React.useEffect(() => {
     if (userProfile) {
       setDisplayName(userProfile.display_name);
@@ -73,6 +93,15 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     onSuccess: () => reFetchProfile(getProfile),
   });
 
+  const checkUsernameAvailability = async (name: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("username", name)
+      .maybeSingle();
+
+    return !data;
+  };
   const validateUsername = (value: string): string => {
     // Only letters, numbers, underscores
     const regex = /^[a-zA-Z0-9_]+$/;
@@ -100,20 +129,24 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     e.preventDefault();
     if (error !== "") return;
 
-    if (infoEdited) {
-      const profile: IUserProfile = {
-        bio,
-        username,
-        display_name,
-      };
-
-      console.log(profile);
-      mutate(profile);
+    if (!infoEdited) {
+      setEditing(false);
+      return;
     }
+
+    const profile: IUserProfile = {
+      bio,
+      username,
+      display_name,
+    };
+
+    console.log(profile);
+    mutate(profile);
+
     setEditing((prev) => !prev);
   };
 
-  const handleOnChange = (
+  const handleOnChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const name = e.target.id;
@@ -122,7 +155,16 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     switch (name) {
       case "username":
         setUsername(value);
-        setError(validateUsername(value));
+
+        const validationError = validateUsername(value);
+        setError(validationError);
+
+        if (!validationError) {
+          const available = await checkUsernameAvailability(value);
+          setUsernameAvailable(available);
+          setAvailableUsername(username);
+        }
+
         break;
       case "bio":
         setBio(value);
@@ -136,13 +178,53 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     */
     }
   };
+  const handleCancel = () => {
+    if (userProfile) {
+      setDisplayName(userProfile.display_name);
+      setBio(userProfile.bio);
+      setUsername(userProfile.username);
+    }
+
+    setProfilePic(null);
+    setError("");
+    setInfoEdited(false);
+    setEditing(false);
+    setUsernameAvailable(null);
+  };
   if (!user) return <Navigate to="/" />;
 
   return (
     <div className="flex justify-center">
-      <div className="w-[70%] md:w-[50%] bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl">
-        {/*  */}
-        <form className="justify-center gap-16 " onSubmit={onSubmitForm}>
+      <div className="max-w-lg w-full bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
+        {" "}
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative">
+            <img
+              src={
+                profilePic
+                  ? URL.createObjectURL(profilePic)
+                  : userProfile?.avatar_url ||
+                    "https://placehold.co/120x120?text=Avatar"
+              }
+              className="w-28 h-28 rounded-full object-cover border-4 border-purple-500 shadow-lg"
+            />
+
+            {editing && (
+              <label className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full cursor-pointer shadow-md">
+                📷
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            )}
+          </div>
+
+          <p className="mt-3 text-sm text-zinc-400">@{username}</p>
+        </div>
+        <form className="flex flex-col gap-6" onSubmit={onSubmitForm}>
           <div>
             <div>
               <label className="text-sm text-zinc-400" htmlFor="username">
@@ -156,6 +238,20 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
                 value={username}
                 onChange={(e) => handleOnChange(e)}
               />
+              {usernameAvailable === false && (
+                <p className="text-red-400 text-xs mt-1">
+                  Username already taken {availableUsername}
+                </p>
+              )}
+
+              {usernameAvailable === true && (
+                <p className="text-green-400 text-xs mt-1">
+                  Username available ✓ {availableUsername}
+                </p>
+              )}
+              {error && (
+                <p className="text-center text-red-500 text-sm">{error}</p>
+              )}
             </div>
 
             <div>
@@ -164,7 +260,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
               </label>
               <input
                 disabled={!editing}
-                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
+                className={inputStyle}
                 type="text"
                 id="display_name"
                 value={display_name}
@@ -178,7 +274,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
               </label>
               <textarea
                 disabled={!editing}
-                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
+                className={inputStyle}
                 rows={3}
                 id="bio"
                 value={bio}
@@ -193,7 +289,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
                 type="file"
                 accept="image/*"
                 placeholder="choose profile pic"
-                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
+                className={inputStyle}
                 onChange={handleFileChange}
               />
             </div>
@@ -203,8 +299,7 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
               </label>
               <input
                 disabled={!editing}
-                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
-                type="password"
+                className={inputStyle} type="password"
                 id="password"
                 value={password}
                 onChange={(e) => handleOnChange(e)}
@@ -213,25 +308,37 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
           </div>
 
           <div>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center gap-4 mt-6">
               {!editing && (
-                <div
-                  onClick={() => setEditing((prev) => !prev)}
-                  className=" text-center h-[12%] mt-4 bg-purple-600 hover:bg-purple-800 cursor-pointer text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                <button
+                  type="button"
+                  onClick={() => setEditing(true)}
+                  className="px-6 py-2  cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
                 >
-                  Edit
-                </div>
+                  Edit Profile
+                </button>
               )}
+
               {editing && (
-                <input
-                  type="submit"
-                  className=" text-center mt-4 h-[12%] bg-purple-600 hover:bg-purple-800 cursor-pointer text-white border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={"Submit"}
-                />
+                <>
+                  <button
+                    type="submit"
+                    className="px-6 py-2  cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
+                  >
+                    Save Changes
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="px-6 py-2 cursor-pointer bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white transition"
+                  >
+                    Cancel
+                  </button>
+                </>
               )}
-            </div>
+            </div>{" "}
           </div>
-          {error && <p className="text-center text-red-500 text-sm">{error}</p>}
         </form>
       </div>
     </div>

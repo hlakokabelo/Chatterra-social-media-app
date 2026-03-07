@@ -5,7 +5,9 @@ interface IHomeProps {}
 
 
 const Home: React.FunctionComponent<IHomeProps> = () => {
+ 
   return (
+
     <div className="">
       <h2 className="text-4xl font-bold mb-6 text-center bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text">
         Recent Posts

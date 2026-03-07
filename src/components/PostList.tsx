@@ -19,15 +19,19 @@ export interface IPost {
   username?: string;
 }
 
-const fetchPosts = async ({ pageParam, feedMode }: { pageParam: number; feedMode: string }) => {
-  console.log(pageParam);
+const fetchPosts = async ({
+  pageParam,
+  feedMode,
+}: {
+  pageParam: number;
+  feedMode: string;
+}) => {
   const limit = 10;
   const page = pageParam;
   const from = (page - 1) * limit;
   const to = from + limit - 1;
   let query = supabase.rpc("get_posts_with_counts");
 
-  console.log({pageParam,feedMode})
   if (feedMode === "fresh") {
     query = query.order("created_at", { ascending: false });
   }
@@ -37,12 +41,12 @@ const fetchPosts = async ({ pageParam, feedMode }: { pageParam: number; feedMode
       .order("like_count", { ascending: false })
       .order("created_at", { ascending: false });
   }
-  
+
   if (feedMode === "rising_comments") {
     query = query
       .order("like_count", { ascending: false })
       .order("created_at", { ascending: false })
-      .order("comment_count", { ascending: false })
+      .order("comment_count", { ascending: false });
   }
 
   if (feedMode === "discussion") {
@@ -67,7 +71,7 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
 
       getNextPageParam: (lastPage, allPages) => {
         const nextPage = lastPage.length ? allPages.length + 1 : undefined;
-     
+
         return nextPage;
       },
     });

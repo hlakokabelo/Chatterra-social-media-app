@@ -14,25 +14,25 @@ export default function SignInPage() {
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    signInWithEmail(email, password);
-    navigate("/profile")
+    const { error } = await signInWithEmail(email, password);
+    if (error) return setErrorMessage(error);
+    navigate("/profile");
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { error } = await signInWithGoogle();
 
-    if (error) setErrorMessage(error);
-    navigate("/profile")
-
+    if (error) return setErrorMessage(error);
+    navigate("/profile");
   };
   const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const { error } = await signInWithGitHub();
 
-    if (error) setErrorMessage(error);
-    navigate("/profile")
+    if (error) return setErrorMessage(error);
+    navigate("/profile");
   };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">
@@ -85,7 +85,7 @@ export default function SignInPage() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors text-white py-2 rounded-lg font-medium"
+            className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition-colors text-white py-2 rounded-lg font-medium"
           >
             Sign In
           </button>
@@ -100,7 +100,7 @@ export default function SignInPage() {
             Sign up
           </div>
         </div>
-        <p className="text-red-500 "> {errorMessage}</p>
+        <p className="text-red-500 text-center "> {errorMessage}</p>
       </div>
     </div>
   );

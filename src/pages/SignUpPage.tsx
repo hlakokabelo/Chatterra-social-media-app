@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [errorMessage, seterrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const { signInWithGitHub, signInWithGoogle, signUpWithEmail } = useAuth();
@@ -16,7 +16,7 @@ export default function SignUpPage() {
     e.preventDefault();
 
     const { error } = await signUpWithEmail(email, password);
-    if (error) seterrorMessage(String(error));
+    if (error) return setErrorMessage(String(error));
     else navigate("/profile");
   };
 
@@ -34,7 +34,7 @@ export default function SignUpPage() {
 
     const { error } = await signInWithGitHub();
 
-    if (error) seterrorMessage(error);
+    if (error) return setErrorMessage(error);
     else navigate("/profile");
   };
 

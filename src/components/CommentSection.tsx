@@ -71,6 +71,25 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     },
   });
 
+   React.useEffect(() => {
+      const hash = window.location.hash;
+  
+      if (!hash) return;
+  
+      setTimeout(() => {
+      
+  
+        const element = document.querySelector(hash);
+  
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 500);
+    }, []);
+   
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
