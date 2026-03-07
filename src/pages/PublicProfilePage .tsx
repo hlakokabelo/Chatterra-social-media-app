@@ -1,17 +1,20 @@
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
 import * as React from "react";
 import UserPosts from "../components/UserPosts";
 import UserReplies from "../components/UserReplies";
 import UserLikes from "../components/UserLikes";
-
+import { MdEdit } from "react-icons/md";
+import { useAuth, type IUserProfile } from "../context/AuthContext";
 const PublicProfilePage = () => {
   const { username } = useParams();
-  const [profile, setProfile] = React.useState<any>(null);
+  const [profile, setProfile] = React.useState<IUserProfile | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [notFound, setNotFound] = React.useState(false);
   const navigate = useNavigate();
   const [tab, setTab] = React.useState("posts");
+  const { user } = useAuth();
+
   React.useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
@@ -69,19 +72,28 @@ const PublicProfilePage = () => {
     <div>
       <div className="flex justify-center mt-12">
         <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl max-w-md w-full">
+          {user?.id === profile?.id && (
+            <Link to={"/edit-profile"}>
+              <div className="w-full flex justify-end relative">
+                <p className="hover:text-green-400 cursor-pointer w-fit">
+                  <MdEdit size={25} />
+                </p>
+              </div>
+            </Link>
+          )}
           <div className="flex flex-col items-center">
             <img
-              src={profile.avatar_url}
+              src={profile?.avatar_url}
               className="w-28 h-28 rounded-full object-cover border-4 border-purple-500"
             />
 
             <h2 className="text-xl font-semibold mt-4">
-              {profile.display_name}
+              {profile?.display_name}
             </h2>
 
-            <p className="text-zinc-400">@{profile.username}</p>
+            <p className="text-zinc-400">@{profile?.username}</p>
 
-            <p className="mt-4 text-center text-zinc-300">{profile.bio}</p>
+            <p className="mt-4 text-center text-zinc-300">{profile?.bio}</p>
           </div>
         </div>
       </div>

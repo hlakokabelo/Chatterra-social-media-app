@@ -8,7 +8,7 @@ import CommunitiesPage from "./pages/CommunitiesPage";
 import CommunityPage from "./pages/CommunityPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import ProfilePage from "./pages/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import PublicProfilePage from "./pages/PublicProfilePage ";
@@ -44,7 +44,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
           <Route path="robot.txt" element={<>text</>} />
 
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/edit-profile" element={<EditProfilePage />} />
         </Routes>
       </div>
     </div>

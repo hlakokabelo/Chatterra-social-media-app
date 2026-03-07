@@ -53,7 +53,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
         {data?.avatar_url ? (
           <div
             onClick={() => navigate(`/u/${data.username}`)}
-            className="flex cursor-pointer border-transparent sm:w-[45%]  pb-1.5"
+            className="flex cursor-pointer hover:text-amber-200 border-transparent sm:w-[45%]  pb-1.5"
           >
             <img
               src={data?.avatar_url}

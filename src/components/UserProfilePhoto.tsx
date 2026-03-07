@@ -16,7 +16,7 @@ const UserProfilePhoto: React.FunctionComponent<IUserProfilePhotoProps> = ({
       {user && userProfile?.avatar_url && (
         <Link
           className="cursor-pointer flex"
-          to={"/profile"}
+          to={`/u/${userProfile?.username}`}
         >
           <img
             src={userProfile?.avatar_url}

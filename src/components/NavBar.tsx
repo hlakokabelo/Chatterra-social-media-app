@@ -7,7 +7,7 @@ interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, userProfile } = useAuth();
 
   const navigate = useNavigate();
   const goToUrl = (destination: string) => {
@@ -44,7 +44,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             {user && (
               <Link
                 className="text-gray-300 hover:text-white transition-colors"
-                to={"/profile"}
+                to={`/u/${userProfile?.username}`}
               >
                 Profile
               </Link>
@@ -142,7 +142,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             {user && (
               <p
                 className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-                onClick={() => goToUrl("/profile")}
+                onClick={() => goToUrl(`/u/${userProfile?.username}`)}
               >
                 Profile page
               </p>

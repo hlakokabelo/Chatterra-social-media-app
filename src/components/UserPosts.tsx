@@ -9,6 +9,17 @@ interface Props {
   userId: string;
 }
 
+const timeStamp = (post: IPost) => {
+  //posted on : 16 Sep, 18:00
+  //posted 18hrs ago
+  const stamp = formatTimeStamp(post.created_at);
+  return (
+    "posted " +
+    (stamp.includes("min") || stamp.includes("hr") ? "" : "on") +
+    " " +
+    stamp
+  );
+};
 const fetchUserPosts = async (userId: string) => {
   const { data, error } = await supabase
     .from("posts")
@@ -42,9 +53,7 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
           >
             <p className="text-white">{post.content}</p>
 
-            <p className="text-xs text-zinc-500 mt-2">
-                 posted on:  {formatTimeStamp(post.created_at)}
-            </p>
+            <p className="text-xs text-zinc-500 mt-2">{timeStamp(post)} </p>
           </div>
         </Link>
       ))}

@@ -58,7 +58,7 @@ const UserReplies: React.FC<Props> = ({ userId }) => {
             <p className="text-xs text-zinc-500 mt-2">
               Reply to: {reply.posts?.content?.slice(0, 50)}...
             </p>
-            <p className="text-xs text-zinc-500 mt-2">
+            <p className="text-xs text-zinc-400 mt-2 ">
               {formatTimeStamp(reply.created_at)}
             </p>
           </div>

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Navigate } from "react-router";
+import { Link, Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
- import imageCompression from "browser-image-compression";
+import imageCompression from "browser-image-compression";
 
-interface IProfilePageProps {}
+interface IEditProfilePageProps {}
 
 interface IUserProfile {
   bio: string;
@@ -41,7 +41,7 @@ const reFetchProfile = async (getProfile: any) => {
   getProfile();
 };
 
-const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
+const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
   const { user, userProfile, getProfile } = useAuth();
   const [editing, setEditing] = React.useState<boolean>(false);
   // const [password, setPassword] = React.useState<string>("-------");
@@ -60,23 +60,21 @@ const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     ? "mt-1 w-full px-4 py-2 bg-zinc-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
     : "mt-1 w-full px-4 py-2 border border-blue-500 rounded-lg bg-zinc-900 text-zinc-300";
 
-const handleFileChange = async (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  if (e.target.files && e.target.files[0]) {
-    const image = e.target.files[0];
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const image = e.target.files[0];
 
-    const compressed = await imageCompression(image, {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 512,
-      useWebWorker: true,
-    });
+      const compressed = await imageCompression(image, {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 512,
+        useWebWorker: true,
+      });
 
-    setProfilePic(compressed);
-  }
+      setProfilePic(compressed);
+    }
 
-  setInfoEdited(true);
-};
+    setInfoEdited(true);
+  };
   React.useEffect(() => {
     if (userProfile) {
       setDisplayName(userProfile.display_name);
@@ -222,7 +220,11 @@ const handleFileChange = async (
             )}
           </div>
 
-          <p className="mt-3 text-sm text-zinc-400">@{username}</p>
+          <Link to={`/u/${username}`}>
+            <p className="mt-3 text-sm text-zinc-400 cursor-pointer hover:text-amber-300">
+              @{username}
+            </p>
+          </Link>
         </div>
         <form className="flex flex-col gap-6" onSubmit={onSubmitForm}>
           <div>
@@ -345,4 +347,4 @@ const handleFileChange = async (
   );
 };
 
-export default ProfilePage;
+export default EditProfilePage;

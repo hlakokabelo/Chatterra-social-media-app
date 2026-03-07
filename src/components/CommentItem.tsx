@@ -110,7 +110,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
           {/**Display commenter username */}
           <span
             onClick={() => navigate("/u/" + comment?.username)}
-            className="cursor-pointer text-sm font-bold text-blue-400"
+            className="cursor-pointer text-sm font-bold text-blue-400 hover:text-yellow-500"
           >
             {comment?.username}
           </span>

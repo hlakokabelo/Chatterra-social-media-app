@@ -17,7 +17,7 @@ export default function SignUpPage() {
 
     const { error } = await signUpWithEmail(email, password);
     if (error) return setErrorMessage(String(error));
-    else navigate("/profile");
+    else navigate("/");
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,7 +27,7 @@ export default function SignUpPage() {
     const { error } = await signInWithGitHub();
 
     if (error) throw new Error(error);
-    else navigate("/profile");
+    else navigate("/");
   };
   const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ export default function SignUpPage() {
     const { error } = await signInWithGitHub();
 
     if (error) return setErrorMessage(error);
-    else navigate("/profile");
+    else navigate("/");
   };
 
   return (
