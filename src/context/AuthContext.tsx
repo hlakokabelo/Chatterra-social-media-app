@@ -28,14 +28,20 @@ interface AuthContextType {
   signOut: () => void;
   getProfile: (user: User | null | undefined) => Promise<void>;
   userProfile: IUserProfile | null;
+  feedMode: FeedMode;
 }
+
+type FeedMode = "fresh" | "rising" | "discussion";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
+  const feedModes: FeedMode[] = ["fresh", "rising", "discussion"];
 
+  const [feedMode] = useState(
+    feedModes[Math.floor(Math.random() * feedModes.length)], );
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -142,6 +148,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     user,
     signInWithGitHub,
     signOut,
+    feedMode,
     getProfile,
   };
 
