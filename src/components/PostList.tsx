@@ -37,6 +37,13 @@ const fetchPosts = async ({ pageParam, feedMode }: { pageParam: number; feedMode
       .order("like_count", { ascending: false })
       .order("created_at", { ascending: false });
   }
+  
+  if (feedMode === "rising_comments") {
+    query = query
+      .order("like_count", { ascending: false })
+      .order("created_at", { ascending: false })
+      .order("comment_count", { ascending: false })
+  }
 
   if (feedMode === "discussion") {
     query = query

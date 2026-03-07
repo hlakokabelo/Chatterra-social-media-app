@@ -31,7 +31,7 @@ interface AuthContextType {
   feedMode: FeedMode;
 }
 
-type FeedMode = "fresh" | "rising" | "discussion";
+type FeedMode = "fresh" | "rising" | "discussion"|"rising_comments";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -131,31 +131,38 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
   return (
-    <div className="flex items-center space-x-4 my-4">
-      <button
-        onClick={() => submitLike(1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
-        }`}
-      >
-        👍 {likes}
-      </button>
-      <button
-        onClick={() => submitLike(-1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
-        }`}
-      >
-        👎 {dislikes}
-      </button>
-      {user?.id === user_id && (
-        <div className="ml-5.5" onClick={deletHandle}>
-          <MdDeleteForever />
-        </div>
-      )}
+    <div>
+      <div className="flex items-center space-x-4 my-4">
+        <button
+          onClick={() => submitLike(1)}
+          className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+            userVote === 1
+              ? "bg-green-500 text-white"
+              : "bg-gray-200 text-black"
+          }`}
+        >
+          👍 {likes}
+        </button>
+        <button
+          onClick={() => submitLike(-1)}
+          className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+            userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
+          }`}
+        >
+          👎 {dislikes}
+        </button>
+
+        {user?.id === user_id && (
+          <div className="ml-5.5 cursor-pointer" onClick={deletHandle}>
+            <MdDeleteForever
+              className="text-red-500 hover:text-red-800"
+              size={25}
+            />
+          </div>
+        )}
+      </div>
       {showError && (
         <a className="text-red-600" href="/sign-in">
-          {" "}
           Log-in to like post
         </a>
       )}{" "}
