@@ -4,6 +4,7 @@ import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import { fetchCommunities, type ICommunity } from "./CommunityList";
 import { useNavigate } from "react-router";
+import { routeBuilder } from "../utils/routes";
 
 interface ICreatePostProps {}
 let postId: number = 0;
@@ -35,7 +36,7 @@ const createPost = async (post: IPostInput) => {
   }
   //upload post
   if (image_url === "") image_url = null;
-  
+
   const { imageFile: _, ...payloadVariables } = post;
   let payload = {
     ...payloadVariables,
@@ -85,7 +86,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
     mutationFn: createPost,
     onSuccess: () => {
       clearForm();
-      navigate("/post/" + postId);
+      navigate(routeBuilder.post(postId, title));
     },
   });
 

@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import imageCompression from "browser-image-compression";
+import { routeBuilder } from "../utils/routes";
 
 interface IEditProfilePageProps {}
 
@@ -220,7 +221,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
             )}
           </div>
 
-          <Link to={`/u/${username}`}>
+          <Link to={routeBuilder.user(username)}>
             <p className="mt-3 text-sm text-zinc-400 cursor-pointer hover:text-amber-300">
               @{username}
             </p>

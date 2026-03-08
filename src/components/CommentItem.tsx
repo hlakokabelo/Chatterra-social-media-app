@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { formatTimeStamp } from "../utils/formatTimeStamp.tsx";
 import { useNavigate } from "react-router";
+import { routeBuilder } from "../utils/routes.tsx";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
@@ -90,7 +91,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const isHighlighted = window.location.hash === `#comment-${comment.id}`;
 
   React.useEffect(() => {
-    //parent comment collapse is true by default so ignore 
+    //parent comment collapse is true by default so ignore
     if (comment.parent_comment_id) {
       const val = handleHashedComment(comment);
       setIsCollapsed(val);
@@ -109,7 +110,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
         <div className="flex items-center space-x-2">
           {/**Display commenter username */}
           <span
-            onClick={() => navigate("/u/" + comment?.username)}
+            onClick={() => comment?.username && navigate(routeBuilder.user(comment.username))}
             className="cursor-pointer text-sm font-bold text-blue-400 hover:text-yellow-500"
           >
             {comment?.username}

@@ -12,6 +12,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import PublicProfilePage from "./pages/PublicProfilePage ";
+import { ROUTES } from "./utils/routes";
 
 function App() {
   return (
@@ -19,32 +20,32 @@ function App() {
       <NavBar />
       <div className="container mx-auto px-4 py-6">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path={ROUTES.HOME} element={<Home />} />
 
-          {/*Register */}
+          {/* Register */}
           <Route element={<PrivateRoutes />}>
-            <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/sign-up" element={<SignUpPage />} />
+            <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
+            <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
           </Route>
 
-          {/*Communities */}
-          <Route path="/community/:id" element={<CommunityPage />} />
-          <Route path="/community/create" element={<CreateCommunityPage />} />
-          <Route path="/communities" element={<CommunitiesPage />} />
+          {/* Communities */}
+          <Route path="/community/:id/:slug?" element={<CommunityPage />} />
 
-          {/*Posts*/}
-          <Route path="/post/:id" element={<PostPage />} />
-          <Route path="/create" element={<CreatePostPage />} />
-
-          {/*User Info*/}
+          <Route
+            path={ROUTES.CREATE_COMMUNITY}
+            element={<CreateCommunityPage />}
+          />
+          <Route path={ROUTES.COMMUNITIES} element={<CommunitiesPage />} />
+          {/* Posts */}
+          <Route path="/post/:id/:slug?" element={<PostPage />} />
+          <Route path={ROUTES.CREATE_POST} element={<CreatePostPage />} />
+          {/* User Info */}
           <Route path="/user/:username" element={<PublicProfilePage />} />
           <Route path="/u/:username" element={<PublicProfilePage />} />
-
-          {/* Catch-all route */}
+          {/* Catch-all */}
           <Route path="*" element={<PageNotFound />} />
-          <Route path="robot.txt" element={<>text</>} />
-
-          <Route path="/edit-profile" element={<EditProfilePage />} />
+          <Route path="robots.txt" element={<>text</>} />
+          <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
         </Routes>
       </div>
     </div>

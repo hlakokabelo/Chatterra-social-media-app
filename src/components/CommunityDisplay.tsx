@@ -6,9 +6,11 @@ import PostItem from "./PostItem";
 import PostNotFoud from "../pages/PageNotFound";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
+import { routeBuilder, slugify } from "../utils/routes";
 
 interface ICommunityDisplayProps {
   communityId: number;
+  slug: string | undefined;
 }
 
 interface ICommunity {
@@ -53,12 +55,13 @@ export const fetchCommunityPost = async (
   });
 
   if (error) throw new Error(error.message);
-  console.log({meta:data});
+  console.log({ meta: data });
 
   return data as PostWithCommunity[];
 };
 const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   communityId,
+  slug,
 }) => {
   const navigate = useNavigate();
   const { data: CommunityData, error: CommunityError } = useQuery<
@@ -77,6 +80,17 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   if (isLoading)
     return <div className="text-center py-4">Loading communities...</div>;
   if (CommunityError) return <PostNotFoud title="Community" />;
+
+  if (CommunityData && !isLoading) {
+    const correctSlug = slugify(CommunityData.name);
+
+    if (slug !== correctSlug) {
+      navigate(routeBuilder.community(communityId) + `/${correctSlug}`, {
+        replace: true,
+      });
+    }
+  }
+
   return (
     <div className="grid justify-evenly gap-y-[4rem]">
       <div className="border w-full p-2.5 rounded-3xl  border-amber-200 bg-gradient-to-r from-gray-200 to-pink-500 bg-clip-text text-transparent">
@@ -89,7 +103,10 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
         <p className="text-cyan-600">
           created by{" "}
           <span
-            onClick={() => navigate("/u/" + CommunityData?.creator.username)}
+            onClick={() =>
+              CommunityData?.creator.username &&
+              navigate(routeBuilder.user(CommunityData?.creator.username))
+            }
             className="cursor-pointer text-blue-800"
           >
             {CommunityData?.creator.username}

@@ -4,6 +4,7 @@ import { supabase } from "../supabase-client";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
 import type { IPost } from "./PostList";
+import { routeBuilder } from "../utils/routes";
 
 interface Props {
   userId: string;
@@ -46,7 +47,7 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {data.map((post: IPost) => (
-        <Link to={`/post/${post.id}`}>
+        <Link to={routeBuilder.post(post.id,post.title)}>
           <div
             key={post.id}
             className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 cursor-pointer hover:border-amber-300 "

@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 interface IPostListProps {}
 
 export interface IPost {
-  id: string;
+  id: number;
   title: string;
   content: string;
   image_url: string;

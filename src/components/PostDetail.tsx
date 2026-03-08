@@ -5,20 +5,23 @@ import { supabase } from "../supabase-client";
 import LikeButton from "./LikeButton";
 import CommentSection from "./CommentSection";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Loading from "./Loading";
 import { FaUser } from "react-icons/fa";
 import PostNotFoud from "../pages/PageNotFound";
+import { routeBuilder, ROUTES, slugify } from "../utils/routes";
 
 interface IPostDetailProps {
   postId: number;
+  slug: string | undefined;
 }
+
 const fetchPostById = async (id: number): Promise<IPost> => {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
   if (error) throw new Error(error.message);
 
@@ -32,13 +35,16 @@ const fetchPostById = async (id: number): Promise<IPost> => {
   data.username = profileData.username;
   return data as IPost;
 };
-const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
+const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
+  postId,
+  slug,
+}) => {
   const navigate = useNavigate();
 
   if (isNaN(postId)) {
-    navigate("/");
+    navigate(ROUTES.HOME);
   }
-  const { data, error, isLoading } = useQuery<IPost, Error>({
+  const { data, error, isLoading, isSuccess } = useQuery<IPost, Error>({
     queryKey: ["post", postId],
     queryFn: () => fetchPostById(postId),
   });
@@ -47,12 +53,23 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({ postId }) => {
 
   if (error) return <PostNotFoud title="Post" />;
 
+  if (isSuccess)
+    if (data) {
+      const correctSlug = slugify(data.title);
+
+      if (slug !== correctSlug) {
+        navigate(routeBuilder.post(postId) + `/${correctSlug}`, {
+          replace: true,
+        });
+      }
+    }
+
   return (
     <div className="space-y-6">
       <div className="lg:ml-[56vh] md:flex flex-col justify-center">
         {data?.avatar_url ? (
           <div
-            onClick={() => navigate(`/u/${data.username}`)}
+            onClick={() => navigate(routeBuilder.user(data.username))}
             className="flex cursor-pointer hover:text-amber-200 border-transparent sm:w-[45%]  pb-1.5"
           >
             <img

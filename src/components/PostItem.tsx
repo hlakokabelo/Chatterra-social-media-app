@@ -3,6 +3,7 @@ import type { IPost } from "./PostList";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
 import { FaUser } from "react-icons/fa";
+import { routeBuilder } from "../utils/routes";
 
 interface IPostItemProps {
   post: IPost;
@@ -25,7 +26,7 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
               <FaUser className="w-[35px] h-[25px]" />
             </div>
           )}
-          <Link to={`/u/${post.username}`}>
+          <Link to={routeBuilder.user(post.username)}>
             <div className="flex flex-col flex-1">
               <div className="text-[20px] leading-[22px] font-semibold mt-2 mb-4 ml-3">
                 <p className="text-amber-300 text-1 hover:text-amber-500">
@@ -35,7 +36,7 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
             </div>
           </Link>
         </div>
-        <Link to={`/post/${post.id}`} className="block relative z-10">
+        <Link to={routeBuilder.post(post.id,post.title)} className="block relative z-10">
           {/* Image Banner */}
           {post.image_url && (
             <div className="mt-2 flex-1">

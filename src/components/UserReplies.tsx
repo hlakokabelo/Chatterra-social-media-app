@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
 import type { IComment } from "./CommentSection";
 import type { IPost } from "./PostList";
+import { routeBuilder } from "../utils/routes";
 
 interface Props {
   userId: string;
@@ -48,7 +49,7 @@ const UserReplies: React.FC<Props> = ({ userId }) => {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {data.map((reply: ICommentReply) => (
-        <Link to={`/post/${reply.posts.id}#${"comment-" + reply.id}`}>
+        <Link to={routeBuilder.hashComment(reply.posts.id, reply.id)}>
           <div
             key={reply.id}
             className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 cursor-pointer hover:border-blue-600 "

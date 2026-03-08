@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useNavigate } from "react-router";
+import { ROUTES } from "../utils/routes";
 
 interface IPostNotFoudProps {
   title?: string;
 }
 
-const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({ title="Page" }) => {
+const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({
+  title = "Page",
+}) => {
   const navigate = useNavigate();
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-6">
@@ -23,7 +26,7 @@ const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({ title="Page" 
         </p>
 
         <p
-          onClick={() => navigate("/")}
+          onClick={() => navigate(ROUTES.HOME)}
           className="cursor-pointer inline-block bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition"
         >
           Back to feed

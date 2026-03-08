@@ -5,11 +5,11 @@ import CommunityDisplay from "../components/CommunityDisplay";
 interface ICommunityPageProps {}
 
 const CommunityPage: React.FunctionComponent<ICommunityPageProps> = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id ,slug} = useParams<{ id: string,slug?:string }>();
   return (
     <div className="grid justify-evenly gap-y-[4rem]">
     
-      <CommunityDisplay communityId={Number(id)} />
+      <CommunityDisplay communityId={Number(id)} slug={slug} />
     </div>
   );
 };

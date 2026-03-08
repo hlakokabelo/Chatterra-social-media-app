@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import UserProfilePhoto from "./UserProfilePhoto";
 import image from "../assets/icon3.svg";
+import { routeBuilder, ROUTES } from "../utils/routes";
 interface INavBarProps {}
 
 const NavBar: React.FunctionComponent<INavBarProps> = () => {
@@ -22,13 +23,13 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
       return;
     }
 
-    goToUrl("/sign-in");
+    goToUrl(ROUTES.SIGN_IN);
   };
   return (
     <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-lg border-b border-white/10 shadow-lg">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className=" mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex font-mono text-xl font-bold text-white">
+          <Link to={ROUTES.HOME} className="flex font-mono text-xl font-bold text-white">
             <img className="w-[25px] mr-2" src={image} alt="" />
             Chatterra
           </Link>
@@ -37,33 +38,25 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               className="text-gray-300 hover:text-white transition-colors"
-              to={"/"}
+              to={ROUTES.HOME}
             >
               Home
             </Link>
-            {user && (
-              <Link
-                className="text-gray-300 hover:text-white transition-colors"
-                to={`/u/${userProfile?.username}`}
-              >
-                Profile
-              </Link>
-            )}
             <Link
               className="text-gray-300 hover:text-white transition-colors"
-              to={"/create"}
+              to={ROUTES.CREATE_POST}
             >
               Create Post
             </Link>
             <Link
               className="text-gray-300 hover:text-white transition-colors"
-              to={"/communities"}
+              to={ROUTES.COMMUNITIES}
             >
               Communities
             </Link>
             <Link
               className="text-gray-300 hover:text-white transition-colors"
-              to={"/community/create"}
+              to={ROUTES.CREATE_COMMUNITY}
             >
               Create comunity
             </Link>
@@ -83,7 +76,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
               </div>
             ) : (
               <button
-                onClick={() => navigate("/sign-in")}
+                onClick={() => navigate(ROUTES.SIGN_IN)}
                 className=" cursor-pointer bg-blue-500 px-3 py-1 rounded"
               >
                 Sign in
@@ -142,32 +135,32 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
             {user && (
               <p
                 className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-                onClick={() => goToUrl(`/u/${userProfile?.username}`)}
+                onClick={() => goToUrl(routeBuilder.user(userProfile?.username))}
               >
                 Profile page
               </p>
             )}
             <p
               className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => goToUrl("/")}
+              onClick={() => goToUrl(ROUTES.HOME)}
             >
               Home
             </p>
             <p
               className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => goToUrl("/create")}
+              onClick={() => goToUrl(ROUTES.CREATE_POST)}
             >
               Create Post
             </p>
             <p
               className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => goToUrl("/communities")}
+              onClick={() => goToUrl(ROUTES.COMMUNITIES)}
             >
               Communities
             </p>
             <p
               className=" cursor-pointer block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => goToUrl("/community/create")}
+              onClick={() => goToUrl(ROUTES.CREATE_COMMUNITY)}
             >
               Create comunity
             </p>

@@ -3,6 +3,7 @@ import * as React from "react";
 import { supabase } from "../supabase-client";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { ROUTES } from "../utils/routes";
 
 interface ICreateCommunityProps {}
 
@@ -30,7 +31,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
     mutationFn: createCommunity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
-      navigate("/communities");
+      navigate(ROUTES.COMMUNITIES);
     },
   });
 

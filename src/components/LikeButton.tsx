@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import Loading from "./Loading";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router";
+import { ROUTES } from "../utils/routes";
 
 interface ILikeButtonProps {
   postId: number;
@@ -95,7 +96,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
       return deletePost(postId);
     },
     onSuccess: () => {
-      navigate("/");
+      navigate(ROUTES.HOME);
     },
   });
 
@@ -162,7 +163,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
         )}
       </div>
       {showError && (
-        <a className="text-red-600" href="/sign-in">
+        <a className="text-red-600" href={ROUTES.SIGN_IN}>
           Log-in to like post
         </a>
       )}{" "}

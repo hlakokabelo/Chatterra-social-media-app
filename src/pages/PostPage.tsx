@@ -5,11 +5,11 @@ import { useParams } from "react-router";
 interface IPostPageProps {}
 
 const PostPage: React.FunctionComponent<IPostPageProps> = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id: string; slug?: string }>();
 
   return (
     <div>
-      <PostDetail postId={Number(id)} />
+      <PostDetail postId={Number(id)} slug={slug} />
     </div>
   );
 };

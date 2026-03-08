@@ -6,6 +6,7 @@ import UserReplies from "../components/UserReplies";
 import UserLikes from "../components/UserLikes";
 import { MdEdit } from "react-icons/md";
 import { useAuth, type IUserProfile } from "../context/AuthContext";
+import { ROUTES } from "../utils/routes";
 const PublicProfilePage = () => {
   const { username } = useParams();
   const [profile, setProfile] = React.useState<IUserProfile | null>(null);
@@ -73,7 +74,7 @@ const PublicProfilePage = () => {
       <div className="flex justify-center mt-12">
         <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl max-w-md w-full">
           {user?.id === profile?.id && (
-            <Link to={"/edit-profile"}>
+            <Link to={ROUTES.EDIT_PROFILE}>
               <div className="w-full flex justify-end relative">
                 <p className="hover:text-green-400 cursor-pointer w-fit">
                   <MdEdit size={25} />

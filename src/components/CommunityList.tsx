@@ -2,6 +2,7 @@ import * as React from "react";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
+import { routeBuilder } from "../utils/routes";
 
 interface ICommunityListProps {}
 export interface ICommunity {
@@ -39,7 +40,7 @@ const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
           className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
         >
           <Link
-            to={`/community/${community.id}`}
+            to={routeBuilder.community(community.id,community.name)}
             className="text-2xl font-bold text-purple-500 hover:underline"
           >
             {community.name}

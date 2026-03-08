@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { ROUTES } from "../utils/routes";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
@@ -16,7 +17,7 @@ export default function SignInPage() {
 
     const { error } = await signInWithEmail(email, password);
     if (error) return setErrorMessage(error);
-    navigate("/");
+    navigate(ROUTES.HOME);
   };
 
   const signUpWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,7 +25,7 @@ export default function SignInPage() {
     const { error } = await signInWithGoogle();
 
     if (error) return setErrorMessage(error);
-    navigate("/");
+    navigate(ROUTES.HOME);
   };
   const signUpWithGitHub = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -32,7 +33,7 @@ export default function SignInPage() {
     const { error } = await signInWithGitHub();
 
     if (error) return setErrorMessage(error);
-    navigate("/");
+    navigate(ROUTES.HOME);
   };
   return (
     <div className="flex mt-[40%] sm:mt-0 md:mt-0 lg:mt-0 items-center justify-center">
@@ -94,7 +95,7 @@ export default function SignInPage() {
         <div className="text-sm text-zinc-400 mt-6 text-center">
           Don’t have an account?{" "}
           <div
-            onClick={() => navigate("/sign-up")}
+            onClick={() => navigate(ROUTES.SIGN_UP)}
             className="cursor-pointer text-indigo-400 hover:text-indigo-300"
           >
             Sign up
