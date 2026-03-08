@@ -92,7 +92,6 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
   }, [hasNextPage]);
 
   const posts: IPost[] | undefined = data?.pages.flat();
-  console.log(posts);
   return (
     <div className="grid justify-evenly">
       {posts?.map((post, key) => (

@@ -86,7 +86,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
 
   const { mutate } = useMutation({
     mutationFn: (profile: IUserProfile) => {
-      console.log(profilePic);
       return upDateProfile(profile, userProfile?.id, profilePic);
     },
     onSuccess: () => reFetchProfile(getProfile),
@@ -139,7 +138,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
       display_name,
     };
 
-    console.log(profile);
     mutate(profile);
 
     setEditing((prev) => !prev);

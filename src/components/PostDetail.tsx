@@ -24,7 +24,6 @@ const fetchPostById = async (id: number): Promise<IPostCommunity> => {
   });
   if (error) throw new Error(error.message);
 
-  console.log(data[0]);
   return data[0] as IPostCommunity;
 };
 const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
@@ -49,10 +48,12 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
 
   if (isSuccess)
     if (data) {
+      const hash = window.location.hash;
+
       const correctSlug = slugify(data.title);
 
       if (slug !== correctSlug) {
-        navigate(routeBuilder.post(postId) + `/${correctSlug}`, {
+        navigate(routeBuilder.post(postId) + `/${correctSlug}${hash}`, {
           replace: true,
         });
       }

@@ -55,7 +55,6 @@ export const fetchCommunityPost = async (
   });
 
   if (error) throw new Error(error.message);
-  console.log({ meta: data });
 
   return data as PostWithCommunity[];
 };

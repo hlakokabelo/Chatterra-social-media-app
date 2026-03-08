@@ -26,7 +26,6 @@ const fetchUserPosts = async (userId: string) => {
     .rpc("get_posts_with_user_id", { p_user_id: userId })
     .order("created_at", { ascending: false });
 
-  console.log(data);
 
   if (error) throw new Error(error.message);
 
@@ -47,15 +46,15 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {data.map((post: IPost & { community_id: number }) => (
-        <Link to={routeBuilder.post(post.id, post.title)}>
-          <div
-            key={post.id}
-            className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 cursor-pointer hover:border-amber-300 "
-          >
-            <p className="text-white">{post.title}</p>
-
+        <div
+          key={post.id}
+          className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-amber-300 "
+        >
+          <Link to={routeBuilder.post(post.id, post.title)}>
+            <p className="text-shadow-amber-200 hover:text-blue-300">{post.title}</p>
+          </Link>
           <div className="w-fit">
-              <Link
+            <Link
               to={routeBuilder.community(
                 post.community_id,
                 post.community_name,
@@ -66,9 +65,8 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
               </p>
             </Link>
           </div>
-            <p className="text-xs text-zinc-500 mt-2">{timeStamp(post)} </p>
-          </div>
-        </Link>
+          <p className="text-xs text-zinc-500 mt-2">{timeStamp(post)} </p>
+        </div>
       ))}
     </div>
   );
