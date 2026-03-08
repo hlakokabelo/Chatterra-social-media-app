@@ -22,7 +22,7 @@ const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({
         </h2>
 
         <p className="text-gray-200 dark:text-gray-400 mb-6">
-          Either it was deleted, never existed
+          Either it was deleted or it never existed
         </p>
 
         <p

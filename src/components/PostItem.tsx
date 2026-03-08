@@ -6,37 +6,62 @@ import { FaUser } from "react-icons/fa";
 import { routeBuilder } from "../utils/routes";
 
 interface IPostItemProps {
-  post: IPost;
+  post: IPost & { community_name?: string; community_id?: number };
+  calledByCommunityComponent?: boolean; //ensures the community name is displayed when called by postList
 }
 
-const PostItem: React.FunctionComponent<IPostItemProps> = ({ post }) => {
+const PostItem: React.FunctionComponent<IPostItemProps> = ({
+  post,
+  calledByCommunityComponent = false,
+}) => {
   return (
     <div className=" mb-6  sm:max-w-[35rem] relative group">
       <div className=" bg-[rgb(24,27,32)] border border-[rgb(84,90,106)] rounded-[20px] text-white flex flex-col p-5 overflow-hidden transition-colors duration-300">
         {/* Header: Avatar and Title */}
         <div className="flex items-center space-x-2">
           {post.avatar_url ? (
-            <img
-              src={post.avatar_url}
-              alt="User Avatar"
-              className="w-[35px] h-[35px] rounded-full object-cover"
-            />
+            <Link
+              className="cursor-pointer"
+              to={routeBuilder.user(post.username)}
+            >
+              <img
+                src={post.avatar_url}
+                alt="User Avatar"
+                className="w-[50px] rounded-full object-cover"
+              />
+            </Link>
           ) : (
             <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]">
               <FaUser className="w-[35px] h-[25px]" />
             </div>
           )}
-          <Link to={routeBuilder.user(post.username)}>
-            <div className="flex flex-col flex-1">
-              <div className="text-[20px] leading-[22px] font-semibold mt-2 mb-4 ml-3">
+          <div className="flex flex-col flex-1">
+            <div className="text-[20px] leading-[22px] font-semibold mt-2 mb-4 ml-3">
+              <Link to={routeBuilder.user(post.username)}>
                 <p className="text-amber-300 text-1 hover:text-amber-500">
                   {post.username}
                 </p>
-              </div>
+              </Link>
+
+              {!calledByCommunityComponent && post?.community_id && (
+                <Link
+                  to={routeBuilder.community(
+                    post?.community_id,
+                    post.community_name,
+                  )}
+                >
+                  <p className="text-[13px] hover:text-blue-400">
+                    c/{post.community_name}
+                  </p>
+                </Link>
+              )}
             </div>
-          </Link>
+          </div>
         </div>
-        <Link to={routeBuilder.post(post.id,post.title)} className="block relative z-10">
+        <Link
+          to={routeBuilder.post(post.id, post.title)}
+          className="block relative z-10"
+        >
           {/* Image Banner */}
           {post.image_url && (
             <div className="mt-2 flex-1">

@@ -116,7 +116,11 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
       {data && data.length > 0 ? (
         <div className="">
           {data.map((post) => (
-            <PostItem key={post.id} post={post} />
+            <PostItem
+              key={post.id}
+              post={post}
+              calledByCommunityComponent={true}
+            />
           ))}
         </div>
       ) : (
