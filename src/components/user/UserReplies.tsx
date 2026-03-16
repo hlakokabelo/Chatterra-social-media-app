@@ -1,11 +1,11 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import { Link } from "react-router";
-import { formatTimeStamp } from "../utils/formatTimeStamp";
-import type { IComment } from "./CommentSection";
-import type { IPost } from "./PostList";
-import { routeBuilder } from "../utils/routes";
+import { formatTimeStamp } from "../../utils/formatTimeStamp";
+import type { IComment } from "../postsProperties/CommentSection";
+import type { IPost } from "../posts/PostList";
+import { routeBuilder } from "../../utils/routes";
 
 interface Props {
   userId: string;
@@ -49,21 +49,20 @@ const UserReplies: React.FC<Props> = ({ userId }) => {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {data.map((reply: ICommentReply) => (
-        <Link to={routeBuilder.hashComment(reply.posts.id, reply.id)}>
-          <div
-            key={reply.id}
-            className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 cursor-pointer hover:border-blue-600 "
-          >
-            <p className="text-white">{reply.content}</p>
+        <div key={reply.id}>
+          <Link to={routeBuilder.hashComment(reply.posts.id, reply.id)}>
+            <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 cursor-pointer hover:border-blue-600 ">
+              <p className="text-white">{reply.content}</p>
 
-            <p className="text-xs text-zinc-500 mt-2">
-              Reply to: {reply.posts?.content?.slice(0, 50)}...
-            </p>
-            <p className="text-xs text-zinc-400 mt-2 ">
-              {formatTimeStamp(reply.created_at)}
-            </p>
-          </div>
-        </Link>
+              <p className="text-xs text-zinc-500 mt-2">
+                Reply to: {reply.posts?.content?.slice(0, 50)}...
+              </p>
+              <p className="text-xs text-zinc-400 mt-2 ">
+                {formatTimeStamp(reply.created_at)}
+              </p>
+            </div>
+          </Link>
+        </div>
       ))}
     </div>
   );

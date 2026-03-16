@@ -1,11 +1,11 @@
 import * as React from "react";
 import type { IComment } from "./CommentSection";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
-import { formatTimeStamp } from "../utils/formatTimeStamp.tsx";
+import { supabase } from "../../supabase-client.ts";
+import { formatTimeStamp } from "../../utils/formatTimeStamp.tsx";
 import { useNavigate } from "react-router";
-import { routeBuilder } from "../utils/routes.tsx";
+import { routeBuilder } from "../../utils/routes.tsx";
 
 type ICommentChild = IComment & { children?: IComment[] };
 

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { routeBuilder } from "../utils/routes";
+import { routeBuilder } from "../../utils/routes";
 
 interface ICommunityListProps {}
 export interface ICommunity {
@@ -31,22 +31,27 @@ const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
   if (isLoading) return <div>Loading communities...</div>;
 
   if (error) return <div>Error: {error.message}</div>;
-
   return (
-    <div className="max-w-5xl mx-auto space-y-4">
+    <div className="max-w-5xl mx-auto px-4 space-y-4">
       {data?.map((community) => (
-        <div
-          key={community.id}
-          className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
-        >
-          <Link
-            to={routeBuilder.community(community.id,community.name)}
-            className="text-2xl font-bold text-purple-500 hover:underline"
+        <Link to={routeBuilder.community(community.id, community.name)}>
+          <div
+            key={community.id}
+            className="p-5 m-4 rounded-xl border border-slate-700 bg-slate-900/60
+        hover:bg-slate-900/80 hover:-translate-y-0.5
+        transition-all duration-200"
           >
-            {community.name}
-          </Link>
-          <p className="text-gray-400 mt-2">{community.description}</p>
-        </div>
+            <div className="text-xl font-semibold text-slate-200 hover:text-slate-100">
+              {community.name}
+            </div>
+
+            {community.description && (
+              <div className="text-slate-400 mt-2 text-sm leading-relaxed">
+                {community.description}
+              </div>
+            )}
+          </div>
+        </Link>
       ))}
     </div>
   );

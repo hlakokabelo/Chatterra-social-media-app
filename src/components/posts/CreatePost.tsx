@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../supabase-client";
-import { useAuth } from "../context/AuthContext";
-import { fetchCommunities, type ICommunity } from "./CommunityList";
+import { supabase } from "../../supabase-client";
+import { useAuth } from "../../context/AuthContext";
+import { fetchCommunities, type ICommunity } from "../community/CommunityList";
 import { useNavigate } from "react-router";
-import { routeBuilder } from "../utils/routes";
+import { routeBuilder } from "../../utils/routes";
 
 interface ICreatePostProps {}
 let postId: number = 0;
@@ -110,13 +110,22 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
     });
   };
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-      <p className="text-center text-red-500">{errorMessage}</p>
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-2xl mx-auto space-y-1 p-8 rounded-2xl 
+  bg-slate-900/60 backdrop-blur-md border border-white/10 shadow-xl"
+    >
+      <h2 className="text-4xl  font-bold mb-3 text-center bg-linear-to-r text-slate-200">
+        Create New Post
+      </h2>
+      <p className="text-center text-red-400">{errorMessage}</p>
 
-      <div>
-        <label htmlFor="title" className="block mb-2 font-medium">
+      {/* Title */}
+      <div className="space-y-2">
+        <label htmlFor="title" className="block font-medium text-gray-200">
           Title
-        </label>{" "}
+        </label>
+
         <input
           type="text"
           value={title}
@@ -124,65 +133,88 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           id="title"
           required
           maxLength={20}
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
+      focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
           onChange={(e) => setTitle(e.target.value)}
-        />{" "}
+        />
       </div>
-      <div>
-        <label htmlFor="content" className="block mb-2 font-medium">
+
+      {/* Content */}
+      <div className="space-y-2">
+        <label htmlFor="content" className="block font-medium text-gray-200">
           Content
         </label>
+
         <textarea
           id="content"
           rows={5}
           disabled={!user}
           value={content}
           required
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
+      focus:outline-none focus:ring-2 focus:ring-purple-500 transition resize-none"
           onChange={(e) => setContent(e.target.value)}
-        />{" "}
-        <div>
-          <select
-            disabled={!user}
-            className="w-[14rem] px-4 py-2 text-center rounded-xl border border-gray-300 
-       text-gray-800 
-         focus:outline-none mb-2.5 mt-2.5  focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-         transition duration-200 ease-in-out
-         shadow-sm"
-            id="community"
-            onChange={handleCommunityChange}
-          >
-            <option className="" value={""}>
-              {" "}
-              Choose a Community{" "}
-            </option>
+        />
+      </div>
 
-            {communities?.map((community, key) => (
-              <option className="min-w-[4px]" key={key} value={community.id}>
-                {community.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <label className="block mb-2 font-medium" htmlFor="image">
-          Upload image
+      {/* Community */}
+      <div className="space-y-2">
+        <label className="block font-medium text-gray-200">Community</label>
+
+        <select
+          disabled={!user}
+          className="w-full text-center rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
+      focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          id="community"
+          onChange={handleCommunityChange}
+        >
+          <option value="text-black">Choose a Community</option>
+
+          {communities?.map((community, key) => (
+            <option
+              className="text-black text-start"
+              key={key}
+              value={community.id}
+            >
+              {community.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Image Upload */}
+      <div className="space-y-2">
+        <label className="block font-medium text-gray-200" htmlFor="image">
+          Upload Image
         </label>
+
         <input
           id="image"
           disabled={!user}
           type="file"
           accept="image/*"
-          className="w-full border border-white/10 bg-transparent p-2 rounded"
+          className="w-full rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
+      file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+      file:bg-cyan-700 file:text-white hover:file:bg-cyan-500
+      transition"
           onChange={handleFileChange}
         />
       </div>
+
+      {/* Button */}
       <button
-        className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer"
+        className="w-full py-3 mt-2 rounded-lg font-semibold text-white 
+    bg-cyan-700
+    hover:scale-[1.02] active:scale-[0.98] 
+    transition-transform shadow-lg"
         type="submit"
       >
-        {isPending ? "Creating" : "Create Post"}
+        {isPending ? "Creating..." : "Create Post"}
       </button>
-      {isError && <p className="text-red-500">Error creating post</p>}
+
+      {isError && (
+        <p className="text-center text-red-400">Error creating post</p>
+      )}
     </form>
   );
 };

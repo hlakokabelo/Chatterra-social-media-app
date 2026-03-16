@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import PostItem from "./PostItem";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface IPostListProps {}
 
@@ -93,14 +93,16 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
 
   const posts: IPost[] | undefined = data?.pages.flat();
   return (
-    <div className="grid justify-evenly">
-      {posts?.map((post, key) => (
-        <PostItem post={post} key={key} />
+    <div className="md:flex md:flex-col md:items-center">
+      {posts?.map((post) => (
+        <PostItem post={post} key={post.id} />
       ))}
+
       <div ref={loadMoreRef}></div>
+
       {isFetchingNextPage && (
-        <div className="flex justify-center items-center">
-          <div className="h-10 w-10  animate-spin rounded-full border-4 border-gray-700 border-t-blue-500"></div>
+        <div className="flex justify-center py-6">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-700 border-t-slate-400"></div>
         </div>
       )}
     </div>

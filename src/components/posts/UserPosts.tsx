@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import { Link } from "react-router";
-import { formatTimeStamp } from "../utils/formatTimeStamp";
+import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import type { IPost } from "./PostList";
-import { routeBuilder } from "../utils/routes";
+import { routeBuilder } from "../../utils/routes";
 
 interface Props {
   userId: string;
@@ -25,7 +25,6 @@ const fetchUserPosts = async (userId: string) => {
   const { data, error } = await supabase
     .rpc("get_posts_with_user_id", { p_user_id: userId })
     .order("created_at", { ascending: false });
-
 
   if (error) throw new Error(error.message);
 
@@ -51,19 +50,23 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
           className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-amber-300 "
         >
           <Link to={routeBuilder.post(post.id, post.title)}>
-            <p className="text-shadow-amber-200 hover:text-blue-300">{post.title}</p>
+            <p className="text-shadow-amber-200 hover:text-blue-300">
+              {post.title}
+            </p>
           </Link>
           <div className="w-fit">
-            <Link
-              to={routeBuilder.community(
-                post.community_id,
-                post.community_name,
-              )}
-            >
-              <p className="text-blue-300 w-fit hover:text-blue-600">
-                c/{post.community_name}
-              </p>
-            </Link>
+            {post.community_id && (
+              <Link
+                to={routeBuilder.community(
+                  post.community_id,
+                  post.community_name,
+                )}
+              >
+                <p className="text-blue-300 w-fit hover:text-blue-600">
+                  c/{post.community_name}
+                </p>
+              </Link>
+            )}
           </div>
           <p className="text-xs text-zinc-500 mt-2">{timeStamp(post)} </p>
         </div>

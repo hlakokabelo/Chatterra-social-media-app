@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
-import { ROUTES } from "../utils/routes";
+import { ROUTES } from "../../utils/routes";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");

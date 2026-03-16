@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import CommentItem from "./CommentItem";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 interface ICommentSectionProps {
   postId: number;
@@ -143,40 +143,62 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   }
 
   const commentTree = comments ? buildCommentTree(comments) : [];
-  return (
-    <div className="mt-6">
-      <h3 className="text-2xl font-semibold mb-4">Comments</h3>
-      {user ? (
-        <form className="mb-4" onSubmit={handleSubmit}>
-          <textarea
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
-            rows={3}
-            value={newComentText}
-            placeholder="write comment..."
-            onChange={(e) => setNewCommentText(e.target.value)}
-          />
+ return (
+  <div className="mt-10 border-t border-slate-800 pt-8">
+
+    {/* Header */}
+    <h3 className="text-xl font-semibold text-slate-200 mb-6">
+      Comments
+    </h3>
+
+    {/* Comment Form */}
+    {user ? (
+      <form
+        className="mb-6 p-4 rounded-xl border border-slate-700 bg-slate-900/60"
+        onSubmit={handleSubmit}
+      >
+        <textarea
+          className="w-full rounded-lg bg-slate-800 border border-slate-700
+          px-3 py-2 text-slate-200 placeholder-slate-500
+          focus:outline-none focus:ring-1 focus:ring-slate-500
+          resize-none"
+          rows={3}
+          value={newComentText}
+          placeholder="Write a comment..."
+          onChange={(e) => setNewCommentText(e.target.value)}
+        />
+
+        <div className="flex justify-end mt-3">
           <button
-            className="mt-2 bg-purple-500 text-white px-4 py-2 rounded cursor-pointer"
+            className="px-4 py-2 rounded-lg text-sm font-medium
+            bg-slate-700 text-slate-100 hover:bg-slate-600
+            transition"
             type="submit"
           >
-            {isPending ? "Posting" : "Post Comment"}
+            {isPending ? "Posting..." : "Post Comment"}
           </button>
-          {isError && (
-            <p className="text-red-500 mt-2">Error posting comment.</p>
-          )}
-        </form>
-      ) : (
-        <p className="mb-4 text-gray-600">Log in to comment</p>
-      )}
+        </div>
 
-      {/* Comments Display Section */}
-      <div className="space-y-4">
-        {commentTree.map((comment_, key) => (
-          <CommentItem key={key} comment={comment_} postId={postId} />
-        ))}
-      </div>
+        {isError && (
+          <p className="text-rose-400 text-sm mt-2">
+            Error posting comment.
+          </p>
+        )}
+      </form>
+    ) : (
+      <p className="mb-6 text-slate-400 text-sm">
+        Log in to join the discussion
+      </p>
+    )}
+
+    {/* Comment List */}
+    <div className="space-y-5">
+      {commentTree.map((comment_, key) => (
+        <CommentItem key={key} comment={comment_} postId={postId} />
+      ))}
     </div>
-  );
-};
+
+  </div>
+);};
 
 export default CommentSection;

@@ -58,8 +58,8 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
   const [availableUsername, setAvailableUsername] = React.useState<string>("");
 
   const inputStyle = editing
-    ? "mt-1 w-full px-4 py-2 bg-zinc-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-    : "mt-1 w-full px-4 py-2 border border-blue-500 rounded-lg bg-zinc-900 text-zinc-300";
+    ? "mt-1 w-full px-4 py-2 bg-slate-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+    : "mt-1 w-full px-4 py-2 border border-slate-500 rounded-lg bg-slate-700 text-slate-300";
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -192,7 +192,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-lg w-full bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
+      <div className="max-w-2xl w-full bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
         {" "}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
@@ -220,7 +220,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
           </div>
 
           <Link to={routeBuilder.user(username)}>
-            <p className="mt-3 text-sm text-zinc-400 cursor-pointer hover:text-amber-300">
+            <p className="mt-3 text-sm text-slate-400 cursor-pointer hover:text-amber-300">
               @{username}
             </p>
           </Link>
@@ -228,12 +228,12 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
         <form className="flex flex-col gap-6" onSubmit={onSubmitForm}>
           <div>
             <div>
-              <label className="text-sm text-zinc-400" htmlFor="username">
+              <label className="text-sm text-slate-400" htmlFor="username">
                 username:
               </label>
               <input
                 disabled={!editing}
-                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-zinc-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : "border border-blue-500 rounded-2xl"}`}
+                className={`mt-1 w-full px-4 py-2 ${editing ? "bg-slate-800 text-white border border-white/10 rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500" : " bg-slate-700 border border-slate-500 rounded-2xl"}`}
                 type="text"
                 id="username"
                 value={username}
@@ -256,7 +256,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
             </div>
 
             <div>
-              <label className="text-sm text-zinc-400" htmlFor="display_name">
+              <label className="text-sm text-slate-400" htmlFor="display_name">
                 Display name:
               </label>
               <input
@@ -270,7 +270,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
             </div>
 
             <div>
-              <label className="text-sm text-zinc-400" htmlFor="bio">
+              <label className="text-sm text-slate-400" htmlFor="bio">
                 bio
               </label>
               <textarea
@@ -295,7 +295,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
               />
             </div>
             {/* <div>
-              <label className="text-sm text-zinc-400" htmlFor="password">
+              <label className="text-sm text-slate-400" htmlFor="password">
                 Password
               </label>
               <input
@@ -332,7 +332,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="px-6 py-2 cursor-pointer bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white transition"
+                    className="px-6 py-2 cursor-pointer bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition"
                   >
                     Cancel
                   </button>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import PostDetail from "../components/PostDetail";
+import PostDetail from "../components/posts/PostDetail";
 import { useParams } from "react-router";
 
 interface IPostPageProps {}

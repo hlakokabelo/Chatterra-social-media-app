@@ -1,12 +1,12 @@
 import * as React from "react";
-import { supabase } from "../supabase-client";
+import { supabase } from "../../supabase-client";
 import { useQuery } from "@tanstack/react-query";
-import type { IPost } from "./PostList";
-import PostItem from "./PostItem";
-import PostNotFoud from "../pages/PageNotFound";
-import { formatTimeStamp } from "../utils/formatTimeStamp";
+import type { IPost } from "../posts/PostList";
+import PostItem from "../posts/PostItem";
+import PostNotFoud from "../../pages/PageNotFound";
+import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
-import { routeBuilder, slugify } from "../utils/routes";
+import { routeBuilder, slugify } from "../../utils/routes";
 
 interface ICommunityDisplayProps {
   communityId: number;
@@ -90,45 +90,62 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
     }
   }
 
-  return (
-    <div className="grid justify-evenly gap-y-[4rem]">
-      <div className="border w-full p-2.5 rounded-3xl  border-amber-200 bg-gradient-to-r from-gray-200 to-pink-500 bg-clip-text text-transparent">
-        <h2 className="text-4xl text-center mb-2"> {CommunityData?.name}</h2>
-        <p>{CommunityData?.description}</p>
-        <p className="text-cyan-600">
-          {" "}
-          created {CommunityData && formatTimeStamp(CommunityData?.created_at)}
+ return (
+  <div className="max-w-3xl mx-auto px-4 space-y-8">
+
+    {/* Community Header */}
+    <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60">
+
+      <h2 className="text-2xl font-semibold text-slate-100 mb-2">
+        c/{CommunityData?.name}
+      </h2>
+
+      {CommunityData?.description && (
+        <p className="text-slate-300 mb-4">
+          {CommunityData.description}
         </p>
-        <p className="text-cyan-600">
+      )}
+
+      <div className="text-sm text-slate-400 space-y-1">
+        <p>
+          created {CommunityData && formatTimeStamp(CommunityData.created_at)}
+        </p>
+
+        <p>
           created by{" "}
           <span
             onClick={() =>
               CommunityData?.creator.username &&
-              navigate(routeBuilder.user(CommunityData?.creator.username))
+              navigate(routeBuilder.user(CommunityData.creator.username))
             }
-            className="cursor-pointer text-blue-800"
+            className="cursor-pointer text-slate-300 hover:text-slate-100"
           >
             {CommunityData?.creator.username}
           </span>
         </p>
       </div>
-      {data && data.length > 0 ? (
-        <div className="">
-          {data.map((post) => (
-            <PostItem
-              key={post.id}
-              post={post}
-              calledByCommunityComponent={true}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-gray-400">
-          No posts in this community yet.
-        </p>
-      )}
+
     </div>
-  );
+
+    {/* Posts */}
+    {data && data.length > 0 ? (
+      <div className="space-y-6">
+        {data.map((post) => (
+          <PostItem
+            key={post.id}
+            post={post}
+            calledByCommunityComponent={true}
+          />
+        ))}
+      </div>
+    ) : (
+      <p className="text-center text-slate-400 py-6">
+        No posts in this community yet.
+      </p>
+    )}
+
+  </div>
+);
 };
 
 export default CommunityDisplay;

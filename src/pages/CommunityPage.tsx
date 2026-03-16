@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useParams } from "react-router";
-import CommunityDisplay from "../components/CommunityDisplay";
+import CommunityDisplay from "../components/community/CommunityDisplay";
 
 interface ICommunityPageProps {}
 

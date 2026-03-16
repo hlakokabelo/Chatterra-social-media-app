@@ -1,18 +1,11 @@
 import * as React from "react";
-import PostList from "../components/PostList";
+import PostList from "../components/posts/PostList";
 
 interface IHomeProps {}
 
-
 const Home: React.FunctionComponent<IHomeProps> = () => {
- 
   return (
-
-    <div className="">
-      <h2 className="text-4xl font-bold mb-6 text-center bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text">
-        Recent Posts
-      </h2>
-
+    <div className="max-w-screen">
       <div>
         <PostList />
       </div>

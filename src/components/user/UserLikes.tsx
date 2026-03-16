@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
-import { formatTimeStamp } from "../utils/formatTimeStamp";
+import { supabase } from "../../supabase-client";
+import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link } from "react-router";
-import type { IPost } from "./PostList";
-import { routeBuilder } from "../utils/routes";
+import type { IPost } from "../posts/PostList";
+import { routeBuilder } from "../../utils/routes";
 
 interface Props {
   userId: string;
@@ -54,23 +54,24 @@ const UserLikes: React.FC<Props> = ({ userId }) => {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {data.map((like: IVotes, index: number) => (
-        <Link to={routeBuilder.post(like.posts.id,like.posts.title)}>
-          <div
-            key={index}
-            className="cursor-pointer bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-green-600"
-          >
-            <p className="text-white">{like.posts?.title}</p>
+        <div key={index}>
+          <Link to={routeBuilder.post(like.posts.id, like.posts.title)}>
+            <div className="cursor-pointer bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-green-600">
+              <p className="text-white">{like.posts?.title}</p>
 
-            <p>
-              <span
-                className={like.vote === 1 ? "text-green-500" : "text-red-500"}
-              >
-                {like.vote === 1 ? "up-voted on:" : "down-voted on:"}{" "}
-              </span>
-              {formatTimeStamp(like.created_at)}
-            </p>
-          </div>
-        </Link>
+              <p>
+                <span
+                  className={
+                    like.vote === 1 ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {like.vote === 1 ? "up-voted on:" : "down-voted on:"}{" "}
+                </span>
+                {formatTimeStamp(like.created_at)}
+              </p>
+            </div>
+          </Link>
+        </div>
       ))}
     </div>
   );
