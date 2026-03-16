@@ -11,9 +11,9 @@ import SignUpPage from "./pages/authPages/SignUpPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
-import PublicProfilePage from "./pages/PublicProfilePage ";
 import { ROUTES } from "./utils/routes";
 import { Footer } from "./components/Footer";
+import PublicProfilePage from "./pages/PublicProfilePage";
 
 function App() {
   return (
