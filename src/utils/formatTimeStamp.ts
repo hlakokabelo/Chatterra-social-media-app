@@ -27,7 +27,6 @@ export function formatTimeStamp(
   const pad = (num: any) => String(num).padStart(2, "0");
 
   // Same day → just time
-
   if (withMinutes && diffDays === 0) {
     const diffMs = now - date; // difference in milliseconds
 
@@ -46,10 +45,11 @@ export function formatTimeStamp(
   const minutes = pad(date.getMinutes());
   const timeStr = `${hours}:${minutes}`;
 
-  // time (Instagram often does this)
+  // time
   if (diffDays === 0) {
     return ` ${timeStr}`; // e.g. "Yesterday 14:35"
   }
+
   if (diffDays === 1) {
      // e.g. "Yesterday 14:35"
   
