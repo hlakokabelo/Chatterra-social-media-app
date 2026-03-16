@@ -3,9 +3,9 @@ import type { IComment } from "./CommentSection";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../supabase-client.ts";
-import { formatTimeStamp } from "../../utils/formatTimeStamp.tsx";
+import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
-import { routeBuilder } from "../../utils/routes.tsx";
+import { routeBuilder } from "../../utils/routes.ts";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
