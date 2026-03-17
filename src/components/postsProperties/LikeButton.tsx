@@ -62,6 +62,7 @@ const deletePost = async (postId: number) => {
     console.error(error);
   }
 };
+
 const fetchVotes = async (postId: number): Promise<IVote[]> => {
   const { data } = await supabase
     .from("votes")

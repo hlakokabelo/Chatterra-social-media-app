@@ -6,6 +6,7 @@ import { supabase } from "../../supabase-client.ts";
 import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
+import CommentLikeButton from "./CommentLikeButton.tsx";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
@@ -84,7 +85,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const handleReplySubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (!replyText) return;
+    if (!replyText) return ;
     mutate({ content: replyText, parent_comment_id: comment.id });
   };
 
@@ -110,7 +111,9 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
         <div className="flex items-center space-x-2">
           {/**Display commenter username */}
           <span
-            onClick={() => comment?.username && navigate(routeBuilder.user(comment.username))}
+            onClick={() =>
+              comment?.username && navigate(routeBuilder.user(comment.username))
+            }
             className="cursor-pointer text-sm font-bold text-blue-400 hover:text-yellow-500"
           >
             {comment?.username}
@@ -120,6 +123,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
           </span>
         </div>
         <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
+        <CommentLikeButton />
         <button
           className="text-amber-500 text-sm mt-1 cursor-pointer"
           onClick={() => setShowReply((prev) => !prev)}
@@ -135,6 +139,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
             rows={2}
             value={replyText}
             placeholder="write reply..."
+            required
             onChange={(e) => setReplyText(e.target.value)}
           />
           <button
@@ -146,7 +151,6 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
           {isError && <p className="text-red-500">Error posting reply.</p>}
         </form>
       )}
-
       {comment.children && comment.children.length > 0 && (
         <div>
           <button

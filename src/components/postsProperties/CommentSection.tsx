@@ -165,6 +165,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
           rows={3}
           value={newComentText}
           placeholder="Write a comment..."
+          required
           onChange={(e) => setNewCommentText(e.target.value)}
         />
 
@@ -172,7 +173,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
           <button
             className="px-4 py-2 rounded-lg text-sm font-medium
             bg-slate-700 text-slate-100 hover:bg-slate-600
-            transition"
+            transition cursor-pointer"
             type="submit"
           >
             {isPending ? "Posting..." : "Post Comment"}
