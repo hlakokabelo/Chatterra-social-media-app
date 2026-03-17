@@ -6,7 +6,6 @@ import { supabase } from "../../supabase-client.ts";
 import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
-import CommentLikeButton from "./CommentLikeButton.tsx";
 import LikeButton from "./LikeButton.tsx";
 
 type ICommentChild = IComment & { children?: IComment[] };

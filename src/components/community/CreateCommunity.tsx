@@ -19,9 +19,26 @@ const createCommunity = async (community: ICommunity) => {
 
   if (error) throw new Error(error.message);
 };
+
+const checkNameAvailability = async (name: string) => {
+  const { data } = await supabase
+    .from("communities")
+    .select("name")
+    .eq("name", name)
+    .maybeSingle();
+
+  return !data;
+};
+
 const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   const { user } = useAuth();
   const [name, setName] = React.useState<string>("");
+  const [debouncedUsername, setDebouncedUsername] = React.useState<string>("");
+  const [nameAvailable, setNameAvailable] = React.useState<boolean | null>(
+    null,
+  );
+  const [availableName, setAvailableName] = React.useState<string>("");
+
   const [description, setDescription] = React.useState<string>("");
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const queryClient = useQueryClient();
@@ -41,15 +58,38 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
     setErrorMessage("Log in to create community");
   };
 
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
-    setErrorMessage(validateCommunityName(name));
 
-    if(name==="")
-      setErrorMessage("")
+    setErrorMessage("");
     setName(name);
   };
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (errorMessage === "") setDebouncedUsername(name);
+    }, 250); // delay (tweak if you want)
+
+    return () => clearTimeout(timeout);
+  }, [name]);
+
+  React.useEffect(() => {
+    const check = async () => {
+      if (!debouncedUsername) return;
+
+      setErrorMessage(validateCommunityName(name));
+
+      if (errorMessage === "") {
+        const available = await checkNameAvailability(debouncedUsername);
+        setNameAvailable(available);
+        setAvailableName(debouncedUsername);
+      } else {
+        setNameAvailable(null);
+      }
+    };
+
+    check();
+  }, [debouncedUsername]);
 
   return (
     <form
@@ -78,6 +118,18 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
           className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2
       focus:outline-none focus:ring-2 focus:ring-cyan-900 transition"
         />
+
+        {nameAvailable === false && (
+          <p className="text-red-400 text-xs mt-1">
+            Community name already taken {availableName}
+          </p>
+        )}
+
+        {nameAvailable === true && (
+          <p className="text-green-400 text-xs mt-1">
+            Community name available ✓ {availableName}
+          </p>
+        )}
       </div>
 
       {/* Description */}
