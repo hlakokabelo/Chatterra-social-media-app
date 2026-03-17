@@ -2,11 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../../supabase-client";
 import { useAuth } from "../../context/AuthContext";
-import {
-  fetchCommunities,
-  type ICommunity,
-  type IMemberInfo,
-} from "../community/CommunityList";
+import { type IMemberInfo } from "../community/CommunityList";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes";
 
@@ -65,7 +61,7 @@ const getUserCommunities = async (): Promise<IMemberInfo[]> => {
 };
 
 const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
-  const { user, userProfile } = useAuth();
+  const { user } = useAuth();
   const [title, setTitle] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
@@ -179,7 +175,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           onChange={handleCommunityChange}
           defaultValue=""
         >
-          <option value=""  className="bg-slate-800 text-slate-400">
+          <option value="" className="bg-slate-800 text-slate-400">
             {user ? "Select a community" : "Sign in to select a community"}
           </option>
 

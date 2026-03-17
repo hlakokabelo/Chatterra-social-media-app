@@ -14,7 +14,6 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import { ROUTES } from "./utils/routes";
 import { Footer } from "./components/Footer";
 import PublicProfilePage from "./pages/PublicProfilePage";
-import CommunitySeeder from "./components/admin/CommunitySeeder";
 
 function App() {
   return (

@@ -15,14 +15,6 @@ interface ICommunityDisplayProps {
   slug: string | undefined;
 }
 
-interface ICommunityMember {
-  id?: number;
-  joined_at?: string;
-  community_id: number;
-  role?: string;
-  user_id: string;
-}
-
 interface ICommunity {
   name: string;
   description: string;
@@ -208,7 +200,7 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   return (
     <div className="max-w-3xl mx-auto px-4 space-y-8">
       {/* Community Header */}
-      <div className="p-6 rounded-xl border border-slate-700 bg-gradient-to-br from-slate-900/80 to-slate-900/40 backdrop-blur-sm">
+      <div className="p-6 rounded-xl border border-slate-700 bg-linear-to-br from-slate-900/80 to-slate-900/40 backdrop-blur-sm">
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-3xl font-bold text-slate-100">
             c/{CommunityData?.name}

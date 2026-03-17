@@ -112,9 +112,6 @@ const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
     },
   });
 
-  const isUserInCommunity = (communityId: number) => {
-    return userCommunities?.some((community) => community.id === communityId);
-  };
 
   const handleJoinCommunity = async (
     e: React.MouseEvent,
