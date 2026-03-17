@@ -1,5 +1,5 @@
 import * as React from "react";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loading from "../Loading";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";

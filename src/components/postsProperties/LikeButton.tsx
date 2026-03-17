@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import { useAuth } from "../../context/AuthContext";
 import Loading from "../Loading";
 import { MdDeleteForever } from "react-icons/md";

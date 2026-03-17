@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import { useAuth } from "../../context/AuthContext";
 import { type IMemberInfo } from "../community/CommunityList";
 import { useNavigate } from "react-router";

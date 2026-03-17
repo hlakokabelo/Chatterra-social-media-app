@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { supabase } from "../supabase-client";
+import { supabase } from "../config/supabase-client";
 import * as React from "react";
 import UserPosts from "../components/posts/UserPosts";
 import UserReplies from "../components/user/UserReplies";

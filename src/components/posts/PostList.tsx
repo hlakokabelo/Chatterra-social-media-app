@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import PostItem from "./PostItem";
 import { useAuth } from "../../context/AuthContext";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";

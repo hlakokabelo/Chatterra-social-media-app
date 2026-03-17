@@ -2,7 +2,7 @@ import * as React from "react";
 import type { IComment } from "./CommentSection";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../supabase-client.ts";
+import { supabase } from "../../config/supabase-client.ts";
 import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";

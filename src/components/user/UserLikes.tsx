@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link } from "react-router";
 import type { IPost } from "../posts/PostList";

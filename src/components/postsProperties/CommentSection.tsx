@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import CommentItem from "./CommentItem";
 import Loading from "../Loading";
 

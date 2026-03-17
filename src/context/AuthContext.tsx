@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../supabase-client";
+import { supabase } from "../config/supabase-client";
 import type { Session, User } from "@supabase/supabase-js";
 
 interface Isign {
@@ -102,6 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         password: password,
       });
 
+      
       // Handle Supabase error explicitly
       if (error) {
         return { success: false, error: error.message }; // Return the error

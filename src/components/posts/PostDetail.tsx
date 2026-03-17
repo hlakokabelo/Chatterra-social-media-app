@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { IPost } from "./PostList";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../supabase-client";
+import { supabase } from "../../config/supabase-client";
 import LikeButton from "../postsProperties/LikeButton";
 import CommentSection from "../postsProperties/CommentSection";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";

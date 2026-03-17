@@ -1,5 +1,5 @@
 // utils/communitySeeder.ts
-import { supabase } from '../supabase-client';
+import { supabase } from '../config/supabase-client';
 
 interface RandomAssignmentResult {
   user_id: string;
