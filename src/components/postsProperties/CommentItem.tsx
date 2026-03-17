@@ -7,6 +7,7 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
 import CommentLikeButton from "./CommentLikeButton.tsx";
+import LikeButton from "./LikeButton.tsx";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
@@ -85,7 +86,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const handleReplySubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (!replyText) return ;
+    if (!replyText) return;
     mutate({ content: replyText, parent_comment_id: comment.id });
   };
 
@@ -123,7 +124,9 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
           </span>
         </div>
         <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
-        <CommentLikeButton />
+
+        {/*   Like button    */}
+        <LikeButton isComment={true} item_id={comment.id} user_id={comment.user_id} />
         <button
           className="text-amber-500 text-sm mt-1 cursor-pointer"
           onClick={() => setShowReply((prev) => !prev)}

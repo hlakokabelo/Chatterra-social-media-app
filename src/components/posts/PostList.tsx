@@ -3,6 +3,8 @@ import * as React from "react";
 import { supabase } from "../../supabase-client";
 import PostItem from "./PostItem";
 import { useAuth } from "../../context/AuthContext";
+import { formatErrorMessage } from "../../utils/formatErrorMessage";
+import Loading from "../Loading";
 
 interface IPostListProps {}
 
@@ -18,6 +20,7 @@ export interface IPost {
   user_id?: string;
   username?: string;
   community_name?: string;
+  edited?: boolean;
 }
 
 const fetchPosts = async ({
@@ -61,9 +64,10 @@ const fetchPosts = async ({
   if (error) throw new Error(error?.message);
   return data;
 };
+
 const PostList: React.FunctionComponent<IPostListProps> = () => {
   const { feedMode } = useAuth();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data,isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["posts", feedMode],
       queryFn: ({ pageParam }) => fetchPosts({ pageParam, feedMode }),
@@ -92,6 +96,17 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
   }, [hasNextPage]);
 
   const posts: IPost[] | undefined = data?.pages.flat();
+
+  if(isLoading){
+    return <Loading/>
+  }
+  if (error)
+    return (
+      <div className="text-center text-red-400">
+        {formatErrorMessage(error.message)}
+      </div>
+    );
+
   return (
     <div className="md:flex md:flex-col md:items-center">
       {posts?.map((post) => (

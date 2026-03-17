@@ -59,88 +59,87 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
       }
     }
 
-return (
-  <div className="max-w-3xl mx-auto px-4 space-y-8">
 
-    {/* Post Card */}
-    <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60 backdrop-blur">
+  return (
+    <div className="max-w-3xl mx-auto px-4 space-y-8">
+      {/* Post Card */}
+      <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60 backdrop-blur">
+        {/* Author Section */}
+        <div className="flex items-center gap-3 mb-4">
+          {data?.avatar_url ? (
+            <Link to={routeBuilder.user(data.username)}>
+              <img
+                src={data.avatar_url}
+                alt="User Avatar"
+                className="w-12 h-12 rounded-full object-cover"
+              />
+            </Link>
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
+              <FaUser className="text-slate-300" />
+            </div>
+          )}
 
-      {/* Author Section */}
-      <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-col leading-tight">
+            <Link
+              to={routeBuilder.user(data!.username)}
+              className="text-slate-200 font-semibold hover:text-slate-100"
+            >
+              {data?.username}
+            </Link>
 
-        {data?.avatar_url ? (
-          <Link to={routeBuilder.user(data.username)}>
+            {data?.community_id && (
+              <Link
+                to={routeBuilder.community(
+                  data.community_id,
+                  data.community_name,
+                )}
+                className="text-sm text-slate-400 hover:text-slate-300"
+              >
+                c/{data.community_name}
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-2xl font-semibold text-slate-100 mb-4">
+          {data?.title}
+        </h2>
+
+        {/* Image */}
+        {data?.image_url && (
+          <div className="mb-5">
             <img
-              src={data.avatar_url}
-              alt="User Avatar"
-              className="w-12 h-12 rounded-full object-cover"
+              src={data.image_url}
+              alt={data.title}
+              className="rounded-lg max-h-[30rem] w-full object-cover"
             />
-          </Link>
-        ) : (
-          <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
-            <FaUser className="text-slate-300" />
           </div>
         )}
 
-        <div className="flex flex-col leading-tight">
-          <Link
-            to={routeBuilder.user(data!.username)}
-            className="text-slate-200 font-semibold hover:text-slate-100"
-          >
-            {data?.username}
-          </Link>
+        {/* Content */}
+        <p className="text-slate-300 leading-relaxed mb-4">{data?.content}</p>
 
-          {data?.community_id && (
-            <Link
-              to={routeBuilder.community(
-                data.community_id,
-                data.community_name
-              )}
-              className="text-sm text-slate-400 hover:text-slate-300"
-            >
-              c/{data.community_name}
-            </Link>
-          )}
+        {/* Metadata */}
+        <div className="flex items-center justify-between text-sm text-slate-400">
+          <span>posted {formatTimeStamp(data!.created_at)}</span>
         </div>
-      </div>
 
-      {/* Title */}
-      <h2 className="text-2xl font-semibold text-slate-100 mb-4">
-        {data?.title}
-      </h2>
-
-      {/* Image */}
-      {data?.image_url && (
-        <div className="mb-5">
-          <img
-            src={data.image_url}
-            alt={data.title}
-            className="rounded-lg max-h-[30rem] w-full object-cover"
-          />
+        {/* Likes */}
+        <div className="mt-4">
+          <LikeButton item_id={postId} user_id={data?.user_id} />
         </div>
-      )}
 
-      {/* Content */}
-      <p className="text-slate-300 leading-relaxed mb-4">
-        {data?.content}
-      </p>
-
-      {/* Metadata */}
-      <div className="flex items-center justify-between text-sm text-slate-400">
-        <span>posted {formatTimeStamp(data!.created_at)}</span>
+        <p className="text-sm italic text-blue-300">
+          {data?.edited ? "edited" : ""}
+        </p>
       </div>
 
-      {/* Likes */}
-      <div className="mt-4">
-        <LikeButton postId={postId} user_id={data?.user_id} />
-      </div>
-
+      {/* Comments */}
+      <CommentSection postId={Number(postId)} />
     </div>
-
-    {/* Comments */}
-    <CommentSection postId={Number(postId)} />
-
-  </div>
-);};
+  );
+};
 
 export default PostDetail;

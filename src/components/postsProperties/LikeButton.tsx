@@ -8,96 +8,123 @@ import { useNavigate } from "react-router";
 import { ROUTES } from "../../utils/routes";
 
 interface ILikeButtonProps {
-  postId: number;
+  isComment?: boolean;
+  item_id: number;
   user_id: string | undefined;
 }
 interface IVote {
   id: number;
-  post_id: number;
+  post_id?: number;
+  comment_id?: number;
   user_id: string;
   vote: number;
 }
+
 const submitVote = async (
   voteValue: number,
-  postId: number,
+  itemIdValue: number,
   userId: string,
+  isComment: boolean,
 ) => {
-  //check if vote exists
+  const itemColumn = isComment ? "comment_id" : "post_id";
+  const table = isComment ? "comment_votes" : "votes";
+
   const { data: existingVote } = await supabase
-    .from("votes")
+    .from(table)
     .select("*")
-    .eq("post_id", postId)
+    .eq(itemColumn, itemIdValue)
     .eq("user_id", userId)
     .maybeSingle();
+
   if (existingVote) {
-    //if vote is equal to vote in db delete vote
     if (existingVote.vote === voteValue) {
+      // delete
       const { error } = await supabase
-        .from("votes")
+        .from(table)
         .delete()
         .eq("id", existingVote.id);
 
       if (error) throw new Error(error.message);
     } else {
-      //else updatte vote value
+      // update
       const { error } = await supabase
-        .from("votes")
+        .from(table)
         .update({ vote: voteValue })
         .eq("id", existingVote.id);
 
       if (error) throw new Error(error.message);
     }
   } else {
-    const { error } = await supabase
-      .from("votes")
-      .insert({ post_id: postId, vote: voteValue, user_id: userId });
+    // insert
+    const { error } = await supabase.from(table).insert({
+      [itemColumn]: itemIdValue,
+      vote: voteValue,
+      user_id: userId,
+    });
+
     if (error) throw new Error(error.message);
   }
 };
 
-const deletePost = async (postId: number) => {
-  const { error } = await supabase.from("posts").delete().eq("id", postId);
+const deletePostOrComment = async (item_id: number, isComment: boolean) => {
+  const table = isComment ? "comments" : "posts";
 
-  if (error) {
-    console.error(error);
-  }
+  const { error } = await supabase.from(table).delete().eq("id", item_id);
+
+  if (error) throw new Error(error.message);
 };
 
-const fetchVotes = async (postId: number): Promise<IVote[]> => {
-  const { data } = await supabase
-    .from("votes")
+const fetchVotes = async (
+  item_id: number,
+  isComment: boolean,
+): Promise<IVote[]> => {
+  const table = isComment ? "comment_votes" : "votes";
+  const column = isComment ? "comment_id" : "post_id";
+
+  const { data, error } = await supabase
+    .from(table)
     .select("*")
-    .eq("post_id", postId);
+    .eq(column, item_id);
+
+  if (error) throw new Error(error.message);
 
   return data as IVote[];
 };
 
+/** Displays likes of an item either a comment or post */
 const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
-  postId,
+  item_id,
   user_id,
+  isComment = false,
 }) => {
   const { user } = useAuth();
   const [showError, setShowError] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
+  const queryKey: unknown[] = [
+    `${isComment ? "comment" : "post"}`,
+    "votes",
+    item_id,
+  ];
 
   const { mutate } = useMutation({
     mutationFn: (voteValue: number) => {
       if (!user) throw new Error("You must be logged in to vote!");
-      return submitVote(voteValue, postId, user.id);
+      return submitVote(voteValue, item_id, user.id, isComment);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["votes", postId] });
+      queryClient.invalidateQueries({ queryKey: queryKey });
     },
   });
 
-  const { mutate: deletePostMutate } = useMutation({
+  const { mutate: deleteItemMutate } = useMutation({
     mutationFn: () => {
-      return deletePost(postId);
+      return deletePostOrComment(item_id, isComment);
     },
     onSuccess: () => {
-      navigate(ROUTES.HOME);
+      //if its a post deleted go home, else stay where you are
+      if (!isComment) navigate(ROUTES.HOME);
     },
   });
 
@@ -106,8 +133,8 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
     isLoading,
     error,
   } = useQuery<IVote[], Error>({
-    queryKey: ["votes", postId],
-    queryFn: () => fetchVotes(postId),
+    queryKey: queryKey,
+    queryFn: () => fetchVotes(item_id, isComment),
     refetchInterval: 15000, //10secs
   });
 
@@ -121,19 +148,19 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
 
   const submitLike = (like: number) => {
     if (user ? false : true) return setShowError(true);
-
     mutate(like);
   };
 
   const deletHandle = () => {
-    deletePostMutate();
+    deleteItemMutate();
   };
+  // establish upvote and downvote count
   const dislikes = votes?.filter((vote) => vote.vote === -1).length;
   const likes = votes?.filter((vote) => vote.vote === 1).length;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
   return (
-    <div>
+    <div className={`${isComment ? "text-[10px]" : ""}`}>
       <div className="flex items-center space-x-4 my-4">
         <button
           onClick={() => submitLike(1)}
@@ -155,19 +182,23 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
         </button>
 
         {user?.id === user_id && (
-          <div className="ml-5.5 cursor-pointer" onClick={deletHandle}>
+          <div
+            className="ml-5.5 cursor-pointer"
+            title="delete"
+            onClick={deletHandle}
+          >
             <MdDeleteForever
               className="text-red-500 hover:text-red-800"
-              size={25}
+              size={isComment ? 17 : 25}
             />
           </div>
         )}
       </div>
       {showError && (
         <a className="text-red-600" href={ROUTES.SIGN_IN}>
-          Log-in to like post
+          Log-in to like {isComment ? "comment" : "post"}
         </a>
-      )}{" "}
+      )}
     </div>
   );
 };

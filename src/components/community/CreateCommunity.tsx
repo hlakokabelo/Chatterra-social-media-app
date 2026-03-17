@@ -4,6 +4,7 @@ import { supabase } from "../../supabase-client";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { ROUTES } from "../../utils/routes";
+import { validateCommunityName } from "../../utils/validations";
 
 interface ICreateCommunityProps {}
 
@@ -22,9 +23,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   const { user } = useAuth();
   const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
-  const [errorMessage, setErrorMessage] = React.useState<string>(
-    user ? "" : "Log in to create community",
-  );
+  const [errorMessage, setErrorMessage] = React.useState<string>("");
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutate, isPending, isError } = useMutation({
@@ -37,10 +36,21 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
 
   const handleOnSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-
+    if (errorMessage !== "") return;
     if (user) return mutate({ name, description, user_id: user?.id });
     setErrorMessage("Log in to create community");
   };
+
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    setErrorMessage(validateCommunityName(name));
+
+    if(name==="")
+      setErrorMessage("")
+    setName(name);
+  };
+
   return (
     <form
       onSubmit={handleOnSubmit}
@@ -50,8 +60,6 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
       <h2 className="text-4xl font-bold text-center  text-slate-300 bg-clip-text ">
         Create New Community
       </h2>
-
-      <p className="text-center text-red-400">{errorMessage}</p>
 
       {/* Community Name */}
       <div className="space-y-2">
@@ -66,7 +74,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
           value={name}
           maxLength={20}
           required
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => handleNameChange(e)}
           className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2
       focus:outline-none focus:ring-2 focus:ring-cyan-900 transition"
         />
@@ -91,6 +99,8 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
       focus:outline-none focus:ring-2 focus:ring-cyan-900 transition resize-none"
         />
       </div>
+
+      <p className="text-center text-red-400">{errorMessage}</p>
 
       {/* Submit */}
       <button

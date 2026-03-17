@@ -7,6 +7,7 @@ import PostNotFoud from "../../pages/PageNotFound";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
 import { routeBuilder, slugify } from "../../utils/routes";
+import Loading from "../Loading";
 
 interface ICommunityDisplayProps {
   communityId: number;
@@ -77,7 +78,11 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   });
 
   if (isLoading)
-    return <div className="text-center py-4">Loading communities...</div>;
+    return (
+      <div className="text-center py-4">
+        <Loading/>
+      </div>
+    );
   if (CommunityError) return <PostNotFoud title="Community" />;
 
   if (CommunityData && !isLoading) {
@@ -90,62 +95,56 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
     }
   }
 
- return (
-  <div className="max-w-3xl mx-auto px-4 space-y-8">
+  return (
+    <div className="max-w-3xl mx-auto px-4 space-y-8">
+      {/* Community Header */}
+      <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60">
+        <h2 className="text-2xl font-semibold text-slate-100 mb-2">
+          c/{CommunityData?.name}
+        </h2>
 
-    {/* Community Header */}
-    <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60">
+        {CommunityData?.description && (
+          <p className="text-slate-300 mb-4">{CommunityData.description}</p>
+        )}
 
-      <h2 className="text-2xl font-semibold text-slate-100 mb-2">
-        c/{CommunityData?.name}
-      </h2>
+        <div className="text-sm text-slate-400 space-y-1">
+          <p>
+            created {CommunityData && formatTimeStamp(CommunityData.created_at)}
+          </p>
 
-      {CommunityData?.description && (
-        <p className="text-slate-300 mb-4">
-          {CommunityData.description}
+          <p>
+            created by{" "}
+            <span
+              onClick={() =>
+                CommunityData?.creator.username &&
+                navigate(routeBuilder.user(CommunityData.creator.username))
+              }
+              className="cursor-pointer text-slate-300 hover:text-slate-100"
+            >
+              {CommunityData?.creator.username}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* Posts */}
+      {data && data.length > 0 ? (
+        <div className="space-y-6">
+          {data.map((post) => (
+            <PostItem
+              key={post.id}
+              post={post}
+              calledByCommunityComponent={true}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-slate-400 py-6">
+          No posts in this community yet.
         </p>
       )}
-
-      <div className="text-sm text-slate-400 space-y-1">
-        <p>
-          created {CommunityData && formatTimeStamp(CommunityData.created_at)}
-        </p>
-
-        <p>
-          created by{" "}
-          <span
-            onClick={() =>
-              CommunityData?.creator.username &&
-              navigate(routeBuilder.user(CommunityData.creator.username))
-            }
-            className="cursor-pointer text-slate-300 hover:text-slate-100"
-          >
-            {CommunityData?.creator.username}
-          </span>
-        </p>
-      </div>
-
     </div>
-
-    {/* Posts */}
-    {data && data.length > 0 ? (
-      <div className="space-y-6">
-        {data.map((post) => (
-          <PostItem
-            key={post.id}
-            post={post}
-            calledByCommunityComponent={true}
-          />
-        ))}
-      </div>
-    ) : (
-      <p className="text-center text-slate-400 py-6">
-        No posts in this community yet.
-      </p>
-    )}
-
-  </div>
-);
+  );
 };
 
 export default CommunityDisplay;

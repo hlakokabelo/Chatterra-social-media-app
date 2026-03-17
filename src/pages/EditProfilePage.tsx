@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import imageCompression from "browser-image-compression";
 import { routeBuilder } from "../utils/routes";
+import { validateUsername } from "../utils/validations";
 
 interface IEditProfilePageProps {}
 
@@ -55,6 +56,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
   const [usernameAvailable, setUsernameAvailable] = React.useState<
     boolean | null
   >(null);
+  const [debouncedUsername, setDebouncedUsername] = React.useState("");
   const [availableUsername, setAvailableUsername] = React.useState<string>("");
 
   const inputStyle = editing
@@ -100,28 +102,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
 
     return !data;
   };
-  const validateUsername = (value: string): string => {
-    // Only letters, numbers, underscores
-    const regex = /^[a-zA-Z0-9_]+$/;
-
-    if (value.includes(" ")) {
-      return "Username cannot contain spaces.";
-    }
-
-    if (!regex.test(value)) {
-      return "Only letters, numbers, and underscores are allowed.";
-    }
-
-    if (value.length < 3) {
-      return "Username must be at least 3 characters.";
-    }
-
-    if (value.length > 20) {
-      return "Username cannot exceed 20 characters.";
-    }
-
-    return "";
-  };
 
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -155,13 +135,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
 
         const validationError = validateUsername(value);
         setError(validationError);
-
-        if (!validationError) {
-          const available = await checkUsernameAvailability(value);
-          setUsernameAvailable(available);
-          setAvailableUsername(username);
-        }
-
         break;
       case "bio":
         setBio(value);
@@ -189,6 +162,34 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
     setUsernameAvailable(null);
   };
   if (!user) return <Navigate to="/" />;
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (username !== userProfile?.username) setDebouncedUsername(username);
+    }, 250); // delay (tweak if you want)
+
+    return () => clearTimeout(timeout);
+  }, [username]);
+
+  
+  React.useEffect(() => {
+    const check = async () => {
+      if (!debouncedUsername) return;
+
+      const validationError = validateUsername(debouncedUsername);
+      setError(validationError);
+
+      if (validationError === "") {
+        const available = await checkUsernameAvailability(debouncedUsername);
+        setUsernameAvailable(available);
+        setAvailableUsername(debouncedUsername);
+      } else {
+        setUsernameAvailable(null);
+      }
+    };
+
+    check();
+  }, [debouncedUsername]);
 
   return (
     <div className="flex justify-center">

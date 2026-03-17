@@ -7,10 +7,13 @@ import UserLikes from "../components/user/UserLikes";
 import { MdEdit } from "react-icons/md";
 import { useAuth, type IUserProfile } from "../context/AuthContext";
 import { ROUTES } from "../utils/routes";
+import Loading from "../components/Loading";
+import { formatErrorMessage } from "../utils/formatErrorMessage";
 const PublicProfilePage = () => {
   const { username } = useParams();
   const [profile, setProfile] = React.useState<IUserProfile | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [errorMessage, SetErrorMessage] = React.useState("");
   const [notFound, setNotFound] = React.useState(false);
   const navigate = useNavigate();
   const [tab, setTab] = React.useState("posts");
@@ -26,7 +29,12 @@ const PublicProfilePage = () => {
         .eq("username", username)
         .maybeSingle();
 
-      if (error || !data) {
+      if (error) {
+        SetErrorMessage(formatErrorMessage(error.message));
+        setLoading(false);
+        return;
+      }
+      if (!data) {
         setNotFound(true);
         setLoading(false);
         return;
@@ -42,10 +50,15 @@ const PublicProfilePage = () => {
   if (loading) {
     return (
       <div className="flex justify-center mt-12">
-        <p className="text-zinc-400">Loading profile...</p>
+        <p className="text-zinc-400">
+          <Loading />
+        </p>
       </div>
     );
   }
+
+  if (errorMessage)
+    return <div className="text-center text-red-400">{errorMessage}</div>;
   if (notFound) {
     return (
       <div>

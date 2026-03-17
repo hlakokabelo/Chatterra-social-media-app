@@ -3,6 +3,8 @@ import { supabase } from "../../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { routeBuilder } from "../../utils/routes";
+import Loading from "../Loading";
+import { formatErrorMessage } from "../../utils/formatErrorMessage";
 
 interface ICommunityListProps {}
 export interface ICommunity {
@@ -28,9 +30,14 @@ const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
     queryFn: fetchCommunities,
   });
 
-  if (isLoading) return <div>Loading communities...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <div className="text-center text-red-400">{formatErrorMessage(error.message)}</div>;
   return (
     <div className="max-w-5xl mx-auto px-4 space-y-4">
       {data?.map((community) => (
