@@ -6,6 +6,7 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import type { IPost } from "./PostList";
 import { routeBuilder } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";
+import Loading from "../Loading";
 
 interface Props {
   userId: string;
@@ -38,7 +39,7 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
     queryFn: () => fetchUserPosts(userId),
   });
 
-  if (isLoading) return <p className="text-zinc-400 mt-4">Loading posts...</p>;
+  if (isLoading) return <div className="text-zinc-400 mt-4"><Loading/></div>;
   if (error)
     return (
       <p className="text-red-400 mt-4">{formatErrorMessage(error.message)}</p>

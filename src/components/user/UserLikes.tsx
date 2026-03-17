@@ -5,6 +5,7 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link } from "react-router";
 import type { IPost } from "../posts/PostList";
 import { routeBuilder } from "../../utils/routes";
+import Loading from "../Loading";
 
 interface Props {
   userId: string;
@@ -45,7 +46,7 @@ const UserLikes: React.FC<Props> = ({ userId }) => {
     queryFn: () => fetchUserLikes(userId),
   });
 
-  if (isLoading) return <p className="text-zinc-400 mt-4">Loading likes...</p>;
+  if (isLoading) return <div className="text-zinc-400 mt-4"><Loading/></div>;
   if (error) return <p className="text-red-400 mt-4">Error loading likes.</p>;
 
   if (!data?.length)

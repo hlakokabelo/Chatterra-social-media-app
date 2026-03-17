@@ -6,6 +6,7 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import type { IComment } from "../postsProperties/CommentSection";
 import type { IPost } from "../posts/PostList";
 import { routeBuilder } from "../../utils/routes";
+import Loading from "../Loading";
 
 interface Props {
   userId: string;
@@ -40,7 +41,7 @@ const UserReplies: React.FC<Props> = ({ userId }) => {
   });
 
   if (isLoading)
-    return <p className="text-zinc-400 mt-4">Loading replies...</p>;
+    return <div className="text-zinc-400 mt-4"><Loading/></div>;
   if (error) return <p className="text-red-400 mt-4">Error loading replies.</p>;
 
   if (!data?.length)

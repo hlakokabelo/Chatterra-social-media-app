@@ -14,6 +14,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import { ROUTES } from "./utils/routes";
 import { Footer } from "./components/Footer";
 import PublicProfilePage from "./pages/PublicProfilePage";
+import CommunitySeeder from "./components/admin/CommunitySeeder";
 
 function App() {
   return (
@@ -45,13 +46,14 @@ function App() {
             <Route path="/user/:username" element={<PublicProfilePage />} />
             <Route path="/u/:username" element={<PublicProfilePage />} />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="robots.txt" element={<>text</>} />
+            {/*    <Route path="/admin" element={<CommunitySeeder/>} />
+             */}{" "}
             <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
           </Routes>
         </div>
       </main>
 
-     <Footer/>
+      <Footer />
     </div>
   );
 }

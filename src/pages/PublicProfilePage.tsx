@@ -50,9 +50,9 @@ const PublicProfilePage = () => {
   if (loading) {
     return (
       <div className="flex justify-center mt-12">
-        <p className="text-zinc-400">
+        <div className="text-zinc-400">
           <Loading />
-        </p>
+        </div>
       </div>
     );
   }

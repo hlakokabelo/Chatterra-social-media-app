@@ -39,6 +39,7 @@ const upDateProfile = async (
   await supabase.from("profiles").update(profile).eq("id", id);
 };
 
+
 const reFetchProfile = async (getProfile: any) => {
   getProfile();
 };
@@ -171,7 +172,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
     return () => clearTimeout(timeout);
   }, [username]);
 
-  
   React.useEffect(() => {
     const check = async () => {
       if (!debouncedUsername) return;

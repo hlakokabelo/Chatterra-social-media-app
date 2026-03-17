@@ -12,6 +12,7 @@ interface ICommunity {
   name: string;
   description: string;
   user_id: string;
+  role: string;
 }
 
 const createCommunity = async (community: ICommunity) => {
@@ -54,7 +55,8 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   const handleOnSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (errorMessage !== "") return;
-    if (user) return mutate({ name, description, user_id: user?.id });
+    if (user)
+      return mutate({ name, description, user_id: user?.id, role: "admin" });
     setErrorMessage("Log in to create community");
   };
 
