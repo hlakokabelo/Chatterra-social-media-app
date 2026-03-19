@@ -4,7 +4,7 @@ Chattera is a Reddit-style social platform where users can create communities, s
 
 The goal of the project is to demonstrate a full-stack social media architecture using modern web technologies, focusing on scalable data access, authentication, and clean frontend state management.
 
- **Live Demo:** [Chattera](https://Chattera.vercel.app/)
+ **Live Demo:** [Chatterra](https://Chatterra.vercel.app/)
  
 ---
 
