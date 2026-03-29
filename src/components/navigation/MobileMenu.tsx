@@ -15,10 +15,11 @@ interface IMobileMenuProps {
 const MobileMenu: React.FunctionComponent<IMobileMenuProps> = ({ items }) => {
   let { goToUrl, menuOpen, mobileMenuClick, user, userProfile } = items;
 
+
   return (
     <>
       {menuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden mobile-menu">
           <div className="absolute right-2 top-16 w-72 bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-2xl border border-gray-700/50 overflow-hidden animate-slideDown">
             {/* Mobile Menu Header with User Info */}
             {user && userProfile && (
