@@ -34,15 +34,6 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
     goToUrl(ROUTES.SIGN_IN);
   };
 
-  // Close mobile menu on escape key
-  React.useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, []);
-
   return (
     <nav className="fixed top-0 w-full z-40 bg-gradient-to-r from-gray-900/95 to-gray-800/95 backdrop-blur-xl border-b border-gray-700/50 shadow-xl">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,8 +88,10 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
-              className="cursor-pointer text-gray-300 hover:text-white focus:outline-none p-2 rounded-lg hover:bg-gray-800/50 transition-all duration-300"
-              onClick={() => setMenuOpen((prev) => !prev)}
+              className="cursor-pointer mobile-menu text-gray-300 hover:text-white focus:outline-none p-2 rounded-lg hover:bg-gray-800/50 transition-all duration-300"
+              onClick={() => {
+                setMenuOpen((prev) => !prev);
+              }}
               aria-label="Toggle menu"
             >
               <svg
