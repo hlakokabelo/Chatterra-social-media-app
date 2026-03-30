@@ -9,6 +9,7 @@ import { useAuth, type IUserProfile } from "../context/AuthContext";
 import { ROUTES } from "../utils/routes";
 import Loading from "../components/Loading";
 import { formatErrorMessage } from "../utils/formatErrorMessage";
+import { useEffect } from "react";
 const PublicProfilePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { username } = useParams();
@@ -27,6 +28,11 @@ const PublicProfilePage = () => {
     setSearchParams({ tab: newTab });
   };
 
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  
   React.useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
