@@ -2,7 +2,7 @@ import * as React from "react";
 import type { IPost } from "./PostList";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
-import { FaUser, FaHeart, FaComment, FaShare } from "react-icons/fa";
+import { FaUser, FaComment } from "react-icons/fa";
 import { routeBuilder } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
 import LikeButton from "../postsProperties/LikeButton";
