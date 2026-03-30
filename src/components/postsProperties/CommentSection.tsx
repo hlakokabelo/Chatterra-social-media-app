@@ -71,22 +71,6 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     },
   });
 
-   React.useEffect(() => {
-      const hash = window.location.hash;
-  
-      if (!hash) return;
-  
-      setTimeout(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }, 500);
-    }, []);
-   
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
@@ -104,6 +88,23 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     queryFn: () => fetchComments(postId),
     refetchInterval: 15000, //10secs
   });
+
+  
+  React.useEffect(() => {
+    const hash = window.location.hash;
+
+    if (!hash) return;
+
+    setTimeout(() => {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, 500);
+  }, [isLoading, comments]);
 
   /* Map of Comments - Organize Replies - Return Tree  */
   const buildCommentTree = (
@@ -133,7 +134,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   };
 
   if (isLoading) {
-    return <Loading title="Fetching comments" />;
+    return <Loading />;
   }
 
   if (error) {
@@ -141,63 +142,59 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   }
 
   const commentTree = comments ? buildCommentTree(comments) : [];
- return (
-  <div className="mt-10 border-t border-slate-800 pt-8">
 
-    {/* Header */}
-    <h3 className="text-xl font-semibold text-slate-200 mb-6">
-      Comments
-    </h3>
+  return (
+    <div className="mt-10 border-t border-slate-800 pt-8">
+      {/* Header */}
+      <h3 className="text-xl font-semibold text-slate-200 mb-6">Comments</h3>
 
-    {/* Comment Form */}
-    {user ? (
-      <form
-        className="mb-6 p-4 rounded-xl border border-slate-700 bg-slate-900/60"
-        onSubmit={handleSubmit}
-      >
-        <textarea
-          className="w-full rounded-lg bg-slate-800 border border-slate-700
+      {/* Comment Form */}
+      {user ? (
+        <form
+          className="mb-6 p-4 rounded-xl border border-slate-700 bg-slate-900/60"
+          onSubmit={handleSubmit}
+        >
+          <textarea
+            className="w-full rounded-lg bg-slate-800 border border-slate-700
           px-3 py-2 text-slate-200 placeholder-slate-500
           focus:outline-none focus:ring-1 focus:ring-slate-500
           resize-none"
-          rows={3}
-          value={newComentText}
-          placeholder="Write a comment..."
-          required
-          onChange={(e) => setNewCommentText(e.target.value)}
-        />
+            rows={3}
+            value={newComentText}
+            placeholder="Write a comment..."
+            required
+            onChange={(e) => setNewCommentText(e.target.value)}
+          />
 
-        <div className="flex justify-end mt-3">
-          <button
-            className="px-4 py-2 rounded-lg text-sm font-medium
+          <div className="flex justify-end mt-3">
+            <button
+              className="px-4 py-2 rounded-lg text-sm font-medium
             bg-slate-700 text-slate-100 hover:bg-slate-600
             transition cursor-pointer"
-            type="submit"
-          >
-            {isPending ? "Posting..." : "Post Comment"}
-          </button>
-        </div>
+              type="submit"
+            >
+              {isPending ? "Posting..." : "Post Comment"}
+            </button>
+          </div>
 
-        {isError && (
-          <p className="text-rose-400 text-sm mt-2">
-            Error posting comment.
-          </p>
-        )}
-      </form>
-    ) : (
-      <p className="mb-6 text-slate-400 text-sm">
-        Log in to join the discussion
-      </p>
-    )}
+          {isError && (
+            <p className="text-rose-400 text-sm mt-2">Error posting comment.</p>
+          )}
+        </form>
+      ) : (
+        <p className="mb-6 text-slate-400 text-sm">
+          Log in to join the discussion
+        </p>
+      )}
 
-    {/* Comment List */}
-    <div className="space-y-5">
-      {commentTree.map((comment_, key) => (
-        <CommentItem key={key} comment={comment_} postId={postId} />
-      ))}
+      {/* Comment List */}
+      <div className="space-y-5">
+        {commentTree.map((comment_, key) => (
+          <CommentItem key={key} comment={comment_} postId={postId} />
+        ))}
+      </div>
     </div>
-
-  </div>
-);};
+  );
+};
 
 export default CommentSection;

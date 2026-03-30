@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { supabase } from "../config/supabase-client";
 import * as React from "react";
 import UserPosts from "../components/posts/UserPosts";
@@ -10,14 +10,22 @@ import { ROUTES } from "../utils/routes";
 import Loading from "../components/Loading";
 import { formatErrorMessage } from "../utils/formatErrorMessage";
 const PublicProfilePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { username } = useParams();
   const [profile, setProfile] = React.useState<IUserProfile | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [errorMessage, SetErrorMessage] = React.useState("");
   const [notFound, setNotFound] = React.useState(false);
   const navigate = useNavigate();
-  const [tab, setTab] = React.useState("posts");
   const { user } = useAuth();
+
+  const legalTabs = ["posts", "replies", "likes"];
+  const tab = legalTabs.includes(searchParams.get("tab") || "")
+    ? searchParams.get("tab")    : "posts";
+
+  const handleTabChange = (newTab: string) => {
+    setSearchParams({ tab: newTab });
+  };
 
   React.useEffect(() => {
     const fetchProfile = async () => {
@@ -45,7 +53,7 @@ const PublicProfilePage = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [username]);
 
   if (loading) {
     return (
@@ -115,7 +123,7 @@ const PublicProfilePage = () => {
         <div>
           <div className="flex justify-center gap-6 border-b border-zinc-700 mt-6 pb-2">
             <button
-              onClick={() => setTab("posts")}
+              onClick={() => handleTabChange("posts")}
               className={
                 tab === "posts"
                   ? "text-purple-400 cursor-pointer"
@@ -126,7 +134,7 @@ const PublicProfilePage = () => {
             </button>
 
             <button
-              onClick={() => setTab("replies")}
+              onClick={() => handleTabChange("replies")}
               className={
                 tab === "replies"
                   ? "text-purple-400 cursor-pointer"
@@ -137,7 +145,7 @@ const PublicProfilePage = () => {
             </button>
 
             <button
-              onClick={() => setTab("likes")}
+              onClick={() => handleTabChange("likes")}
               className={
                 tab === "likes"
                   ? "text-purple-400 cursor-pointer"

@@ -7,7 +7,7 @@ import CommentSection from "../postsProperties/CommentSection";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link, useNavigate } from "react-router";
 import Loading from "../Loading";
-import { FaUser, FaComment, FaShare } from "react-icons/fa";
+import { FaUser, FaComment } from "react-icons/fa";
 import PostNotFoud from "../../pages/PageNotFound";
 import { routeBuilder, slugify } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
@@ -44,23 +44,18 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
       queryFn: () => fetchPostById(postId),
     },
   );
+  React.useEffect(() => {
+    if (isSuccess && data && slug !== slugify(data.title)) {
+      const hash = window.location.hash;
+      navigate(routeBuilder.post(postId) + `/${slugify(data.title)}${hash}`, {
+        replace: true,
+      });
+    }
+  }, [isSuccess, data, slug, postId, navigate]);
 
   if (isLoading) return <Loading title="Loading post" />;
 
   if (error) return <PostNotFoud title="Post" />;
-
-  if (isSuccess)
-    if (data) {
-      const hash = window.location.hash;
-
-      const correctSlug = slugify(data.title);
-
-      if (slug !== correctSlug) {
-        navigate(routeBuilder.post(postId) + `/${correctSlug}${hash}`, {
-          replace: true,
-        });
-      }
-    }
 
   return (
     <div className="max-w-3xl mx-auto px-4 space-y-8">
@@ -142,9 +137,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
 
           {/* Edited indicator */}
           {data?.edited && (
-            <p className="text-xs italic text-blue-300/70 mb-4">
-              edited
-            </p>
+            <p className="text-xs italic text-blue-300/70 mb-4">edited</p>
           )}
 
           {/* Action Buttons */}

@@ -101,7 +101,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const isHighlighted = window.location.hash === hashCommentId(comment.id);
   React.useEffect(() => {
     //parent comment collapse is true by default so ignore
-    if (comment.parent_comment_id && window.location.hash) {
+    if (window.location.hash && comment.parent_comment_id) {
       const val = handleHashedComment(comment);
       setIsCollapsed(val);
     }

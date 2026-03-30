@@ -142,7 +142,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   });
 
   if (isLoading) {
-    return <Loading title="Loading likes" />;
+    return <></>;
   }
 
   if (error) {
