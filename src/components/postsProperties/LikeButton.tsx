@@ -6,6 +6,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../utils/routes";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 interface ILikeButtonProps {
   isComment?: boolean;
@@ -149,7 +150,11 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   }
 
   const submitLike = (like: number) => {
-    if (user ? false : true) return setShowError(true);
+    if (user ? false : true) {
+      toast.error(
+        `You must be logged in to like this ${isComment ? "comment" : "post"}!`);
+      return;
+    }
     mutate(like);
   };
 
@@ -213,11 +218,6 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
           </div>
         )}
       </div>
-      {showError && (
-        <a className="text-red-600" href={ROUTES.SIGN_IN}>
-          Log-in to like {isComment ? "comment" : "post"}
-        </a>
-      )}
     </div>
   );
 };
