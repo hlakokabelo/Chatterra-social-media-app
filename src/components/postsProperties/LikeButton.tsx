@@ -101,7 +101,6 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   refetchIntervalOn = true,
 }) => {
   const { user } = useAuth();
-  const [showError, setShowError] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();

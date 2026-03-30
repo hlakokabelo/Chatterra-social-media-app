@@ -89,22 +89,23 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     refetchInterval: 15000, //10secs
   });
 
-  
+  const hasScrolled = React.useRef(false);
+
   React.useEffect(() => {
+    if (hasScrolled.current) return;
+
     const hash = window.location.hash;
+    if (!hash || isLoading) return;
 
-    if (!hash) return;
-
-    setTimeout(() => {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, 500);
-  }, [isLoading, comments]);
+    const element = document.querySelector(hash);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start", 
+      });
+      hasScrolled.current = true;
+    }
+  }, [isLoading]);
 
   /* Map of Comments - Organize Replies - Return Tree  */
   const buildCommentTree = (
