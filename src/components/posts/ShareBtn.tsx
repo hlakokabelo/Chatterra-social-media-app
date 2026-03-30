@@ -90,7 +90,7 @@ export function ShareBtn({ post }: { post: IPost }) {
     <div className="relative" ref={shareMenuRef}>
       <button
         onClick={handleShare}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
+        className="cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
       >
         <FaShare className="text-base" />
         <span className="text-sm cursor-pointer font-medium">Share</span>
