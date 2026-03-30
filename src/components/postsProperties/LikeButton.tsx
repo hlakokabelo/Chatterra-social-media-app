@@ -6,11 +6,13 @@ import Loading from "../Loading";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../utils/routes";
+import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 
 interface ILikeButtonProps {
   isComment?: boolean;
   item_id: number;
   user_id: string | undefined;
+  refetchIntervalOn?: boolean;
 }
 interface IVote {
   id: number;
@@ -96,6 +98,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   item_id,
   user_id,
   isComment = false,
+  refetchIntervalOn = true,
 }) => {
   const { user } = useAuth();
   const [showError, setShowError] = React.useState<boolean>(false);
@@ -135,7 +138,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   } = useQuery<IVote[], Error>({
     queryKey: queryKey,
     queryFn: () => fetchVotes(item_id, isComment),
-    refetchInterval: 15000, //10secs
+    refetchInterval: refetchIntervalOn ? 15000 : false, //10secs
   });
 
   if (isLoading) {
@@ -155,33 +158,50 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
     deleteItemMutate();
   };
   // establish upvote and downvote count
-  const dislikes = votes?.filter((vote) => vote.vote === -1).length;
-  const likes = votes?.filter((vote) => vote.vote === 1).length;
+  const dislikes = votes?.filter((vote) => vote.vote === -1).length || 0;
+  const likes = votes?.filter((vote) => vote.vote === 1).length || 0;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
   return (
     <div className={`${isComment ? "text-[12px]" : ""}`}>
       <div className="flex items-center space-x-4 my-4">
-        <button
-          onClick={() => submitLike(1)}
-          className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-            userVote === 1
-              ? "bg-green-500 text-white"
-              : "bg-gray-200 text-black"
-          }`}
-        >
-          👍 {likes}
-        </button>
-        <button
-          onClick={() => submitLike(-1)}
-          className={`px-3  py-1 cursor-pointer rounded transition-colors duration-150 ${
-            userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
-          }`}
-        >
-          👎 {dislikes}
-        </button>
+        <div className="flex flex-row items-center gap-0.5">
+          <button
+            onClick={() => submitLike(1)}
+            className={`p-1.5 cursor-pointer rounded-full transition-colors duration-150 ${
+              userVote === 1
+                ? "text-orange-500 hover:text-orange-900 hover:bg-gray-100"
+                : "text-gray-500 hover:text-orange-500 hover:bg-gray-100"
+            }`}
+          >
+            <BiSolidUpvote className="text-xl" />
+          </button>
 
-        {user?.id === user_id && (
+          <span
+            className={`text-xs font-bold ${
+              userVote === 1
+                ? "text-orange-500"
+                : userVote === -1
+                  ? "text-blue-600"
+                  : "text-gray-500"
+            }`}
+          >
+            {likes - dislikes}
+          </span>
+
+          <button
+            onClick={() => submitLike(-1)}
+            className={`p-1.5 cursor-pointer rounded-full transition-colors duration-150 ${
+              userVote === -1
+                ? "text-blue-600 hover:text-blue-900 hover:bg-gray-100"
+                : "text-gray-500 hover:text-blue-600 hover:bg-gray-100"
+            }`}
+          >
+            <BiSolidDownvote className="text-xl" />
+          </button>
+        </div>
+
+        {user && user?.id === user_id && (
           <div
             className="ml-5.5 cursor-pointer"
             title="delete"

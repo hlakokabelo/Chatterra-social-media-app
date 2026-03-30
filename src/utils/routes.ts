@@ -1,3 +1,5 @@
+import { encodeId } from "./idEncoder";
+
 export const ROUTES = {
   HOME: "/",
   SIGN_IN: "/sign-in",
@@ -18,11 +20,13 @@ export const slugify = (text: string) =>
     .replace(/^-|-$/g, ""); // trim hyphens from start/end
 
 export const routeBuilder = {
-  post: (id: number | string, title?: string) =>
-    title ? `/post/${id}/${slugify(title)}` : `/post/${id}`,
+  post: (id: number, title?: string) =>
+    title ? `/post/${encodeId(id)}/${slugify(title)}` : `/post/${encodeId(id)}`,
   community: (id: number, title?: string) =>
-    title ? `/community/${id}/${slugify(title)}` : `/community/${id}`,
+    title
+      ? `/community/${encodeId(id)}/${slugify(title)}`
+      : `/community/${encodeId(id)}`,
   user: (username: string | undefined) => `/user/${username ? username : ""}`,
   hashComment: (postId: number, commentId: number) =>
-    `/post/${postId}#comment-${commentId}`,
+    `/post/${encodeId(postId)}#comment-${encodeId(commentId)}`,
 };

@@ -41,7 +41,7 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           {/* Logo */}
           <Link
             to={ROUTES.HOME}
-            className="flex items-center space-x-2 font-mono text-xl font-bold text-white hover:text-blue-400 transition-colors duration-300"
+            className="flex  items-center space-x-2 font-mono text-xl font-bold text-white hover:text-blue-400 transition-colors duration-300"
           >
             <img
               className="w-7 h-7 animate-pulse"
@@ -54,8 +54,8 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-20 space-x-1">
-            <NavLink to={ROUTES.HOME}>Home</NavLink>
+          <div className="hidden md:flex items-center gap-10 md:gap-20 space-x-1">
+            <NavLink className={'hidden lg:block'} to={ROUTES.HOME}>Home</NavLink>
             <NavLink to={ROUTES.CREATE_POST}>Create Post</NavLink>
             <NavLink to={ROUTES.COMMUNITIES}>Communities</NavLink>
             <NavLink to={ROUTES.CREATE_COMMUNITY}>Create Community</NavLink>

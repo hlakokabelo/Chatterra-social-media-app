@@ -2,12 +2,14 @@ import * as React from "react";
 import type { IPost } from "./PostList";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaHeart, FaComment, FaShare } from "react-icons/fa";
 import { routeBuilder } from "../../utils/routes";
+import { ShareBtn } from "./ShareBtn";
+import LikeButton from "../postsProperties/LikeButton";
 
 interface IPostItemProps {
   post: IPost & { community_name?: string; community_id?: number };
-  calledByCommunityComponent?: boolean; //ensures the community name is displayed when called by postList
+  calledByCommunityComponent?: boolean;
 }
 
 const PostItem: React.FunctionComponent<IPostItemProps> = ({
@@ -15,80 +17,103 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
   calledByCommunityComponent = false,
 }) => {
   return (
-    <div className="sm:w-3xl mb-6  font-bold sm:max-w-[35rem] relative group">
-      <div className="rounded-xl border border-slate-700 bg-slate-900/60 p-5 transition hover:bg-slate-900/80">
+    <div className="w-full max-w-3xl mx-auto mb-6 group">
+      <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/95 to-slate-900/80 backdrop-blur-sm p-6 transition-all duration-300 ">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-4">
           {post.avatar_url ? (
-            <Link to={routeBuilder.user(post.username)}>
+            <Link
+              to={routeBuilder.user(post.username)}
+              className="flex-shrink-0"
+            >
               <img
                 src={post.avatar_url}
-                alt="User Avatar"
-                className="w-10 h-10 rounded-full object-cover"
+                alt={post.username}
+                className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 hover:ring-slate-500 transition-all"
               />
             </Link>
           ) : (
-            <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center">
-              <FaUser className="text-slate-300 text-sm" />
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700">
+              <FaUser className="text-slate-300 text-lg" />
             </div>
           )}
 
-          <div className="flex flex-col text-1xl leading-tight">
-            <Link
-              to={routeBuilder.user(post.username)}
-              className="text-slate-200 font-medium hover:text-slate-700"
-            >
-              {post.username}
-            </Link>
-
-            {!calledByCommunityComponent && post.community_id && (
+          <div className="flex flex-col flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
               <Link
-                to={routeBuilder.community(
-                  post.community_id,
-                  post.community_name,
-                )}
-                className="text-slate-400 hover:text-white text-xs"
+                to={routeBuilder.user(post.username)}
+                className="text-slate-200 font-semibold hover:text-white transition-colors text-base"
               >
-                c/{post.community_name}
+                u/{post.username}
               </Link>
-            )}
+
+              {!calledByCommunityComponent && post.community_id && (
+                <>
+                  <span className="text-slate-600">•</span>
+                  <Link
+                    to={routeBuilder.community(
+                      post.community_id,
+                      post.community_name,
+                    )}
+                    className="text-slate-400 hover:text-emerald-400 transition-colors text-sm font-medium"
+                  >
+                    c/{post.community_name}
+                  </Link>
+                </>
+              )}
+            </div>
+
+            <span className="text-xs text-slate-500 mt-0.5">
+              {formatTimeStamp(post.created_at, false)}
+            </span>
           </div>
         </div>
 
         {/* Title */}
         <Link to={routeBuilder.post(post.id, post.title)}>
-          <h2
-            className={`text-[1.6rem] font-semibold text-slate-100 mb-3 hover:text-slate-50
-              ${post.image_url?"":"mb-8 mt-8"}`}
-          >
+          <h2 className="text-2xl font-bold text-slate-100 mb-3 hover:text-white transition-colors leading-tight">
             {post.title}
           </h2>
         </Link>
 
         {/* Image */}
         {post.image_url && (
-          <Link to={routeBuilder.post(post.id, post.title)}>
-            <img
-              src={post.image_url}
-              alt={post.title}
-              className="rounded-lg w-full max-h-[28rem] object-cover mb-3"
-            />
+          <Link
+            to={routeBuilder.post(post.id, post.title)}
+            className="block mb-4"
+          >
+            <div className="rounded-xl overflow-hidden bg-slate-800">
+              <img
+                src={post.image_url}
+                alt={post.title}
+                className="w-full max-h-[32rem]"
+              />
+            </div>
           </Link>
         )}
 
-        {/* Footer stats */}
-        <div className="flex items-center gap-5 text-sm text-slate-400">
-          <span>{formatTimeStamp(post.created_at, false)}</span>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-6 pt-2 border-t border-slate-800 mt-4">
+          <LikeButton
+            item_id={post.id}
+            user_id={post.user_id}
+            refetchIntervalOn={false}
+          />
 
-          <span className="flex items-center gap-1">
-            ❤️ {post.like_count ?? 0}
-          </span>
+          <Link
+            to={routeBuilder.post(post.id, post.title)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all duration-200"
+          >
+            <FaComment className="text-base" />
+            <span className="text-sm font-medium">
+              {post.comment_count ?? 0}
+            </span>
+          </Link>
 
-          <span className="flex items-center gap-1">
-            💬 {post.comment_count ?? 0}
-          </span>
+          {/* Share Button with Menu */}
+          <ShareBtn post={post} />
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
 import LikeButton from "./LikeButton.tsx";
+import { encodeId } from "../../utils/idEncoder.ts";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
@@ -19,14 +20,22 @@ interface IReplyComment {
   parent_comment_id: number | null;
 }
 
+const hashCommentId = (id: number): string => {
+  return `#comment-${encodeId(id)}`;
+};
+
+/**
+ * makes sure that if a comment is hashed, its parent comments are not collapsed.
+ * It also ensures that the comment is highlighted by giving it a different style.
+ */
 const handleHashedComment = (comment: ICommentChild): boolean => {
-  const isHighlighted = window.location.hash === `#comment-${comment.id}`;
+  const isHighlighted = window.location.hash === hashCommentId(comment.id);
 
   if (isHighlighted) return true;
   else if (comment.children) {
     let value = false;
     for (const child of comment.children) {
-      value = window.location.hash === `#comment-${child.id}`;
+      value = window.location.hash === hashCommentId(child.id);
 
       if (value) break;
       else if (handleHashedComment(child)) {
@@ -89,18 +98,18 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
     mutate({ content: replyText, parent_comment_id: comment.id });
   };
 
-  const isHighlighted = window.location.hash === `#comment-${comment.id}`;
-
+  const isHighlighted = window.location.hash === hashCommentId(comment.id);
   React.useEffect(() => {
     //parent comment collapse is true by default so ignore
-    if (comment.parent_comment_id) {
+    if (comment.parent_comment_id && window.location.hash) {
       const val = handleHashedComment(comment);
       setIsCollapsed(val);
     }
   }, []);
+
   return (
     <div
-      id={`comment-${comment.id}`}
+      id={`comment-${encodeId(comment.id)}`}
       className={`border-l rounded-lg p-4 ${
         isHighlighted
           ? "border-purple-500 ring-1 ring-purple-500"
@@ -125,7 +134,11 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
         <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
 
         {/*   Like button    */}
-        <LikeButton isComment={true} item_id={comment.id} user_id={comment.user_id} />
+        <LikeButton
+          isComment={true}
+          item_id={comment.id}
+          user_id={comment.user_id}
+        />
         <button
           className="text-amber-500 text-sm mt-1 cursor-pointer"
           onClick={() => setShowReply((prev) => !prev)}

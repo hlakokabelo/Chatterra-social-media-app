@@ -109,6 +109,10 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = React.useState<string>("");
 
+  if (isNaN(communityId)) {
+    return <PostNotFoud title="Community" />;
+  }
+
   const { data: CommunityData, error: CommunityError } = useQuery<
     ICommunity,
     Error

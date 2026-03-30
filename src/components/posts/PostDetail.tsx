@@ -7,9 +7,10 @@ import CommentSection from "../postsProperties/CommentSection";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link, useNavigate } from "react-router";
 import Loading from "../Loading";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaComment, FaShare } from "react-icons/fa";
 import PostNotFoud from "../../pages/PageNotFound";
-import { routeBuilder, ROUTES, slugify } from "../../utils/routes";
+import { routeBuilder, slugify } from "../../utils/routes";
+import { ShareBtn } from "./ShareBtn";
 
 interface IPostDetailProps {
   postId: number;
@@ -26,6 +27,7 @@ const fetchPostById = async (id: number): Promise<IPostCommunity> => {
 
   return data[0] as IPostCommunity;
 };
+
 const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
   postId,
   slug,
@@ -33,8 +35,9 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
   const navigate = useNavigate();
 
   if (isNaN(postId)) {
-    navigate(ROUTES.HOME);
+    return <PostNotFoud title="Post" />;
   }
+
   const { data, error, isLoading, isSuccess } = useQuery<IPostCommunity, Error>(
     {
       queryKey: ["post", postId],
@@ -59,81 +62,110 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
       }
     }
 
-
   return (
     <div className="max-w-3xl mx-auto px-4 space-y-8">
       {/* Post Card */}
-      <div className="p-6 rounded-xl border border-slate-700 bg-slate-900/60 backdrop-blur">
-        {/* Author Section */}
-        <div className="flex items-center gap-3 mb-4">
-          {data?.avatar_url ? (
-            <Link to={routeBuilder.user(data.username)}>
-              <img
-                src={data.avatar_url}
-                alt="User Avatar"
-                className="w-12 h-12 rounded-full object-cover"
-              />
-            </Link>
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
-              <FaUser className="text-slate-300" />
+      <div className="w-full max-w-3xl mx-auto group">
+        <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/95 to-slate-900/80 backdrop-blur-sm p-6 transition-all duration-300">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4">
+            {data?.avatar_url ? (
+              <Link
+                to={routeBuilder.user(data.username)}
+                className="flex-shrink-0"
+              >
+                <img
+                  src={data.avatar_url}
+                  alt={data.username}
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 hover:ring-slate-500 transition-all"
+                />
+              </Link>
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700">
+                <FaUser className="text-slate-300 text-lg" />
+              </div>
+            )}
+
+            <div className="flex flex-col flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Link
+                  to={routeBuilder.user(data!.username)}
+                  className="text-slate-200 font-semibold hover:text-white transition-colors text-base"
+                >
+                  u/{data?.username}
+                </Link>
+
+                {data?.community_id && (
+                  <>
+                    <span className="text-slate-600">•</span>
+                    <Link
+                      to={routeBuilder.community(
+                        data.community_id,
+                        data.community_name,
+                      )}
+                      className="text-slate-400 hover:text-emerald-400 transition-colors text-sm font-medium"
+                    >
+                      c/{data.community_name}
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              <span className="text-xs text-slate-500 mt-0.5">
+                {formatTimeStamp(data!.created_at, false)}
+              </span>
+            </div>
+          </div>
+
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-slate-100 mb-3 leading-tight">
+            {data?.title}
+          </h2>
+
+          {/* Image */}
+          {data?.image_url && (
+            <div className="block mb-4">
+              <div className="rounded-xl overflow-hidden bg-slate-800">
+                <img
+                  src={data.image_url}
+                  alt={data.title}
+                  className="w-full max-h-[32rem] object-cover"
+                />
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col leading-tight">
-            <Link
-              to={routeBuilder.user(data!.username)}
-              className="text-slate-200 font-semibold hover:text-slate-100"
-            >
-              {data?.username}
-            </Link>
+          {/* Content */}
+          <p className="text-slate-300 leading-relaxed mb-6 whitespace-pre-wrap">
+            {data?.content}
+          </p>
 
-            {data?.community_id && (
-              <Link
-                to={routeBuilder.community(
-                  data.community_id,
-                  data.community_name,
-                )}
-                className="text-sm text-slate-400 hover:text-slate-300"
-              >
-                c/{data.community_name}
-              </Link>
-            )}
-          </div>
-        </div>
+          {/* Edited indicator */}
+          {data?.edited && (
+            <p className="text-xs italic text-blue-300/70 mb-4">
+              edited
+            </p>
+          )}
 
-        {/* Title */}
-        <h2 className="text-2xl font-semibold text-slate-100 mb-4">
-          {data?.title}
-        </h2>
-
-        {/* Image */}
-        {data?.image_url && (
-          <div className="mb-5">
-            <img
-              src={data.image_url}
-              alt={data.title}
-              className="rounded-lg max-h-[30rem] w-full object-cover"
+          {/* Action Buttons */}
+          <div className="flex items-center gap-6 pt-2 border-t border-slate-800 mt-2">
+            <LikeButton
+              item_id={postId}
+              user_id={data?.user_id}
+              refetchIntervalOn={false}
             />
+
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400">
+              <FaComment className="text-base" />
+              <span className="text-sm font-medium">
+                {data?.comment_count ?? 0}
+              </span>
+            </div>
+
+            {/* Share Button with Menu */}
+            {data && <ShareBtn post={data} />}
           </div>
-        )}
-
-        {/* Content */}
-        <p className="text-slate-300 leading-relaxed mb-4">{data?.content}</p>
-
-        {/* Metadata */}
-        <div className="flex items-center justify-between text-sm text-slate-400">
-          <span>posted {formatTimeStamp(data!.created_at)}</span>
         </div>
-
-        {/* Likes */}
-        <div className="mt-4">
-          <LikeButton item_id={postId} user_id={data?.user_id} />
-        </div>
-
-        <p className="text-sm italic text-blue-300">
-          {data?.edited ? "edited" : ""}
-        </p>
       </div>
 
       {/* Comments */}

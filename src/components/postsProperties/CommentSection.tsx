@@ -77,10 +77,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
       if (!hash) return;
   
       setTimeout(() => {
-      
-  
         const element = document.querySelector(hash);
-  
         if (element) {
           element.scrollIntoView({
             behavior: "smooth",
@@ -107,6 +104,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     queryFn: () => fetchComments(postId),
     refetchInterval: 15000, //10secs
   });
+
   /* Map of Comments - Organize Replies - Return Tree  */
   const buildCommentTree = (
     flatComments: IComment[],
