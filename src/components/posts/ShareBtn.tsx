@@ -10,6 +10,7 @@ export function ShareBtn({ post }: { post: IPost }) {
   const postUrl = `${window.location.origin}${routeBuilder.post(post.id, post.title)}`;
 
   const [showShareMenu, setShowShareMenu] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const shareMenuRef = React.useRef<HTMLDivElement>(null);
   const handleShare = async () => {
     const shareData = {
@@ -18,26 +19,21 @@ export function ShareBtn({ post }: { post: IPost }) {
       url: postUrl,
     };
 
-    // Try using Web Share API first (mobile devices)
-    if (
-      navigator.share &&
-      /mobile|android|iphone|ipad|ipod/i.test(navigator.userAgent)
-    ) {
+    if (navigator.share) {
       try {
+        setLoading(true);
         await navigator.share(shareData);
+        setLoading(false);
         return;
       } catch (err) {
-        // User cancelled or share failed, fallback to menu
         if ((err as Error).name !== "AbortError") {
           console.error("Share failed:", err);
         }
       }
     }
-
-    // Fallback: Show share menu
-    setShowShareMenu(!showShareMenu);
+    setLoading(false);
+    setShowShareMenu((prev) => !prev);
   };
-
   // Close share menu when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -90,10 +86,16 @@ export function ShareBtn({ post }: { post: IPost }) {
     <div className="relative" ref={shareMenuRef}>
       <button
         onClick={handleShare}
-        className="cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
+        className="cursor-pointer flex items-center  px-3 py-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
       >
-        <FaShare className="text-base" />
-        <span className="text-sm cursor-pointer font-medium">Share</span>
+        {loading ? (
+          <div className="border rounded-2xl border-slate-400 border-t-transparent animate-spin w-5 h-5" />
+        ) : (
+          <div className="flex gap-2 items-center">
+            <FaShare className="text-base" />
+            <span className="text-sm cursor-pointer font-medium">Share</span>
+          </div>
+        )}
       </button>
 
       {/* Share Menu Dropdown */}
