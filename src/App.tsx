@@ -14,6 +14,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import { ROUTES } from "./utils/routes";
 import { Footer } from "./components/Footer";
 import PublicProfilePage from "./pages/PublicProfilePage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
       {/* Simple pattern overlay */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800/20 via-transparent to-transparent"></div>
+      <Toaster />
 
       <NavBar />
 

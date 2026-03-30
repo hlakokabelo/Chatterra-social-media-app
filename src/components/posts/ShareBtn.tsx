@@ -4,6 +4,7 @@ import { BiCopy } from "react-icons/bi";
 import React from "react";
 import type { IPost } from "./PostList";
 import { FaShare } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export function ShareBtn({ post }: { post: IPost }) {
   const postUrl = `${window.location.origin}${routeBuilder.post(post.id, post.title)}`;
@@ -56,10 +57,10 @@ export function ShareBtn({ post }: { post: IPost }) {
       await navigator.clipboard.writeText(postUrl);
       setShowShareMenu(false);
       // Optional: Show a toast notification
-      alert("Link copied to clipboard!");
+      toast.success("Link copied to clipboard!");
     } catch (err) {
       console.error("Failed to copy:", err);
-      alert("Failed to copy link");
+      toast.error("Failed to copy link");
     }
   };
 
