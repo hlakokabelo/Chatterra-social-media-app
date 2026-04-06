@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { ROUTES } from "../../utils/routes";
 import { validateCommunityName } from "../../utils/validations";
+import toast from "react-hot-toast";
 
 interface ICreateCommunityProps {}
 
@@ -54,10 +55,10 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
 
   const handleOnSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    if (errorMessage !== "") return;
     if (user)
       return mutate({ name, description, user_id: user?.id, role: "admin" });
-    setErrorMessage("Log in to create community");
+
+    toast.error("Log in to create community");
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +71,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       if (errorMessage === "") setDebouncedUsername(name);
-    }, 250); // delay (tweak if you want)
+    }, 250);
 
     return () => clearTimeout(timeout);
   }, [name]);

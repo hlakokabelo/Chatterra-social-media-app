@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { type IMemberInfo } from "../community/CommunityList";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes";
+import toast from "react-hot-toast";
 
 interface ICreatePostProps {}
 let postId: number = 0;
@@ -65,9 +66,6 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   const [title, setTitle] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<string>(
-    user ? "" : "Log in to create post",
-  );
 
   const navigate = useNavigate();
   const clearForm = (): void => {
@@ -104,7 +102,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
 
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
-    if (!user) return setErrorMessage("Log in to create post");
+    if (!user) return toast.error("Log in to create post");
 
     return mutate({
       title,
@@ -124,7 +122,6 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
       <h2 className="text-4xl  font-bold mb-3 text-center bg-linear-to-r text-slate-200">
         Create New Post
       </h2>
-      <p className="text-center text-red-400">{errorMessage}</p>
       {/* Title */}
       <div className="space-y-2">
         <label htmlFor="title" className="block font-medium text-gray-200">
@@ -233,7 +230,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           accept="image/*"
           className="w-full rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
       file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-      file:bg-cyan-700 file:text-white hover:file:bg-cyan-500
+      file:bg-cyan-700 file:text-white hover:file:bg-cyan-500 disabled:cursor-not-allowed
       transition"
           onChange={handleFileChange}
         />
@@ -241,7 +238,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
       {/* Button */}
       <button
         className="w-full py-3 mt-2 rounded-lg font-semibold text-white 
-    bg-cyan-700
+    bg-cyan-700 cursor-pointer
     hover:scale-[1.02] active:scale-[0.98] 
     transition-transform shadow-lg"
         type="submit"

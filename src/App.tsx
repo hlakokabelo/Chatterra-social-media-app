@@ -16,7 +16,7 @@ import { Footer } from "./components/Footer";
 import PublicProfilePage from "./pages/PublicProfilePage";
 import { Toaster } from "react-hot-toast";
 
-function App() {
+const App = () => {
   return (
     <div className="min-h-screen mt-10 bg-gray-950 text-gray-100">
       {/* Simple gradient background */}
@@ -57,6 +57,6 @@ function App() {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;
