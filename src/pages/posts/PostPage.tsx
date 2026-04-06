@@ -1,7 +1,7 @@
 import * as React from "react";
-import PostDetail from "../components/posts/PostDetail";
+import PostDetail from "../../components/posts/PostDetail";
 import { useParams } from "react-router";
-import { decodeId } from "../utils/idEncoder";
+import { decodeId } from "../../utils/idEncoder";
 
 interface IPostPageProps {}
 

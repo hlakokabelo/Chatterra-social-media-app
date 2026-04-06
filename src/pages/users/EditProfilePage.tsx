@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Link, Navigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { supabase } from "../config/supabase-client";
+import { supabase } from "../../config/supabase-client";
 import imageCompression from "browser-image-compression";
-import { routeBuilder } from "../utils/routes";
-import { validateUsername } from "../utils/validations";
+import { routeBuilder } from "../../utils/routes";
+import { validateUsername } from "../../utils/validations";
 
 interface IEditProfilePageProps {}
 

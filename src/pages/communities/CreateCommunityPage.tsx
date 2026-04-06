@@ -1,5 +1,5 @@
 import * as React from "react";
-import CreateCommunity from "../components/community/CreateCommunity";
+import CreateCommunity from "../../components/community/CreateCommunity";
 
 interface ICreateCommunityPageProps {}
 

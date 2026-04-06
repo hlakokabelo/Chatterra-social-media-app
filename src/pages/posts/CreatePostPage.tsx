@@ -1,5 +1,5 @@
 import * as React from "react";
-import CreatePost from "../components/posts/CreatePost";
+import CreatePost from "../../components/posts/CreatePost";
 
 interface ICreatePostPageProps {}
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import CommunityList from "../components/community/CommunityList";
+import CommunityList from "../../components/community/CommunityList";
 import { useEffect } from "react";
 
 interface ICommunitiesPageProps {}

@@ -1,14 +1,14 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router";
-import { supabase } from "../config/supabase-client";
+import { supabase } from "../../config/supabase-client";
 import * as React from "react";
-import UserPosts from "../components/posts/UserPosts";
-import UserReplies from "../components/user/UserReplies";
-import UserLikes from "../components/user/UserLikes";
+import UserPosts from "../../components/posts/UserPosts";
+import UserReplies from "../../components/user/UserReplies";
+import UserLikes from "../../components/user/UserLikes";
 import { MdEdit } from "react-icons/md";
-import { useAuth, type IUserProfile } from "../context/AuthContext";
-import { ROUTES } from "../utils/routes";
-import Loading from "../components/Loading";
-import { formatErrorMessage } from "../utils/formatErrorMessage";
+import { useAuth, type IUserProfile } from "../../context/AuthContext";
+import { ROUTES } from "../../utils/routes";
+import Loading from "../../components/Loading";
+import { formatErrorMessage } from "../../utils/formatErrorMessage";
 import { useEffect } from "react";
 const PublicProfilePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

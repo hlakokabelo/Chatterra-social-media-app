@@ -1,19 +1,19 @@
 import { Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import NavBar from "./components/navigation/NavBar";
-import CreatePostPage from "./pages/CreatePostPage";
-import PostPage from "./pages/PostPage";
-import CreateCommunityPage from "./pages/CreateCommunityPage";
-import CommunitiesPage from "./pages/CommunitiesPage";
-import CommunityPage from "./pages/CommunityPage";
+import CreatePostPage from "./pages/posts/CreatePostPage";
+import PostPage from "./pages/posts/PostPage";
+import CreateCommunityPage from "./pages/communities/CreateCommunityPage";
+import CommunitiesPage from "./pages/communities/CommunitiesPage";
+import CommunityPage from "./pages/communities/CommunityPage";
 import SignInPage from "./pages/authPages/SignInPage";
 import SignUpPage from "./pages/authPages/SignUpPage";
-import EditProfilePage from "./pages/EditProfilePage";
+import EditProfilePage from "./pages/users/EditProfilePage";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import { ROUTES } from "./utils/routes";
 import { Footer } from "./components/Footer";
-import PublicProfilePage from "./pages/PublicProfilePage";
+import PublicProfilePage from "./pages/users/PublicProfilePage";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {

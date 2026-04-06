@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useParams } from "react-router";
-import CommunityDisplay from "../components/community/CommunityDisplay";
-import { decodeId } from "../utils/idEncoder";
+import CommunityDisplay from "../../components/community/CommunityDisplay";
+import { decodeId } from "../../utils/idEncoder";
 import { useEffect } from "react";
 
 interface ICommunityPageProps {}
