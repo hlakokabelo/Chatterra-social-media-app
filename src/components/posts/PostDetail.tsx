@@ -12,17 +12,23 @@ import PostNotFoud from "../../pages/PageNotFound";
 import { routeBuilder, slugify } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
 
+import { PhotoProvider, PhotoView } from "react-photo-view";
+
 interface IPostDetailProps {
   postId: number;
   slug: string | undefined;
 }
 
-type IPostCommunity = IPost & { community_name: string; community_id: number };
+type IPostCommunity = IPost & {
+  community_name: string;
+  community_id: number;
+};
 
 const fetchPostById = async (id: number): Promise<IPostCommunity> => {
   const { data, error } = await supabase.rpc("get_posts_with_post_id", {
     p_post_id: id,
   });
+
   if (error) throw new Error(error.message);
 
   return data[0] as IPostCommunity;
@@ -38,15 +44,18 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
     return <PostNotFoud title="Post" />;
   }
 
-  const { data, error, isLoading, isSuccess } = useQuery<IPostCommunity, Error>(
-    {
-      queryKey: ["post", postId],
-      queryFn: () => fetchPostById(postId),
-    },
-  );
+  const { data, error, isLoading, isSuccess } = useQuery<
+    IPostCommunity,
+    Error
+  >({
+    queryKey: ["post", postId],
+    queryFn: () => fetchPostById(postId),
+  });
+
   React.useEffect(() => {
     if (isSuccess && data && slug !== slugify(data.title)) {
       const hash = window.location.hash;
+
       navigate(routeBuilder.post(postId) + `/${slugify(data.title)}${hash}`, {
         replace: true,
       });
@@ -93,6 +102,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
                 {data?.community_id && (
                   <>
                     <span className="text-slate-600">•</span>
+
                     <Link
                       to={routeBuilder.community(
                         data.community_id,
@@ -120,13 +130,20 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
           {/* Image */}
           {data?.image_url && (
             <div className="block mb-4">
-              <div className="rounded-xl overflow-hidden bg-slate-800">
-                <img
-                  src={data.image_url}
-                  alt={data.title}
-                  className="w-full max-h-[32rem] object-cover"
-                />
-              </div>
+              <PhotoProvider
+                maskOpacity={0.9}
+                speed={() => 300}
+              >
+                <PhotoView src={data.image_url}>
+                  <div className="rounded-xl overflow-hidden bg-black cursor-zoom-in select-none">
+                    <img
+                      src={data.image_url}
+                      alt={data.title}
+                      className="w-full h-auto max-h-[32rem] object-contain bg-black transition-transform duration-300 hover:scale-[1.01]"
+                    />
+                  </div>
+                </PhotoView>
+              </PhotoProvider>
             </div>
           )}
 
@@ -137,7 +154,9 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
 
           {/* Edited indicator */}
           {data?.edited && (
-            <p className="text-xs italic text-blue-300/70 mb-4">edited</p>
+            <p className="text-xs italic text-blue-300/70 mb-4">
+              edited
+            </p>
           )}
 
           {/* Action Buttons */}
@@ -150,12 +169,13 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
 
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400">
               <FaComment className="text-base" />
+
               <span className="text-sm font-medium">
                 {data?.comment_count ?? 0}
               </span>
             </div>
 
-            {/* Share Button with Menu */}
+            {/* Share Button */}
             {data && <ShareBtn post={data} />}
           </div>
         </div>
