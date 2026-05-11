@@ -134,7 +134,7 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
           disabled={!user}
           id="title"
           required
-          maxLength={20}
+          maxLength={300}
           className="w-full rounded-lg bg-slate-700 border border-white/10 px-4 py-2 
       focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
           onChange={(e) => setTitle(e.target.value)}
