@@ -82,13 +82,13 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
             to={routeBuilder.post(post.id, post.title)}
             className="block mb-4"
           >
-            <div className="rounded-xl overflow-hidden bg-slate-800 h-[400px]">
-              <img
-                src={post.image_url}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
+         <div className="rounded-xl overflow-hidden bg-black max-h-[80vh]">
+  <img
+    src={post.image_url}
+    alt={post.title}
+    className="w-full max-h-[80vh] object-contain mx-auto"
+  />
+</div>
           </Link>
         )}
 
