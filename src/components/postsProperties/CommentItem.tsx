@@ -111,7 +111,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
 const handleReply = () => {
   if (!user) {
     toast.error(
-      `Oops — you’ll need to sign in to reply to this ${comment.parent_comment_id ? "reply" : "comment"}`
+      `Oops — you’ll need to sign in to reply`
     );
     return;
   }
