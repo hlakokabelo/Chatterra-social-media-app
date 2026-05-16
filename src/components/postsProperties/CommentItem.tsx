@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { IComment } from "./CommentSection";
 import { useAuth } from "../../context/AuthContext.tsx";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client.ts";
 import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
