@@ -151,7 +151,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   const submitLike = (like: number) => {
     if (user ? false : true) {
       toast.error(
-        `You must be logged in to like this ${isComment ? "comment" : "post"}!`);
+        `Oops — log in to like`);
       return;
     }
     mutate(like);
