@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { IComment } from "./CommentSection";
 import { useAuth } from "../../context/AuthContext.tsx";
+import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client.ts";
 import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
@@ -69,7 +70,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   postId,
 }) => {
   const [showReply, setShowReply] = React.useState<boolean>(false);
-  const [replyText, setReplyText] = React.useState<string>("");
+  const [replyText, setReplyText] = React.useState<string>(""); 
 
   /**ensures that the first comments of root comment are shown */
   const [isCollapsed, setIsCollapsed] = React.useState<boolean>(
@@ -107,6 +108,17 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
     }
   }, []);
 
+const handleReply = () => {
+  if (!user) {
+    toast.error(
+      `Oops — you’ll need to sign in to reply to this ${comment.parent_comment_id ? "reply" : "comment"}`
+    );
+    return;
+  }
+
+  setShowReply((prev) => !prev);
+};
+
   return (
     <div
       id={`comment-${encodeId(comment.id)}`}
@@ -141,7 +153,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
         />
         <button
           className="text-amber-500 text-sm mt-1 cursor-pointer"
-          onClick={() => setShowReply((prev) => !prev)}
+          onClick={handleReply}
         >
           {showReply ? "Cancel" : "Reply"}
         </button>
