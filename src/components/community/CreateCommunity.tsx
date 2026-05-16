@@ -17,9 +17,14 @@ interface ICommunity {
 }
 
 const createCommunity = async (community: ICommunity) => {
-  const { error } = await supabase.from("communities").insert(community);
+  const { error } = await supabase
+    .from("communities")
+    .insert(community);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    toast.error(error.message);
+    throw new Error(error.message);
+  }
 };
 
 const checkNameAvailability = async (name: string) => {
