@@ -227,7 +227,7 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
                   ? "Leaving..."
                   : isMember
                     ? "Leave"
-                    : "Join Community"}
+                    : "Join"}
             </button>
           )}
         </div>
