@@ -1,112 +1,208 @@
 import * as React from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import UserProfilePhoto from "../user/UserProfilePhoto";
 import image from "../../assets/icon3.svg";
 import { ROUTES } from "../../utils/routes";
 import MobileMenu from "./MobileMenu";
 import { appName } from "../../utils/appName";
+import SearchBar from "./SearchBar";
 
-interface INavBarProps {}
+const NavBar: React.FunctionComponent = () => {
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
-const NavBar: React.FunctionComponent<INavBarProps> = () => {
-  const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const { user, signOut, userProfile } = useAuth();
-
   const navigate = useNavigate();
+
   const goToUrl = (destination: string) => {
     setMenuOpen(false);
     navigate(destination);
   };
 
-  document.addEventListener("click", (e) => {
-    if (!(e.target as HTMLElement).closest(".mobile-menu")) {
-      setMenuOpen(false);
-    }
-  });
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (!target.closest(".mobile-menu")) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const mobileMenuClick = () => {
     if (user) {
       signOut();
-      setMenuOpen((prev) => !prev);
+      setMenuOpen(false);
       return;
     }
+
     goToUrl(ROUTES.SIGN_IN);
   };
 
   return (
-    <nav className="fixed top-0 w-full z-40 bg-gradient-to-r from-gray-900/95 to-gray-800/95 backdrop-blur-xl border-b border-gray-700/50 shadow-xl">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 border-b border-gray-800/80 bg-gray-950/90 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center gap-4">
+
           {/* Logo */}
-          <Link
-            to={ROUTES.HOME}
-            className="flex  items-center space-x-2 font-mono text-xl font-bold text-white hover:text-blue-400 transition-colors duration-300"
+          <button
+            onClick={() => goToUrl(ROUTES.HOME)}
+            className="flex shrink-0 items-center gap-2 cursor-pointer"
           >
             <img
-              className="w-7 h-7 animate-pulse"
+              className="h-8 w-8"
               src={image}
               alt={`${appName} Logo`}
             />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+
+            <span className="hidden sm:block text-lg font-bold text-white">
               {appName}
             </span>
-          </Link>
+          </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-10 md:gap-20 space-x-1">
-            <NavLink className={'hidden lg:block'} to={ROUTES.HOME}>Home</NavLink>
-            <NavLink to={ROUTES.CREATE_POST}>Create Post</NavLink>
-            <NavLink to={ROUTES.COMMUNITIES}>Communities</NavLink>
-            <NavLink to={ROUTES.CREATE_COMMUNITY}>Create Community</NavLink>
+          {/* Search */}
+          <div className="flex flex-1 justify-center px-2 sm:px-6">
+            <SearchBar />
           </div>
 
-          {/* Desktop Auth Section */}
-          <div className="hidden md:flex items-center">
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-1">
+
+            <NavLink
+              to={ROUTES.HOME}
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-gray-800 text-white"
+                    : "text-gray-400 hover:bg-gray-800/60 hover:text-white"
+                }`
+              }
+            >
+              Home
+            </NavLink>
+
+            <NavLink
+              to={ROUTES.COMMUNITIES}
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-gray-800 text-white"
+                    : "text-gray-400 hover:bg-gray-800/60 hover:text-white"
+                }`
+              }
+            >
+              Communities
+            </NavLink>
+
+            <NavLink
+              to={ROUTES.CREATE_POST}
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-gray-800 text-white"
+                    : "text-gray-400 hover:bg-gray-800/60 hover:text-white"
+                }`
+              }
+            >
+              Create
+            </NavLink>
+          </div>
+
+          {/* Desktop Auth */}
+          <div className="hidden md:flex shrink-0 items-center gap-3">
+
             {user ? (
-              <div className="flex items-center space-x-4">
-                {/* Using the UserProfilePhoto component */}
+              <>
                 <UserProfilePhoto user={user} />
 
                 <button
                   onClick={signOut}
-                  className="cursor-pointer bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-lg border border-red-500/20 hover:border-red-500/50 transition-all duration-300 font-medium"
+                  className="
+                    cursor-pointer
+                    rounded-lg
+                    border border-red-500/20
+                    bg-red-500/10
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-red-400
+                    transition-all
+                    duration-200
+                    hover:border-red-500/40
+                    hover:bg-red-500
+                    hover:text-white
+                  "
                 >
                   Sign Out
                 </button>
-              </div>
+              </>
             ) : (
               <button
                 onClick={() => navigate(ROUTES.SIGN_IN)}
-                className="cursor-pointer bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 font-medium"
+                className="
+                  cursor-pointer
+                  rounded-lg
+                  bg-blue-600
+                  px-5
+                  py-2
+                  text-sm
+                  font-medium
+                  text-white
+                  transition-all
+                  duration-200
+                  hover:bg-blue-500
+                  hover:shadow-lg
+                  hover:shadow-blue-500/20
+                "
               >
                 Sign In
               </button>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Mobile */}
+          <div className="md:hidden flex items-center gap-2">
+
+            {user && (
+              <UserProfilePhoto user={user} />
+            )}
+
             <button
-              className="cursor-pointer mobile-menu text-gray-300 hover:text-white focus:outline-none p-2 rounded-lg hover:bg-gray-800/50 transition-all duration-300"
-              onClick={() => {
+              className="
+                mobile-menu
+                cursor-pointer
+                rounded-lg
+                p-2
+                text-gray-400
+                transition-colors
+                hover:bg-gray-800
+                hover:text-white
+              "
+              onClick={(e) => {
+                e.stopPropagation();
                 setMenuOpen((prev) => !prev);
               }}
               aria-label="Toggle menu"
             >
               <svg
-                className="w-6 h-6 transform transition-transform duration-300"
+                className="h-6 w-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 {menuOpen ? (
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
+                    d="M6 18 18 6M6 6l12 12"
                   />
                 ) : (
                   <path
@@ -122,18 +218,18 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
         </div>
       </div>
 
-      {/* Mobile Profile Photo - Only show when menu is closed */}
-      {user && !menuOpen && (
-        <div className="md:hidden absolute right-16 top-4">
-          <UserProfilePhoto user={user} />
-        </div>
-      )}
-
       {/* Mobile Menu */}
       <MobileMenu
-        items={{ mobileMenuClick, goToUrl, menuOpen, user, userProfile }}
+        items={{
+          mobileMenuClick,
+          goToUrl,
+          menuOpen,
+          user,
+          userProfile,
+        }}
       />
     </nav>
   );
 };
+
 export default NavBar;
