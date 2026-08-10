@@ -19,11 +19,21 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
     navigate(destination);
   };
 
-  document.addEventListener("click", (e) => {
-    if (!(e.target as HTMLElement).closest(".mobile-menu")) {
+  React.useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+
+    if (!target.closest(".mobile-menu")) {
       setMenuOpen(false);
     }
-  });
+  };
+
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
 
   const mobileMenuClick = () => {
     if (user) {
