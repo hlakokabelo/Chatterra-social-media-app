@@ -5,12 +5,25 @@ export interface SearchResult {
   type: "post" | "community" | "user";
   title?: string;
   content?: string;
+  display_name?: string;
   name?: string;
   username?: string;
   avatar_url?: string;
   created_at?: string;
+  bio?:string;
   community_name?: string;
 }
+
+const escapePostgrestSearch = (value: string) => {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/%/g, "\\%")
+    .replace(/_/g, "\\_")
+    .replace(/"/g, '\\"')
+    .replace(/,/g, "\\,")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)");
+};
 
 export const searchPosts = async (
   query: string,
@@ -73,12 +86,15 @@ export const searchUsers = async (
     return [];
   }
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .ilike("username", `%${searchTerm}%`)
-    .order("username", { ascending: true });
+const sanitizedSearchTerm = escapePostgrestSearch(searchTerm);
 
+const { data, error } = await supabase
+  .from("profiles")
+  .select("*")
+  .or(
+    `username.ilike.%${sanitizedSearchTerm}%,display_name.ilike.%${sanitizedSearchTerm}%,bio.ilike.%${sanitizedSearchTerm}%`,
+  )
+  .order("username", { ascending: true });
   if (error) {
     console.error("Error searching users:", error);
     throw error;

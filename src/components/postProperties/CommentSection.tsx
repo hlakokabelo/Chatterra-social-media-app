@@ -21,6 +21,7 @@ export interface IComment {
   created_at: string;
   id: number;
   username?: string;
+  is_deleted?: boolean;
 }
 
 const createComment = async (

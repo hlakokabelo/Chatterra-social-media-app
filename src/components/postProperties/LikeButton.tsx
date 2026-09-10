@@ -68,11 +68,11 @@ const submitVote = async (
   }
 };
 
-const deletePostOrComment = async (item_id: number, isComment: boolean) => {
-  const table = isComment ? "comments" : "posts";
+const deleteComment = async (item_id: number) => {
 
-  const { error } = await supabase.from(table).delete().eq("id", item_id);
-
+  const { error } = await supabase.rpc("delete_comment", {
+  p_comment_id: item_id,
+});
   if (error) throw new Error(error.message);
 };
 
@@ -116,14 +116,17 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
       return submitVote(voteValue, item_id, user.id, isComment);
     },
     onSuccess: () => {
+      toast.success("Comment deleted")
       queryClient.invalidateQueries({ queryKey: queryKey });
     },
+    onError:(error)=>{
+      toast.error(error.message)
+    }
   });
 
   const { mutate: deleteItemMutate } = useMutation({
-    mutationFn: () => {
-      return deletePostOrComment(item_id, isComment);
-    },
+    mutationFn: deleteComment
+    ,
     onSuccess: () => {
       //if its a post deleted go home, else stay where you are
       if (!isComment) navigate(ROUTES.HOME);
@@ -158,7 +161,8 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   };
 
   const deletHandle = () => {
-    deleteItemMutate();
+    deleteItemMutate(item_id);
+    
   };
   // establish upvote and downvote count
   const dislikes = votes?.filter((vote) => vote.vote === -1).length || 0;
@@ -209,6 +213,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
             className="ml-5.5 cursor-pointer"
             title="delete"
             onClick={deletHandle}
+            hidden={!isComment}
           >
             <MdDeleteForever
               className="text-red-500 hover:text-red-800"

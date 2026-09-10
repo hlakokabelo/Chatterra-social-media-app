@@ -7,15 +7,15 @@ import type { IPost } from "./PostList";
 import { routeBuilder } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";
 import UserPostsSkeleton from "../Skeletons/UserPostsSkeleton";
+import { FormatContent } from "../FormatContent";
 
 interface Props {
   userId: string;
 }
 
 const timeStamp = (post: IPost) => {
-  //posted on : 16 Sep, 18:00
-  //posted 18hrs ago
   const stamp = formatTimeStamp(post.created_at);
+
   return (
     "posted " +
     (stamp.includes("min") || stamp.includes("hr") ? "" : "on") +
@@ -23,10 +23,10 @@ const timeStamp = (post: IPost) => {
     stamp
   );
 };
+
 const fetchUserPosts = async (userId: string) => {
   const { data, error } = await supabase
-    .rpc("get_posts_with_user_id", { p_user_id: userId })
-    .order("created_at", { ascending: false });
+    .rpc("get_posts_with_user_id", { p_user_id: userId });
 
   if (error) throw new Error(error.message);
 
@@ -39,42 +39,92 @@ const UserPosts: React.FC<Props> = ({ userId }) => {
     queryFn: () => fetchUserPosts(userId),
   });
 
-
   if (isLoading) return <UserPostsSkeleton />;
-  if (error)
-    return (
-      <p className="text-red-400 mt-4">{formatErrorMessage(error.message)}</p>
-    );
 
-  if (!data?.length) return <p className="text-zinc-400 mt-4">No posts yet.</p>;
+  if (error) {
+    return (
+      <p className="mt-4 text-red-400">
+        {formatErrorMessage(error.message)}
+      </p>
+    );
+  }
+
+  if (!data?.length) {
+    return (
+      <p className="mt-4 text-zinc-400">
+        No posts yet.
+      </p>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4 mt-4">
-      {data.map((post: IPost & { community_id: number }) => (
+    <div className="mt-4 flex flex-col gap-3">
+      {data.map((post: IPost & { community_id: number; community_name: string }) => (
         <div
           key={post.id}
-          className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:border-amber-300 "
+          className="rounded-lg border border-zinc-700 bg-zinc-900 p-4 transition-colors hover:border-zinc-500"
         >
-          <Link to={routeBuilder.post(post.id, post.title)}>
-            <p className="text-shadow-amber-200 hover:text-blue-300">
-              {post.title}
-            </p>
-          </Link>
-          <div className="w-fit">
-            {post.community_id && (
-              <Link
-                to={routeBuilder.community(
-                  post.community_id,
-                  post.community_name,
+          <div className="flex gap-2">
+            {/* Post content */}
+            <div className="min-w-0 flex-2">
+              <Link to={routeBuilder.post(post.id, post.title)}>
+                <h3 className="font-medium text-zinc-100 hover:text-blue-300">
+                  <FormatContent content={post.title} />
+                </h3>
+
+                {post.content && (
+                  <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
+                    <FormatContent content={post.content} />
+                  </p>
                 )}
+              </Link>
+
+              {/*image for mobile*/}
+
+ {post.image_urls
+  ?.[0] && (
+    <img
+      src={post.image_urls[0]}
+      alt=""
+      className="sm:hidden mt-3 max-h-64  rounded-md object-cover flex justify-center"
+    />
+  )}
+              {/* Metadata */}
+              <div className="mt-3 flex items-center gap-2 text-xs text-zinc-500">
+                {post.community_id && (
+                  <>
+                    <Link
+                      to={routeBuilder.community(
+                        post.community_id,
+                        post.community_name
+                      )}
+                      className="text-blue-300 hover:text-blue-400"
+                    >
+                      c/{post.community_name}
+                    </Link>
+
+                    <span>·</span>
+                  </>
+                )}
+
+                <span>{timeStamp(post)}</span>
+              </div>
+            </div>
+
+            {/* Image thumbnail */}
+            {post.image_urls?.[0] && (
+              <Link
+                to={routeBuilder.post(post.id, post.title)}
+                className="hidden shrink-0 sm:block"
               >
-                <p className="text-blue-300 w-fit hover:text-blue-600">
-                  c/{post.community_name}
-                </p>
+                <img
+                  src={post.image_urls[0]}
+                  alt=""
+                  className="max-h-20 rounded-md object-cover"
+                />
               </Link>
             )}
           </div>
-          <p className="text-xs text-zinc-500 mt-2">{timeStamp(post)} </p>
         </div>
       ))}
     </div>

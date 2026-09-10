@@ -6,6 +6,7 @@ import { FaUser, FaComment } from "react-icons/fa";
 import { routeBuilder } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
 import LikeButton from "../postProperties/LikeButton";
+import { FormatContent } from "../FormatContent";
 
 interface IPostItemProps {
   post: IPost & { community_name?: string; community_id?: number };
@@ -76,7 +77,8 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
         {/* Title */}
         <Link to={routeBuilder.post(post.id, post.title)}>
           <h2 className="text-2xl font-bold text-slate-100 mb-3 hover:text-white transition-colors leading-tight">
-            {post.title}
+           <FormatContent content={post?.title}/>
+
           </h2>
         </Link>
 

@@ -20,6 +20,7 @@ export const slugify = (text: string) =>
     .replace(/^-|-$/g, ""); // trim hyphens from start/end
 
 export const routeBuilder = {
+  editPost: (id: number) => `/post/${encodeId(id)}/edit`,
   post: (id: number, title?: string) =>
     title ? `/post/${encodeId(id)}/${slugify(title)}` : `/post/${encodeId(id)}`,
   community: (id: number, title?: string) =>

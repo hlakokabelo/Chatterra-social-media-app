@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   searchCommunities,
@@ -11,6 +10,7 @@ import {
 import { routeBuilder } from "../utils/routes";
 import { formatTimeStamp } from "../utils/formatTimeStamp";
 import SearchLoading from "../components/Skeletons/SearchLoading";
+import HighlightMatch from "../components/HighlightMatch";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -93,7 +93,9 @@ const SearchPage = () => {
           <button
             key={tab.key}
             onClick={() =>
-              setActiveTab(tab.key as "all" | "posts" | "communities" | "users")
+              setActiveTab(
+                tab.key as "all" | "posts" | "communities" | "users",
+              )
             }
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.key
@@ -122,54 +124,65 @@ const SearchPage = () => {
           </div>
         ) : (
           <>
-            {/* MORE POSTS */}
+            {/* POSTS HEADER */}
             {activeTab === "all" && (
-              <div className="w-full py-3 text-white">Posts</div>
+              <div className="w-full py-3 text-white font-medium">
+                Posts
+              </div>
             )}
+
             {/* POSTS */}
-            {postsResults.map((post) => {
-              return (
-                <Link
-                  key={`${post.type}-${post.id}`}
-                  to={routeBuilder.post(post.id as number, post.title)}
-                  className="block p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src={post.avatar_url}
-                      alt={post.username}
-                      className="w-8 h-8 rounded-full"
-                    />
+            {postsResults.map((post) => (
+              <Link
+                key={`${post.type}-${post.id}`}
+                to={routeBuilder.post(post.id as number, post.title)}
+                className="block p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <img
+                    src={post.avatar_url}
+                    alt={post.username}
+                    className="w-8 h-8 rounded-full"
+                  />
 
-                    <div className="text-sm">
-                      <span className="text-white hover:text-blue-400">
-                        u/{post.username}
-                      </span>
+                  <div className="text-sm">
+                    <span className="text-white hover:text-blue-400">
+                      u/{post.username}
+                    </span>
 
-                      <span className="text-gray-500 mx-2">•</span>
+                    <span className="text-gray-500 mx-2">•</span>
 
-                      <span className="text-gray-500">
-                        {formatTimeStamp(post.created_at!)}
-                      </span>
-                    </div>
+                    <span className="text-gray-500">
+                      {formatTimeStamp(post.created_at!)}
+                    </span>
                   </div>
+                </div>
 
-                  <h2 className="text-lg font-semibold text-white mb-1">
-                    {post.title}
-                  </h2>
+                <h2 className="text-lg font-semibold text-white mb-1">
+                  <HighlightMatch
+                    text={post.title || ""}
+                    query={query}
+                  />
+                </h2>
 
-                  <p className="text-gray-400 text-sm line-clamp-2">
-                    {post.content}
+                <p className="text-gray-400 text-sm line-clamp-2">
+                  <HighlightMatch
+                    text={post.content || ""}
+                    query={query}
+                  />
+                </p>
+
+                {post.community_name && (
+                  <p className="text-blue-400 text-xs mt-3">
+                    r/
+                    <HighlightMatch
+                      text={post.community_name}
+                      query={query}
+                    />
                   </p>
-
-                  {post.community_name && (
-                    <p className="text-blue-400 text-xs mt-3">
-                      r/{post.community_name}
-                    </p>
-                  )}
-                </Link>
-              );
-            })}
+                )}
+              </Link>
+            ))}
 
             {/* MORE POSTS */}
             {activeTab === "all" && postsQuery && postsQuery.length > 5 && (
@@ -181,38 +194,49 @@ const SearchPage = () => {
               </button>
             )}
 
-            {/* COMMUNITIES */}
+            {/* COMMUNITIES HEADER */}
             {activeTab === "all" && (
-              <div className="w-full py-3 text-white">Communities</div>
+              <div className="w-full py-3 text-white font-medium">
+                Communities
+              </div>
             )}
-            {communitiesResults.map((community) => {
-              return (
-                <Link
-                  key={`${community.type}-${community.id}`}
-                  to={routeBuilder.community(
-                    community.id as number,
-                    community.name,
-                  )}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
-                >
-                  <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-xl">
-                    👥
-                  </div>
 
-                  <div>
-                    <h2 className="text-white font-semibold">
-                      r/{community.name}
-                    </h2>
+            {/* COMMUNITIES */}
+            {communitiesResults.map((community) => (
+              <Link
+                key={`${community.type}-${community.id}`}
+                to={routeBuilder.community(
+                  community.id as number,
+                  community.name,
+                )}
+                className="flex items-center gap-4 p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
+              >
+                <div className="w-12 h-12 shrink-0 rounded-full bg-gray-700 flex items-center justify-center text-xl">
+                  👥
+                </div>
 
-                    <p className="text-gray-400 text-sm mt-1">
-                      {community.content}
+                <div className="min-w-0">
+                  <h2 className="text-white font-semibold">
+                    r/
+                    <HighlightMatch
+                      text={community.name || ""}
+                      query={query}
+                    />
+                  </h2>
+
+                  {community.content && (
+                    <p className="text-gray-400 text-sm mt-1 line-clamp-2">
+                      <HighlightMatch
+                        text={community.content}
+                        query={query}
+                      />
                     </p>
-                  </div>
-                </Link>
-              );
-            })}
+                  )}
+                </div>
+              </Link>
+            ))}
 
-            {/* MORE communities */}
+            {/* MORE COMMUNITIES */}
             {activeTab === "all" &&
               communitiesQuery &&
               communitiesQuery.length > 5 && (
@@ -224,34 +248,56 @@ const SearchPage = () => {
                 </button>
               )}
 
-            {/* USERs */}
+            {/* USERS HEADER */}
             {activeTab === "all" && (
-              <div className="w-full py-3 text-white">Users</div>
+              <div className="w-full py-3 text-white font-medium">
+                Users
+              </div>
             )}
-            {usersResults.map((user) => {
-              return (
-                <Link
-                  key={`${user.type}-${user.id}`}
-                  to={routeBuilder.user(user.username)}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
-                >
-                  <img
-                    src={user.avatar_url}
-                    alt={user.username}
-                    className="w-12 h-12 rounded-full"
-                  />
 
-                  <div>
-                    <h2 className="text-white font-semibold">{user.name}</h2>
+            {/* USERS */}
+            {usersResults.map((user) => (
+              <Link
+                key={`${user.type}-${user.id}`}
+                to={routeBuilder.user(user.username)}
+                className="flex items-start gap-4 p-4 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:bg-gray-800 transition"
+              >
+                <img
+                  src={user.avatar_url}
+                  alt={user.username}
+                  className="w-12 h-12 shrink-0 rounded-full"
+                />
 
-                    <p className="text-gray-400 text-sm">u/{user.username}</p>
-                  </div>
-                </Link>
-              );
-            })}
+                <div className="min-w-0">
+                  {/* Display name */}
+                  <h2 className="text-white font-semibold truncate">
+                    <HighlightMatch
+                      text={user.display_name || ""}
+                      query={query}
+                    />
+                  </h2>
 
-            {/* MORE users */}
-            {activeTab === "all" && usersQuery && usersQuery?.length > 5 && (
+                  {/* Username */}
+                  <p className="text-gray-400 text-sm">
+                    u/
+                    <HighlightMatch
+                      text={user.username || ""}
+                      query={query}
+                    />
+                  </p>
+
+                  {/* Bio */}
+                  {user.bio && (
+                    <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                      {user.bio}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+
+            {/* MORE USERS */}
+            {activeTab === "all" && usersQuery && usersQuery.length > 5 && (
               <button
                 onClick={() => setActiveTab("users")}
                 className="w-full cursor-pointer py-3 text-blue-400 hover:text-blue-300 transition"

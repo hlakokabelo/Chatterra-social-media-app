@@ -128,7 +128,11 @@ const handleReply = () => {
           : "border-l-zinc-700"
       }`}
     >
-      <div className="mb-2">
+     {comment.is_deleted ? (
+  <div className="text-sm italic text-slate-500">
+    [deleted]
+  </div>
+) : <div className="mb-2">
         <div className="flex items-center space-x-2">
           {/**Display commenter username */}
           <span
@@ -157,7 +161,7 @@ const handleReply = () => {
         >
           {showReply ? "Cancel" : "Reply"}
         </button>
-      </div>
+      </div>}
 
       {showReply && user && (
         <form className="mb-2" onSubmit={handleReplySubmit}>

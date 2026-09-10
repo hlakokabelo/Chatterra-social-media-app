@@ -8,10 +8,11 @@ import { FaUser, FaComment } from "react-icons/fa";
 import PostNotFoud from "../../pages/PageNotFound";
 import { routeBuilder, slugify } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
-
+import PostMenu from "../postProperties/PostMenu";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import { fetchPostById, type IPostCommunity } from "../../services/posts";
 import PostDetailSkeleton from "../Skeletons/PostDetailSkeleton";
+import { FormatContent } from "../FormatContent";
 
 interface IPostDetailProps {
   postId: number;
@@ -28,7 +29,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
     return <PostNotFoud title="Post" />;
   }
 
-  const { data, error, isLoading, isSuccess } = useQuery<
+  const { data: post, error, isLoading, isSuccess } = useQuery<
     IPostCommunity,
     Error
   >({
@@ -37,14 +38,14 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
   });
 
   React.useEffect(() => {
-    if (isSuccess && data && slug !== slugify(data.title)) {
+    if (isSuccess && post && slug !== slugify(post.title)) {
       const hash = window.location.hash;
 
-      navigate(routeBuilder.post(postId) + `/${slugify(data.title)}${hash}`, {
+      navigate(routeBuilder.post(postId) + `/${slugify(post.title)}${hash}`, {
         replace: true,
       });
     }
-  }, [isSuccess, data, slug, postId, navigate]);
+  }, [isSuccess, post, slug, postId, navigate]);
 
 if (isLoading) return <PostDetailSkeleton />;
   if (error) return <PostNotFoud title="Post" />;
@@ -55,93 +56,102 @@ if (isLoading) return <PostDetailSkeleton />;
       <div className="w-full max-w-3xl mx-auto group">
         <div className="rounded-2xl border border-slate-800 bg-linear-to-br from-slate-900/95 to-slate-900/80 backdrop-blur-sm p-6 transition-all duration-300">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-4">
-            {data?.avatar_url ? (
-              <Link
-                to={routeBuilder.user(data.username)}
-                className="shrink-0"
-              >
-                <img
-                  src={data.avatar_url}
-                  alt={data.username}
-                    onError={(e) => {
-    e.currentTarget.src = "/images/image-fallback.jpg";
-  }}
+         <div className="flex items-center gap-3 mb-4">
+  {/* Avatar */}
+  {post?.avatar_url ? (
+    <Link
+      to={routeBuilder.user(post.username)}
+      className="shrink-0"
+    >
+      <img
+        src={post.avatar_url}
+        alt={post.username}
+        onError={(e) => {
+          e.currentTarget.src = "/images/image-fallback.jpg";
+        }}
+        className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 hover:ring-slate-500 transition-all"
+      />
+    </Link>
+  ) : (
+    <div className="w-12 h-12 rounded-full bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700">
+      <FaUser className="text-slate-300 text-lg" />
+    </div>
+  )}
 
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 hover:ring-slate-500 transition-all"
-                />
-              </Link>
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700">
-                <FaUser className="text-slate-300 text-lg" />
-              </div>
+  {/* User information */}
+  <div className="flex flex-col flex-1 min-w-0">
+    <div className="flex items-center gap-2 flex-wrap">
+      <Link
+        to={routeBuilder.user(post!.username)}
+        className="text-slate-200 font-semibold hover:text-white transition-colors text-base"
+      >
+        u/{post?.username}
+      </Link>
+
+      {post?.community_id && (
+        <>
+          <span className="text-slate-600">•</span>
+
+          <Link
+            to={routeBuilder.community(
+              post.community_id,
+              post.community_name
             )}
+            className="text-slate-400 hover:text-emerald-400 transition-colors text-sm font-medium"
+          >
+            c/{post.community_name}
+          </Link>
+        </>
+      )}
+    </div>
 
-            <div className="flex flex-col flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <Link
-                  to={routeBuilder.user(data!.username)}
-                  className="text-slate-200 font-semibold hover:text-white transition-colors text-base"
-                >
-                  u/{data?.username}
-                </Link>
+    <span className="text-xs text-slate-500 mt-0.5">
+      {formatTimeStamp(post!.created_at, false)}
+    </span>
+  </div>
 
-                {data?.community_id && (
-                  <>
-                    <span className="text-slate-600">•</span>
-
-                    <Link
-                      to={routeBuilder.community(
-                        data.community_id,
-                        data.community_name,
-                      )}
-                      className="text-slate-400 hover:text-emerald-400 transition-colors text-sm font-medium"
-                    >
-                      c/{data.community_name}
-                    </Link>
-                  </>
-                )}
-              </div>
-
-              <span className="text-xs text-slate-500 mt-0.5">
-                {formatTimeStamp(data!.created_at, false)}
-              </span>
-            </div>
-          </div>
+  {/* Three dots */}
+  {post?.user_id && (
+    <PostMenu
+      postId={postId}
+      postUserId={post.user_id}
+    />
+  )}
+</div>
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-slate-100 mb-3 leading-tight">
-            {data?.title}
+           <FormatContent content={post?.title}/>
           </h2>
 
       {/* Image */}
-{data?.image_urls&&data?.image_urls?.length > 0 && (
+{post?.image_urls&&post?.image_urls?.length > 0 && (
   <div className="block mb-4">
     <PhotoProvider maskOpacity={0.9} speed={() => 300}>
      <div
   className={
-    data.image_urls.length > 2
+    post.image_urls.length > 2
       ? "flex gap-2 overflow-x-auto scrollbar-small"
       : "block"
   }
 >
-        {data.image_urls.map((imageUrl, index) => (
+        {post.image_urls.map((imageUrl, index) => (
           <PhotoView key={imageUrl} src={imageUrl}>
             <div
               className={
-                data.image_urls.length > 2
+                post.image_urls.length > 2
                   ? "shrink-0 w-64 rounded-xl overflow-hidden bg-black cursor-zoom-in"
                   : "rounded-xl overflow-hidden bg-black cursor-zoom-in select-none"
               }
             >
               <img
                 src={imageUrl}
-                alt={`${data.title} - Image ${index + 1}`}
+                alt={`${post.title} - Image ${index + 1}`}
                 onError={(e) => {
                   e.currentTarget.src = "/images/image-fallback.jpg";
                 }}
                 className={
-                  data.image_urls.length > 2
+                  post.image_urls.length > 2
                     ? "w-full h-64 object-cover"
                     : "w-full h-auto max-h-128 object-contain bg-black transition-transform duration-300 hover:scale-[1.01]"                }
               />
@@ -156,11 +166,11 @@ if (isLoading) return <PostDetailSkeleton />;
 
           {/* Content */}
           <p className="text-slate-300 leading-relaxed mb-6 whitespace-pre-wrap">
-            {data?.content}
+         <FormatContent content={post?.content}/>
           </p>
 
           {/* Edited indicator */}
-          {data?.edited && (
+          {post?.edited && (
             <p className="text-xs italic text-blue-300/70 mb-4">
               edited
             </p>
@@ -170,7 +180,7 @@ if (isLoading) return <PostDetailSkeleton />;
           <div className="flex items-center gap-6 pt-2 border-t border-slate-800 mt-2">
             <LikeButton
               item_id={postId}
-              user_id={data?.user_id}
+              user_id={post?.user_id}
               refetchIntervalOn={false}
             />
 
@@ -178,12 +188,12 @@ if (isLoading) return <PostDetailSkeleton />;
               <FaComment className="text-base" />
 
               <span className="text-sm font-medium">
-                {data?.comment_count ?? 0}
+                {post?.comment_count ?? 0}
               </span>
             </div>
 
             {/* Share Button */}
-            {data && <ShareBtn post={data} />}
+            {post && <ShareBtn post={post} />}
           </div>
         </div>
       </div>
