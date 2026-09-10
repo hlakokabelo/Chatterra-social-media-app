@@ -82,7 +82,14 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
           </h2>
         </Link>
 
-        {/* Image */}
+        {/* Content Snippet */}
+{post.content && (
+  <Link to={routeBuilder.post(post.id, post.title)}>
+    <div className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+      <FormatContent content={post.content} />
+    </div>
+  </Link>
+)}
         {/* Images */}
 {post.image_urls?.length > 0 && (
   <Link

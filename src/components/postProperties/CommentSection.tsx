@@ -4,42 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import CommentItem from "./CommentItem";
 import CommentSectionSkeleton from "../Skeletons/CommentSectionSkeleton";
+import { createComment, type IComment, type INewComment } from "../../services/comments";
 
 interface ICommentSectionProps {
   postId: number;
 }
-interface INewComment {
-  content: string;
-  parent_comment_id: number | null;
-}
 
-export interface IComment {
-  post_id: number;
-  user_id: string;
-  content: string;
-  parent_comment_id: number | null;
-  created_at: string;
-  id: number;
-  username?: string;
-  is_deleted?: boolean;
-}
 
-const createComment = async (
-  newComment: INewComment,
-  postId: number,
-  userId?: string,
-) => {
-  if (!userId) throw new Error("You must be logged in to comment");
 
-  const { error } = await supabase.from("comments").insert({
-    post_id: postId,
-    user_id: userId,
-    content: newComment.content,
-    parent_comment_id: newComment.parent_comment_id,
-  });
-
-  if (error) throw new Error(error.message);
-};
 
 const fetchComments = async (postId: number): Promise<IComment[]> => {
   /*   const { data } = await supabase
