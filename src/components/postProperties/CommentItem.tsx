@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { IComment } from "./CommentSection.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
 import LikeButton from "./LikeButton.tsx";
 import { encodeId } from "../../utils/idEncoder.ts";
+import type { IComment } from "../../services/comments.ts";
 
 type ICommentChild = IComment & { children?: IComment[] };
 
