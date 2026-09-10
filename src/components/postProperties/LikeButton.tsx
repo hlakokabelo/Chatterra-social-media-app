@@ -25,47 +25,25 @@ interface IVote {
 const submitVote = async (
   voteValue: number,
   itemIdValue: number,
-  userId: string,
   isComment: boolean,
 ) => {
-  const itemColumn = isComment ? "comment_id" : "post_id";
-  const table = isComment ? "comment_votes" : "votes";
+  const functionName = isComment
+    ? "submit_comment_vote"
+    : "submit_post_vote";
 
-  const { data: existingVote } = await supabase
-    .from(table)
-    .select("*")
-    .eq(itemColumn, itemIdValue)
-    .eq("user_id", userId)
-    .maybeSingle();
+  const params = isComment
+    ? {
+        c_comment_id: itemIdValue,
+        c_vote: voteValue,
+      }
+    : {
+        p_post_id: itemIdValue,
+        p_vote: voteValue,
+      };
 
-  if (existingVote) {
-    if (existingVote.vote === voteValue) {
-      // delete
-      const { error } = await supabase
-        .from(table)
-        .delete()
-        .eq("id", existingVote.id);
+  const { error } = await supabase.rpc(functionName, params);
 
-      if (error) throw new Error(error.message);
-    } else {
-      // update
-      const { error } = await supabase
-        .from(table)
-        .update({ vote: voteValue })
-        .eq("id", existingVote.id);
-
-      if (error) throw new Error(error.message);
-    }
-  } else {
-    // insert
-    const { error } = await supabase.from(table).insert({
-      [itemColumn]: itemIdValue,
-      vote: voteValue,
-      user_id: userId,
-    });
-
-    if (error) throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
 };
 
 const deleteComment = async (item_id: number) => {
@@ -113,15 +91,11 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   const { mutate } = useMutation({
     mutationFn: (voteValue: number) => {
       if (!user) throw new Error("You must be logged in to vote!");
-      return submitVote(voteValue, item_id, user.id, isComment);
+      return submitVote(voteValue, item_id, isComment);
     },
     onSuccess: () => {
-      toast.success("Comment deleted")
       queryClient.invalidateQueries({ queryKey: queryKey });
     },
-    onError:(error)=>{
-      toast.error(error.message)
-    }
   });
 
   const { mutate: deleteItemMutate } = useMutation({
@@ -165,8 +139,8 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
     
   };
   // establish upvote and downvote count
-  const dislikes = votes?.filter((vote) => vote.vote === -1).length || 0;
-  const likes = votes?.filter((vote) => vote.vote === 1).length || 0;
+  const dislikes = votes?.filter((item) => item.vote < 0).length ?? 0;
+  const likes =votes?.filter((item) => item.vote > 0).reduce((sum, item) => sum + item.vote, 0)||0;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
   return (
