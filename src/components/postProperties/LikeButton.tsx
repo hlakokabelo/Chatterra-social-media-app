@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { ROUTES } from "../../utils/routes";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import toast from "react-hot-toast";
+import { submitVote } from "../../services/posts";
 
 interface ILikeButtonProps {
   isComment?: boolean;
@@ -22,29 +23,6 @@ interface IVote {
   vote: number;
 }
 
-const submitVote = async (
-  voteValue: number,
-  itemIdValue: number,
-  isComment: boolean,
-) => {
-  const functionName = isComment
-    ? "submit_comment_vote"
-    : "submit_post_vote";
-
-  const params = isComment
-    ? {
-        c_comment_id: itemIdValue,
-        c_vote: voteValue,
-      }
-    : {
-        p_post_id: itemIdValue,
-        p_vote: voteValue,
-      };
-
-  const { error } = await supabase.rpc(functionName, params);
-
-  if (error) throw new Error(error.message);
-};
 
 const deleteComment = async (item_id: number) => {
 

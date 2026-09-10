@@ -7,6 +7,7 @@ import { routeBuilder } from "../../utils/routes";
 import toast from "react-hot-toast";
 import type { ICommunity } from "../../types/community";
 import { fetchCommunities } from "../../services/community";
+import { submitVote } from "../../services/posts";
 
 interface ICreatePostProps {}
 let postId: number = 0;
@@ -59,6 +60,9 @@ const createPost = async (post: IPostInput) => {
   }
 
   postId = data.id;
+
+  submitVote(1,postId,false)
+  
   return data;
 };
 
