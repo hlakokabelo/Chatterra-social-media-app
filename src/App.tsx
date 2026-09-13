@@ -20,11 +20,9 @@ import SearchPage from "./pages/SearchPage";
 
 
 const App = () => {
-    const windowLocation = window.location.toString()
 
   return (
-    <div className={`min-h-screen ${  windowLocation.includes('search')||windowLocation.endsWith('/')
-?"mt-25":"mt-10"} bg-gray-950 text-gray-100`}>
+    <div className="min-h-screen mt-25 sm:mt-10 bg-gray-950 text-gray-100">
       {/* Simple gradient background */}
       <div className="fixed inset-0 bg-linear-to-br from-gray-950 via-gray-900 to-gray-950"></div>
 
@@ -43,6 +41,7 @@ const App = () => {
               <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
             </Route>
             <Route path="/community/:id/:slug?" element={<CommunityPage />} />
+            <Route path="/c/:id/:slug?" element={<CommunityPage />} />
             <Route
               path={ROUTES.CREATE_COMMUNITY}
               element={<CreateCommunityPage />}

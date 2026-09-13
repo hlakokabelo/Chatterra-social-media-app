@@ -203,6 +203,7 @@ const MobileMenu: React.FunctionComponent<IMobileMenuProps> = ({ items }) => {
                   <span>Create Community</span>
                 </div>
               </MobileNavItem>
+              
             </div>
           </div>
         </div>
