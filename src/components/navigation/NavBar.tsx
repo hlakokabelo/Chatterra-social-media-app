@@ -110,20 +110,25 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
               <div className="flex items-center space-x-4">
                 <UserProfilePhoto user={user} />
 
-                <button
+               <HoverDropdown description="Sign-Out">
+                 <button
                   onClick={signOut}
                   className="cursor-pointer bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-lg border border-red-500/20 hover:border-red-500/50 transition-all duration-300 font-medium"
                 >
                   <CiLogout/>
                 </button>
+               </HoverDropdown>
+
               </div>
             ) : (
-              <button
+            <HoverDropdown description="Sign-In or Sign-Up">
+                <button
                 onClick={() => navigate(ROUTES.SIGN_IN)}
                 className="cursor-pointer bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 font-medium"
               >
 <CiLogin />
               </button>
+            </HoverDropdown>
             )}
           </div>
 
