@@ -111,16 +111,6 @@ npm run dev
 
 ---
 
-## Testing
-
-Chatterra uses Vitest for testing.
-
-```bash
-npm run test
-```
-
----
-
 ## License
 
 This project is licensed under the MIT License.
