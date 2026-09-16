@@ -4,14 +4,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import CommentItem from "./CommentItem";
 import CommentSectionSkeleton from "../Skeletons/CommentSectionSkeleton";
-import { createComment, type IComment, type INewComment } from "../../services/comments";
+import {
+  createComment,
+  type IComment,
+  type INewComment,
+} from "../../services/comments";
 
 interface ICommentSectionProps {
   postId: number;
 }
-
-
-
 
 const fetchComments = async (postId: number): Promise<IComment[]> => {
   /*   const { data } = await supabase
@@ -25,8 +26,8 @@ const fetchComments = async (postId: number): Promise<IComment[]> => {
   });
 
   if (error) {
-  throw new Error(error.message);
-}
+    throw new Error(error.message);
+  }
 
   return data as IComment[];
 };
@@ -76,7 +77,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",
-        block: "start", 
+        block: "start",
       });
       hasScrolled.current = true;
     }
@@ -109,9 +110,9 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
     return roots;
   };
 
- if (isLoading) {
-  return <CommentSectionSkeleton />;
-}
+  if (isLoading) {
+    return <CommentSectionSkeleton />;
+  }
   if (error) {
     return <div> Error: {error.message}</div>;
   }

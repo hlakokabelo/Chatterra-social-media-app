@@ -1,4 +1,3 @@
-
 import { appName } from "../utils/appName";
 
 export interface IFooterProps {}

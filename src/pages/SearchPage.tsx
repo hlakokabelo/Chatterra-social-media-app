@@ -93,9 +93,7 @@ const SearchPage = () => {
           <button
             key={tab.key}
             onClick={() =>
-              setActiveTab(
-                tab.key as "all" | "posts" | "communities" | "users",
-              )
+              setActiveTab(tab.key as "all" | "posts" | "communities" | "users")
             }
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.key
@@ -126,9 +124,7 @@ const SearchPage = () => {
           <>
             {/* POSTS HEADER */}
             {activeTab === "all" && (
-              <div className="w-full py-3 text-white font-medium">
-                Posts
-              </div>
+              <div className="w-full py-3 text-white font-medium">Posts</div>
             )}
 
             {/* POSTS */}
@@ -159,26 +155,17 @@ const SearchPage = () => {
                 </div>
 
                 <h2 className="text-lg font-semibold text-white mb-1">
-                  <HighlightMatch
-                    text={post.title || ""}
-                    query={query}
-                  />
+                  <HighlightMatch text={post.title || ""} query={query} />
                 </h2>
 
                 <p className="text-gray-400 text-sm line-clamp-2">
-                  <HighlightMatch
-                    text={post.content || ""}
-                    query={query}
-                  />
+                  <HighlightMatch text={post.content || ""} query={query} />
                 </p>
 
                 {post.community_name && (
                   <p className="text-blue-400 text-xs mt-3">
                     r/
-                    <HighlightMatch
-                      text={post.community_name}
-                      query={query}
-                    />
+                    <HighlightMatch text={post.community_name} query={query} />
                   </p>
                 )}
               </Link>
@@ -218,18 +205,12 @@ const SearchPage = () => {
                 <div className="min-w-0">
                   <h2 className="text-white font-semibold">
                     r/
-                    <HighlightMatch
-                      text={community.name || ""}
-                      query={query}
-                    />
+                    <HighlightMatch text={community.name || ""} query={query} />
                   </h2>
 
                   {community.content && (
                     <p className="text-gray-400 text-sm mt-1 line-clamp-2">
-                      <HighlightMatch
-                        text={community.content}
-                        query={query}
-                      />
+                      <HighlightMatch text={community.content} query={query} />
                     </p>
                   )}
                 </div>
@@ -250,9 +231,7 @@ const SearchPage = () => {
 
             {/* USERS HEADER */}
             {activeTab === "all" && (
-              <div className="w-full py-3 text-white font-medium">
-                Users
-              </div>
+              <div className="w-full py-3 text-white font-medium">Users</div>
             )}
 
             {/* USERS */}
@@ -280,10 +259,7 @@ const SearchPage = () => {
                   {/* Username */}
                   <p className="text-gray-400 text-sm">
                     u/
-                    <HighlightMatch
-                      text={user.username || ""}
-                      query={query}
-                    />
+                    <HighlightMatch text={user.username || ""} query={query} />
                   </p>
 
                   {/* Bio */}

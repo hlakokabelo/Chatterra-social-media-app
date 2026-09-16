@@ -10,19 +10,19 @@ The project demonstrates a full-stack social media architecture using modern web
 
 ## Features
 
-* User authentication with Email, Google, and GitHub
-* Create and browse communities
-* Create posts within communities
-* Optional post images
-* Comment on posts
-* Reply to comments with threaded discussions
-* Upvote and downvote posts
-* User profiles
-* Community-specific feeds
-* Global feed
-* Search posts, communities, and users
-* Linkify URLs, mentions, and hashtags
-* Responsive UI
+- User authentication with Email, Google, and GitHub
+- Create and browse communities
+- Create posts within communities
+- Optional post images
+- Comment on posts
+- Reply to comments with threaded discussions
+- Upvote and downvote posts
+- User profiles
+- Community-specific feeds
+- Global feed
+- Search posts, communities, and users
+- Linkify URLs, mentions, and hashtags
+- Responsive UI
 
 ---
 
@@ -30,21 +30,21 @@ The project demonstrates a full-stack social media architecture using modern web
 
 ### Frontend
 
-* React 19
-* TypeScript
-* React Router
-* TanStack Query
-* Tailwind CSS
-* Vite
-* Linkify
+- React 19
+- TypeScript
+- React Router
+- TanStack Query
+- Tailwind CSS
+- Vite
+- Linkify
 
 ### Backend / Infrastructure
 
-* Supabase
-* PostgreSQL
-* Supabase Auth
-* Supabase Storage
-* Row Level Security (RLS)
+- Supabase
+- PostgreSQL
+- Supabase Auth
+- Supabase Storage
+- Row Level Security (RLS)
 
 ---
 
@@ -54,19 +54,19 @@ Chatterra follows a client-server architecture with Supabase providing the backe
 
 ### Frontend Responsibilities
 
-* UI rendering
-* Client-side routing
-* Data fetching and caching with TanStack Query
-* Client-side state management
-* Content formatting and linkification
+- UI rendering
+- Client-side routing
+- Data fetching and caching with TanStack Query
+- Client-side state management
+- Content formatting and linkification
 
 ### Backend Responsibilities
 
-* User authentication
-* Database operations
-* Authorization and access control through Row Level Security
-* Post image storage
-* Server-side data validation and operations through PostgreSQL
+- User authentication
+- Database operations
+- Authorization and access control through Row Level Security
+- Post image storage
+- Server-side data validation and operations through PostgreSQL
 
 ---
 

@@ -27,10 +27,7 @@ const CommunityDisplaySkeleton: React.FC = () => {
         <div className="h-6 w-20 rounded bg-slate-800 animate-pulse mb-5" />
 
         {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="w-full max-w-3xl mx-auto mb-6"
-          >
+          <div key={index} className="w-full max-w-3xl mx-auto mb-6">
             <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6">
               {/* Header */}
               <div className="flex items-center gap-3 mb-4">

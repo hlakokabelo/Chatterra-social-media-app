@@ -5,7 +5,10 @@ interface HoverDropdownProps {
   children: ReactNode;
 }
 
-export default function HoverDropdown({ description, children }: HoverDropdownProps) {
+export default function HoverDropdown({
+  description,
+  children,
+}: HoverDropdownProps) {
   return (
     <div className="group relative inline-block">
       {/* The visible Nav Item */}

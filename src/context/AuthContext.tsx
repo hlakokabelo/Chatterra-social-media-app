@@ -31,7 +31,7 @@ interface AuthContextType {
   feedMode: FeedMode;
 }
 
-type FeedMode = "fresh" | "rising" | "discussion"|"rising_comments";
+type FeedMode = "fresh" | "rising" | "discussion" | "rising_comments";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const feedModes: FeedMode[] = ["fresh", "rising", "discussion"];
 
   const [feedMode] = useState(
-    feedModes[Math.floor(Math.random() * feedModes.length)], );
+    feedModes[Math.floor(Math.random() * feedModes.length)],
+  );
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -102,7 +103,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         password: password,
       });
 
-      
       // Handle Supabase error explicitly
       if (error) {
         return { success: false, error: error.message }; // Return the error

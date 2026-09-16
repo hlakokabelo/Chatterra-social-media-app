@@ -1,7 +1,7 @@
 import { supabase } from "../config/supabase-client";
 
 export interface SearchResult {
-  id: number|string;
+  id: number | string;
   type: "post" | "community" | "user";
   title?: string;
   content?: string;
@@ -10,7 +10,7 @@ export interface SearchResult {
   username?: string;
   avatar_url?: string;
   created_at?: string;
-  bio?:string;
+  bio?: string;
   community_name?: string;
 }
 
@@ -27,7 +27,7 @@ const escapePostgrestSearch = (value: string) => {
 
 export const searchPosts = async (
   query: string,
-  limit?: number
+  limit?: number,
 ): Promise<SearchResult[]> => {
   const searchTerm = query.trim();
 
@@ -48,11 +48,11 @@ export const searchPosts = async (
   return data.map((post: any) => ({
     ...post,
     type: "post" as const,
-  }))
+  }));
 };
 
 export const searchCommunities = async (
-  query: string
+  query: string,
 ): Promise<SearchResult[]> => {
   const searchTerm = query.trim();
 
@@ -77,24 +77,22 @@ export const searchCommunities = async (
   }));
 };
 
-export const searchUsers = async (
-  query: string
-): Promise<SearchResult[]> => {
+export const searchUsers = async (query: string): Promise<SearchResult[]> => {
   const searchTerm = query.trim();
 
   if (!searchTerm) {
     return [];
   }
 
-const sanitizedSearchTerm = escapePostgrestSearch(searchTerm);
+  const sanitizedSearchTerm = escapePostgrestSearch(searchTerm);
 
-const { data, error } = await supabase
-  .from("profiles")
-  .select("*")
-  .or(
-    `username.ilike.%${sanitizedSearchTerm}%,display_name.ilike.%${sanitizedSearchTerm}%,bio.ilike.%${sanitizedSearchTerm}%`,
-  )
-  .order("username", { ascending: true });
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .or(
+      `username.ilike.%${sanitizedSearchTerm}%,display_name.ilike.%${sanitizedSearchTerm}%,bio.ilike.%${sanitizedSearchTerm}%`,
+    )
+    .order("username", { ascending: true });
   if (error) {
     console.error("Error searching users:", error);
     throw error;
@@ -105,4 +103,3 @@ const { data, error } = await supabase
     type: "user" as const,
   }));
 };
-

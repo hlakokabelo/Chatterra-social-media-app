@@ -23,23 +23,20 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           {post.avatar_url ? (
-            <Link
-              to={routeBuilder.user(post.username)}
-              className="shrink-0"
-            >
+            <Link to={routeBuilder.user(post.username)} className="shrink-0">
               <img
                 src={post.avatar_url}
                 alt={post.username}
-                  onError={(e) => {
-    e.currentTarget.src = "/images/image-fallback.jpg";
-  }}
+                onError={(e) => {
+                  e.currentTarget.src = "/images/image-fallback.jpg";
+                }}
 
                 className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 hover:ring-slate-500 transition-all"
               />
             </Link>
           ) : (
-            <div className="w-12 h-12 rounded-full bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700"> 
-            <FaUser className="text-slate-300 text-lg" />
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center ring-2 ring-slate-700">
+              <FaUser className="text-slate-300 text-lg" />
             </div>
           )}
 
@@ -77,58 +74,57 @@ const PostItem: React.FunctionComponent<IPostItemProps> = ({
         {/* Title */}
         <Link to={routeBuilder.post(post.id, post.title)}>
           <h2 className="text-2xl font-bold text-slate-100 mb-3 hover:text-white transition-colors leading-tight">
-           <FormatContent content={post?.title}/>
-
+            <FormatContent content={post?.title} />
           </h2>
         </Link>
 
         {/* Content Snippet */}
-{post.content && (
-  <Link to={routeBuilder.post(post.id, post.title)}>
-    <div className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
-      <FormatContent content={post.content} />
-    </div>
-  </Link>
-)}
+        {post.content && (
+          <Link to={routeBuilder.post(post.id, post.title)}>
+            <div className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+              <FormatContent content={post.content} />
+            </div>
+          </Link>
+        )}
         {/* Images */}
-{post.image_urls?.length > 0 && (
-  <Link
-    to={routeBuilder.post(post.id, post.title)}
-    className="block mb-4"
-  >
-    <div
-      className={
-        post.image_urls.length > 1
-          ? "flex gap-2 overflow-x-auto scrollbar-small"
-          : "block"
-      }
-    >
-      {post.image_urls.map((imageUrl, index) => (
-        <div
-          key={imageUrl}
-          className={
-            post.image_urls.length > 1
-              ? "shrink-0 w-64 rounded-xl overflow-hidden bg-black"
-              : "rounded-xl overflow-hidden bg-black max-h-[80vh]"
-          }
-        >
-          <img
-            src={imageUrl}
-            alt={`${post.title} - Image ${index + 1}`}
-            onError={(e) => {
-              e.currentTarget.src = "/images/image-fallback.jpg";
-            }}
-            className={
-              post.image_urls.length > 1
-                ? "w-full h-64 object-cover"
-                : "w-full h-auto max-h-[80vh] object-contain"
-            }
-          />
-        </div>
-      ))}
-    </div>
-  </Link>
-)}
+        {post.image_urls?.length > 0 && (
+          <Link
+            to={routeBuilder.post(post.id, post.title)}
+            className="block mb-4"
+          >
+            <div
+              className={
+                post.image_urls.length > 1
+                  ? "flex gap-2 overflow-x-auto scrollbar-small"
+                  : "block"
+              }
+            >
+              {post.image_urls.map((imageUrl, index) => (
+                <div
+                  key={imageUrl}
+                  className={
+                    post.image_urls.length > 1
+                      ? "shrink-0 w-64 rounded-xl overflow-hidden bg-black"
+                      : "rounded-xl overflow-hidden bg-black max-h-[80vh]"
+                  }
+                >
+                  <img
+                    src={imageUrl}
+                    alt={`${post.title} - Image ${index + 1}`}
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/image-fallback.jpg";
+                    }}
+                    className={
+                      post.image_urls.length > 1
+                        ? "w-full h-64 object-cover"
+                        : "w-full h-auto max-h-[80vh] object-contain"
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </Link>
+        )}
 
         {/* Action Buttons */}
         <div className="flex items-center gap-6 pt-2 border-t border-slate-800 mt-4">

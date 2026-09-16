@@ -14,13 +14,7 @@ interface IDiscoverCommunitiesProps {
 
 const DiscoverCommunities: React.FunctionComponent<
   IDiscoverCommunitiesProps
-> = ({
-  communities,
-  user,
-  onJoinCommunity,
-  isJoinPending,
-  isLeavePending,
-}) => {
+> = ({ communities, user, onJoinCommunity, isJoinPending, isLeavePending }) => {
   const [search, setSearch] = React.useState("");
 
   const isPending = isJoinPending || isLeavePending;
@@ -88,9 +82,7 @@ const DiscoverCommunities: React.FunctionComponent<
                     </div>
 
                     {community.description && (
-                      <div
-                        className="text-slate-400 mt-2 text-sm leading-relaxed line-clamp-2"
-                      >
+                      <div className="text-slate-400 mt-2 text-sm leading-relaxed line-clamp-2">
                         {community.description}
                       </div>
                     )}

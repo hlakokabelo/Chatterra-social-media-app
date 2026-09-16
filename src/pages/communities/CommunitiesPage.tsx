@@ -5,12 +5,9 @@ import CommunityList from "../../components/community/CommunityList";
 interface ICommunitiesPageProps {}
 
 const CommunitiesPage: React.FunctionComponent<ICommunitiesPageProps> = () => {
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-  
 
   return (
     <div className="">

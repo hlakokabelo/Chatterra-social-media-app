@@ -13,7 +13,6 @@ interface IPostMenuProps {
   postUserId: string;
 }
 
-
 const deletePost = async (postId: number) => {
   const { error } = await supabase.rpc("delete_post", {
     p_post_id: postId,
@@ -56,7 +55,7 @@ const PostMenu = ({ postId, postUserId }: IPostMenuProps) => {
     setOpen(false);
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this post?"
+      "Are you sure you want to delete this post?",
     );
 
     if (!confirmed) return;
@@ -83,7 +82,7 @@ const PostMenu = ({ postId, postUserId }: IPostMenuProps) => {
       </button>
 
       {open && (
-        <div  className="hidden absolute right-0 top-10 z-50 w-36 rounded-xl border border-slate-700 bg-slate-900 shadow-xl overflow-hidden">
+        <div className="hidden absolute right-0 top-10 z-50 w-36 rounded-xl border border-slate-700 bg-slate-900 shadow-xl overflow-hidden">
           <button
             type="button"
             onClick={handleEdit}

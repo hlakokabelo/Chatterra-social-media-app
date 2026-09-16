@@ -17,10 +17,7 @@ import PublicProfilePage from "./pages/users/PublicProfilePage";
 import { Toaster } from "react-hot-toast";
 import SearchPage from "./pages/SearchPage";
 
-
-
 const App = () => {
-
   return (
     <div className="min-h-screen mt-25 sm:mt-10 bg-gray-950 text-gray-100">
       {/* Simple gradient background */}

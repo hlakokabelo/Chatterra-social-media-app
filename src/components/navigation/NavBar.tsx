@@ -10,8 +10,7 @@ import { LuPlus, LuUsersRound, LuUserPlus } from "react-icons/lu";
 import { appName } from "../../utils/appName";
 import SearchBar from "./SearchBar";
 import HoverDropdown from "./HoverDropdown";
-import { CiLogout ,CiLogin} from "react-icons/ci";
-
+import { CiLogout, CiLogin } from "react-icons/ci";
 
 interface INavBarProps {}
 
@@ -110,25 +109,24 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
               <div className="flex items-center space-x-4">
                 <UserProfilePhoto user={user} />
 
-               <HoverDropdown description="Sign-Out">
-                 <button
-                  onClick={signOut}
-                  className="cursor-pointer bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-lg border border-red-500/20 hover:border-red-500/50 transition-all duration-300 font-medium"
-                >
-                  <CiLogout/>
-                </button>
-               </HoverDropdown>
-
+                <HoverDropdown description="Sign-Out">
+                  <button
+                    onClick={signOut}
+                    className="cursor-pointer bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-lg border border-red-500/20 hover:border-red-500/50 transition-all duration-300 font-medium"
+                  >
+                    <CiLogout />
+                  </button>
+                </HoverDropdown>
               </div>
             ) : (
-            <HoverDropdown description="Sign-In or Sign-Up">
+              <HoverDropdown description="Sign-In or Sign-Up">
                 <button
-                onClick={() => navigate(ROUTES.SIGN_IN)}
-                className="cursor-pointer bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 font-medium"
-              >
-<CiLogin />
-              </button>
-            </HoverDropdown>
+                  onClick={() => navigate(ROUTES.SIGN_IN)}
+                  className="cursor-pointer bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-300 font-medium"
+                >
+                  <CiLogin />
+                </button>
+              </HoverDropdown>
             )}
           </div>
 
@@ -176,14 +174,15 @@ const NavBar: React.FunctionComponent<INavBarProps> = () => {
         </div>
       )}
 
-
       {/* Mobile Menu */}
       <MobileMenu
         items={{ mobileMenuClick, goToUrl, menuOpen, user, userProfile }}
       />
 
-      <div className="mt-3 w-90 sm:hidden flex justify-center ml-2"> <SearchBar/></div>
-
+      <div className="mt-3 w-90 sm:hidden flex justify-center ml-2">
+        {" "}
+        <SearchBar />
+      </div>
     </nav>
   );
 };

@@ -1,4 +1,3 @@
-
 const MobileNavItem: React.FC<{
   onClick: () => void;
   children: React.ReactNode;

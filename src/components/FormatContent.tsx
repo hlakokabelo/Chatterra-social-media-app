@@ -10,8 +10,7 @@ interface FormatContentProps {
 // Formats content by turning URLs, mentions, and hashtags into interactive links.
 
 export function FormatContent({ content }: FormatContentProps) {
-
-  if(!content) return null;
+  if (!content) return null;
   return (
     <Linkify
       options={{
@@ -30,10 +29,7 @@ export function FormatContent({ content }: FormatContentProps) {
           ),
 
           email: ({ attributes, content }) => (
-            <a
-              {...attributes}
-              className="text-blue-600 hover:underline"
-            >
+            <a {...attributes} className="text-blue-600 hover:underline">
               {content}
             </a>
           ),

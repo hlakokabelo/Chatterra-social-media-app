@@ -1,24 +1,13 @@
 import React from "react";
 
-
 // used to highlight texts from a search result
-function HighlightMatch({
-  text,
-  query,
-}: {
-  text?: string;
-  query: string;
-}) {
-
-  if(!text)return null;
+function HighlightMatch({ text, query }: { text?: string; query: string }) {
+  if (!text) return null;
   if (!query.trim()) {
     return <>{text}</>;
   }
 
-  const regex = new RegExp(
-    `(${escapeRegExp(query)})`,
-    "gi"
-  );
+  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
 
   return (
     <>
@@ -29,7 +18,7 @@ function HighlightMatch({
           </mark>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        )
+        ),
       )}
     </>
   );

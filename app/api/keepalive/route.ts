@@ -14,12 +14,9 @@ export async function GET() {
 
   let query = supabase.rpc("get_posts_with_counts");
 
-  const feedMode = [
-    "fresh",
-    "rising",
-    "rising_comments",
-    "discussion",
-  ][Math.floor(Math.random() * 4)];
+  const feedMode = ["fresh", "rising", "rising_comments", "discussion"][
+    Math.floor(Math.random() * 4)
+  ];
 
   if (feedMode === "fresh") {
     query = query.order("created_at", { ascending: false });

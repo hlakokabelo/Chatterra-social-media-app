@@ -69,19 +69,25 @@ const fetchPosts = async ({
 
 const PostList: React.FunctionComponent<IPostListProps> = () => {
   const { feedMode } = useAuth();
-  const { data,isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["posts", feedMode],
-      queryFn: ({ pageParam }) => fetchPosts({ pageParam, feedMode }),
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["posts", feedMode],
+    queryFn: ({ pageParam }) => fetchPosts({ pageParam, feedMode }),
 
-      initialPageParam: 1,
+    initialPageParam: 1,
 
-      getNextPageParam: (lastPage, allPages) => {
-        const nextPage = lastPage.length ? allPages.length + 1 : undefined;
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage.length ? allPages.length + 1 : undefined;
 
-        return nextPage;
-      },
-    });
+      return nextPage;
+    },
+  });
 
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
@@ -99,15 +105,15 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
 
   const posts: IPost[] | undefined = data?.pages.flat();
 
- if (isLoading) {
-  return (
-    <div className="md:flex md:flex-col md:items-center">
-      {Array.from({ length: 5 }).map((_, index) => (
-        <PostItemSkeleton key={index} />
-      ))}
-    </div>
-  );
-}
+  if (isLoading) {
+    return (
+      <div className="md:flex md:flex-col md:items-center">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <PostItemSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
   if (error)
     return (
       <div className="text-center text-red-400">

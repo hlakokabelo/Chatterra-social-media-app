@@ -13,16 +13,12 @@ interface ICommunity {
   name: string;
   description: string;
   user_id: string;
-
 }
 
 const createCommunity = async (community: ICommunity) => {
-  const { error } = await supabase
-    .from("communities")
-    .insert(community);
+  const { error } = await supabase.from("communities").insert(community);
 
   if (error) {
-  
     throw new Error(error.message);
   }
 };
@@ -60,8 +56,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
 
   const handleOnSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    if (user)
-      return mutate({ name, description, user_id: user?.id });
+    if (user) return mutate({ name, description, user_id: user?.id });
 
     toast.error("Log in to create community");
   };

@@ -7,7 +7,13 @@ import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { useNavigate } from "react-router";
 import { routeBuilder, slugify } from "../../utils/routes";
 import { useAuth } from "../../context/AuthContext";
-import { checkMembership, fetchCommunityData, fetchCommunityPost, joinCommunity, leaveCommunity } from "../../services/community";
+import {
+  checkMembership,
+  fetchCommunityData,
+  fetchCommunityPost,
+  joinCommunity,
+  leaveCommunity,
+} from "../../services/community";
 import type { ICommunity } from "../../types/community";
 import CommunityDisplaySkeleton from "../Skeletons/CommunityDisplaySkeleton";
 
@@ -35,14 +41,14 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
     return <PostNotFoud title="Community" />;
   }
 
- const {
-  data: CommunityData,
-  error: CommunityError,
-  isLoading: communityLoading,
-} = useQuery<ICommunity, Error>({
-  queryKey: ["community", communityId],
-  queryFn: () => fetchCommunityData(communityId),
-});
+  const {
+    data: CommunityData,
+    error: CommunityError,
+    isLoading: communityLoading,
+  } = useQuery<ICommunity, Error>({
+    queryKey: ["community", communityId],
+    queryFn: () => fetchCommunityData(communityId),
+  });
 
   const { data: isMember, isLoading: isCheckingMembership } = useQuery({
     queryKey: ["isMember", communityId, user?.id],
@@ -113,13 +119,10 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
     }
   };
 
-const isLoading =
-  communityLoading ||
-  postsLoading ||
-  isCheckingMembership;
-if (isLoading) {
-  return <CommunityDisplaySkeleton/>;
-}
+  const isLoading = communityLoading || postsLoading || isCheckingMembership;
+  if (isLoading) {
+    return <CommunityDisplaySkeleton />;
+  }
 
   if (CommunityError) return <PostNotFoud title="Community" />;
 

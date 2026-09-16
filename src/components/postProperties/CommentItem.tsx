@@ -70,7 +70,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   postId,
 }) => {
   const [showReply, setShowReply] = React.useState<boolean>(false);
-  const [replyText, setReplyText] = React.useState<string>(""); 
+  const [replyText, setReplyText] = React.useState<string>("");
 
   /**ensures that the first comments of root comment are shown */
   const [isCollapsed, setIsCollapsed] = React.useState<boolean>(
@@ -108,16 +108,14 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
     }
   }, []);
 
-const handleReply = () => {
-  if (!user) {
-    toast.error(
-      `Oops — you’ll need to sign in to reply`
-    );
-    return;
-  }
+  const handleReply = () => {
+    if (!user) {
+      toast.error(`Oops — you’ll need to sign in to reply`);
+      return;
+    }
 
-  setShowReply((prev) => !prev);
-};
+    setShowReply((prev) => !prev);
+  };
 
   return (
     <div
@@ -128,40 +126,41 @@ const handleReply = () => {
           : "border-l-zinc-700"
       }`}
     >
-     {comment.is_deleted ? (
-  <div className="text-sm italic text-slate-500">
-    [deleted]
-  </div>
-) : <div className="mb-2">
-        <div className="flex items-center space-x-2">
-          {/**Display commenter username */}
-          <span
-            onClick={() =>
-              comment?.username && navigate(routeBuilder.user(comment.username))
-            }
-            className="cursor-pointer text-sm font-bold text-blue-400 hover:text-yellow-500"
-          >
-            {comment?.username}
-          </span>
-          <span className="text-xs text-gray-500">
-            {formatTimeStamp(comment?.created_at)}
-          </span>
-        </div>
-        <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
+      {comment.is_deleted ? (
+        <div className="text-sm italic text-slate-500">[deleted]</div>
+      ) : (
+        <div className="mb-2">
+          <div className="flex items-center space-x-2">
+            {/**Display commenter username */}
+            <span
+              onClick={() =>
+                comment?.username &&
+                navigate(routeBuilder.user(comment.username))
+              }
+              className="cursor-pointer text-sm font-bold text-blue-400 hover:text-yellow-500"
+            >
+              {comment?.username}
+            </span>
+            <span className="text-xs text-gray-500">
+              {formatTimeStamp(comment?.created_at)}
+            </span>
+          </div>
+          <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
 
-        {/*   Like button    */}
-        <LikeButton
-          isComment={true}
-          item_id={comment.id}
-          user_id={comment.user_id}
-        />
-        <button
-          className="text-amber-500 text-sm mt-1 cursor-pointer"
-          onClick={handleReply}
-        >
-          {showReply ? "Cancel" : "Reply"}
-        </button>
-      </div>}
+          {/*   Like button    */}
+          <LikeButton
+            isComment={true}
+            item_id={comment.id}
+            user_id={comment.user_id}
+          />
+          <button
+            className="text-amber-500 text-sm mt-1 cursor-pointer"
+            onClick={handleReply}
+          >
+            {showReply ? "Cancel" : "Reply"}
+          </button>
+        </div>
+      )}
 
       {showReply && user && (
         <form className="mb-2" onSubmit={handleReplySubmit}>
@@ -226,12 +225,12 @@ const handleReply = () => {
           {isCollapsed && (
             <div className="space-y-3 pl-2">
               {comment.children.map((childComment) => (
-  <CommentItem
-    key={childComment.id}
-    comment={childComment}
-    postId={postId}
-  />
-))}
+                <CommentItem
+                  key={childComment.id}
+                  comment={childComment}
+                  postId={postId}
+                />
+              ))}
             </div>
           )}
         </div>

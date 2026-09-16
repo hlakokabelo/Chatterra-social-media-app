@@ -40,7 +40,7 @@ const UserReplies: React.FC<Props> = ({ userId }) => {
     queryFn: () => fetchUserReplies(userId),
   });
 
-  if (isLoading) return <UserRepliesSkeleton />; 
+  if (isLoading) return <UserRepliesSkeleton />;
   if (error) return <p className="text-red-400 mt-4">Error loading replies.</p>;
 
   if (!data?.length)

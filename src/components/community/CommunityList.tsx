@@ -4,7 +4,12 @@ import { formatErrorMessage } from "../../utils/formatErrorMessage";
 import { useAuth } from "../../context/AuthContext";
 import DiscoverCommunities from "./DiscoverCommunities";
 import MyCommunities from "./MyCommunitiesDisplay";
-import { fetchCommunities, getUserCommunities, joinCommunity, leaveCommunity } from "../../services/community";
+import {
+  fetchCommunities,
+  getUserCommunities,
+  joinCommunity,
+  leaveCommunity,
+} from "../../services/community";
 import type { ICommunity, IMemberInfo } from "../../types/community";
 import CommunityListSkeleton from "../Skeletons/CommunityListSkeleton";
 
@@ -18,26 +23,23 @@ const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
   const [activeTab, setActiveTab] = React.useState<TabType>("discover");
 
   const {
-  data: communities,
-  error,
-  isLoading: isLoadingCommunities,
-} = useQuery<ICommunity[], Error>({
-  queryKey: ["communities"],
-  queryFn: fetchCommunities,
-});
+    data: communities,
+    error,
+    isLoading: isLoadingCommunities,
+  } = useQuery<ICommunity[], Error>({
+    queryKey: ["communities"],
+    queryFn: fetchCommunities,
+  });
 
-const {
-  data: userCommunities,
-  isLoading: isLoadingUserCommunities,
-} = useQuery<IMemberInfo[], Error>({
-  queryKey: ["memberInfo", user?.id],
-  queryFn: getUserCommunities,
-  enabled: !!user,
-});
+  const { data: userCommunities, isLoading: isLoadingUserCommunities } =
+    useQuery<IMemberInfo[], Error>({
+      queryKey: ["memberInfo", user?.id],
+      queryFn: getUserCommunities,
+      enabled: !!user,
+    });
 
-const isLoading =
-  isLoadingCommunities || isLoadingUserCommunities;
-  
+  const isLoading = isLoadingCommunities || isLoadingUserCommunities;
+
   const joinMutation = useMutation({
     mutationFn: joinCommunity,
     onSuccess: () => {
@@ -51,7 +53,6 @@ const isLoading =
       queryClient.invalidateQueries({ queryKey: ["memberInfo", user?.id] });
     },
   });
-
 
   const handleJoinCommunity = async (
     e: React.MouseEvent,
@@ -74,8 +75,7 @@ const isLoading =
 
     if (!user) return;
 
-      leaveMutation.mutate({ communityId, userId: user.id });
-    
+    leaveMutation.mutate({ communityId, userId: user.id });
   };
 
   const myCommunities = React.useMemo(() => {
@@ -93,7 +93,7 @@ const isLoading =
     );
   }, [communities, userCommunities]);
 
-if (isLoading) return <CommunityListSkeleton />;
+  if (isLoading) return <CommunityListSkeleton />;
   if (error) {
     return (
       <div className="text-center text-red-400">

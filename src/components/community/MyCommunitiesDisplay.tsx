@@ -80,7 +80,7 @@ const MyCommunities: React.FunctionComponent<IMyCommunitiesProps> = ({
       ) : (
         filteredCommunities.map((community) => {
           const userCommunity = userCommunities.find(
-            (uc) => uc.id === community.id
+            (uc) => uc.id === community.id,
           );
 
           return (

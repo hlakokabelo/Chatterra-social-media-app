@@ -67,16 +67,12 @@ const PublicProfilePage = () => {
     fetchProfile();
   }, [username]);
 
- if (loading) {
-  return <PublicProfileSkeleton />;
-}
+  if (loading) {
+    return <PublicProfileSkeleton />;
+  }
 
   if (errorMessage) {
-    return (
-      <div className="text-center text-red-400">
-        {errorMessage}
-      </div>
-    );
+    return <div className="text-center text-red-400">{errorMessage}</div>;
   }
 
   if (notFound) {
@@ -84,9 +80,7 @@ const PublicProfilePage = () => {
       <div>
         <div className="flex justify-center mt-20">
           <div className="text-center bg-zinc-900 p-8 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold text-white">
-              User not found
-            </h2>
+            <h2 className="text-xl font-semibold text-white">User not found</h2>
 
             <p className="text-zinc-400 mt-2">
               The username "@{username}" does not exist.
@@ -126,10 +120,9 @@ const PublicProfilePage = () => {
                     src={profile.avatar_url}
                     className="w-28 h-28 rounded-full object-cover border-4 border-purple-500 cursor-zoom-in transition-transform duration-300 hover:scale-[1.03]"
                     alt={`${profile.username} avatar`}
-                      onError={(e) => {
-    e.currentTarget.src = "/images/image-fallback.jpg";
-  }}
-
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/image-fallback.jpg";
+                    }}
                   />
                 </PhotoView>
               </PhotoProvider>
@@ -139,13 +132,9 @@ const PublicProfilePage = () => {
               {profile?.display_name}
             </h2>
 
-            <p className="text-zinc-400">
-              @{profile?.username}
-            </p>
+            <p className="text-zinc-400">@{profile?.username}</p>
 
-            <p className="mt-4 text-center text-zinc-300">
-              {profile?.bio}
-            </p>
+            <p className="mt-4 text-center text-zinc-300">{profile?.bio}</p>
           </div>
         </div>
       </div>

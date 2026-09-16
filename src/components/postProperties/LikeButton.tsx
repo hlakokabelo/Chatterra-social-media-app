@@ -23,12 +23,10 @@ interface IVote {
   vote: number;
 }
 
-
 const deleteComment = async (item_id: number) => {
-
   const { error } = await supabase.rpc("delete_comment", {
-  p_comment_id: item_id,
-});
+    p_comment_id: item_id,
+  });
   if (error) throw new Error(error.message);
 };
 
@@ -77,8 +75,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   });
 
   const { mutate: deleteItemMutate } = useMutation({
-    mutationFn: deleteComment
-    ,
+    mutationFn: deleteComment,
     onSuccess: () => {
       //if its a post deleted go home, else stay where you are
       if (!isComment) navigate(ROUTES.HOME);
@@ -105,8 +102,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
 
   const submitLike = (like: number) => {
     if (user ? false : true) {
-      toast.error(
-        `Oops — log in to like`);
+      toast.error(`Oops — log in to like`);
       return;
     }
     mutate(like);
@@ -114,11 +110,13 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
 
   const deletHandle = () => {
     deleteItemMutate(item_id);
-    
   };
   // establish upvote and downvote count
   const dislikes = votes?.filter((item) => item.vote < 0).length ?? 0;
-  const likes =votes?.filter((item) => item.vote > 0).reduce((sum, item) => sum + item.vote, 0)||0;
+  const likes =
+    votes
+      ?.filter((item) => item.vote > 0)
+      .reduce((sum, item) => sum + item.vote, 0) || 0;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
   return (

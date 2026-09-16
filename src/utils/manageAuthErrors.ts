@@ -23,10 +23,7 @@ export const manageOAuthErrors = (msg: string): string => {
     return "Too many attempts. Please try again later.";
   }
 
-  if (
-    msg.includes("Failed to fetch") ||
-    msg.includes("NetworkError")
-  ) {
+  if (msg.includes("Failed to fetch") || msg.includes("NetworkError")) {
     return "Unable to connect. Please check your internet connection.";
   }
 

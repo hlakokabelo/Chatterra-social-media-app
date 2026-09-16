@@ -61,8 +61,8 @@ const createPost = async (post: IPostInput) => {
 
   postId = data.id;
 
-  submitVote(1,postId,false)
-  
+  submitVote(1, postId, false);
+
   return data;
 };
 
@@ -82,12 +82,10 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   /** Community functionality*/
   const [communityId, setCommunityId] = React.useState<number | null>(null);
 
-   const {
-      data: communities,
-    } = useQuery<ICommunity[], Error>({
-      queryKey: ["communities"],
-      queryFn: fetchCommunities,
-    });
+  const { data: communities } = useQuery<ICommunity[], Error>({
+    queryKey: ["communities"],
+    queryFn: fetchCommunities,
+  });
 
   /** 
    *  const { data: myCommunities } = useQuery<IMemberInfo[], Error>({

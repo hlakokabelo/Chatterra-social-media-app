@@ -39,7 +39,6 @@ const upDateProfile = async (
   await supabase.from("profiles").update(profile).eq("id", id);
 };
 
-
 const reFetchProfile = async (getProfile: any) => {
   getProfile();
 };

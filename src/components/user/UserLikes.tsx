@@ -46,7 +46,7 @@ const UserLikes: React.FC<Props> = ({ userId }) => {
     queryFn: () => fetchUserLikes(userId),
   });
 
-if (isLoading) return <UserLikesSkeleton />;
+  if (isLoading) return <UserLikesSkeleton />;
   if (error) return <p className="text-red-400 mt-4">Error loading likes.</p>;
 
   if (!data?.length)

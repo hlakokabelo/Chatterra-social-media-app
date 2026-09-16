@@ -12,7 +12,7 @@ const CommunityPage: React.FunctionComponent<ICommunityPageProps> = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-  
+
   return (
     <div className="grid justify-evenly gap-y-16">
       {id && (

@@ -16,16 +16,12 @@ export const fetchPostById = async (id: number): Promise<IPostCommunity> => {
   return data[0] as IPostCommunity;
 };
 
-
-
 export const submitVote = async (
   voteValue: number,
   itemIdValue: number,
   isComment: boolean,
 ) => {
-  const functionName = isComment
-    ? "submit_comment_vote"
-    : "submit_post_vote";
+  const functionName = isComment ? "submit_comment_vote" : "submit_post_vote";
 
   const params = isComment
     ? {

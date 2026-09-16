@@ -24,9 +24,7 @@ export const routeBuilder = {
   post: (id: number, title?: string) =>
     title ? `/post/${encodeId(id)}/${slugify(title)}` : `/post/${encodeId(id)}`,
   community: (id: number, title?: string) =>
-    title
-      ? `/c/${encodeId(id)}/${slugify(title)}`
-      : `/c/${encodeId(id)}`,
+    title ? `/c/${encodeId(id)}/${slugify(title)}` : `/c/${encodeId(id)}`,
   user: (username: string | undefined) => `/u/${username ? username : ""}`,
   hashComment: (postId: number, commentId: number) =>
     `/post/${encodeId(postId)}#comment-${encodeId(commentId)}`,

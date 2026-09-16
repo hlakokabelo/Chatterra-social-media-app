@@ -6,7 +6,6 @@ interface ICreatePostPageProps {}
 const CreatePostPage: React.FunctionComponent<ICreatePostPageProps> = () => {
   return (
     <div className=" sm:pt-0">
-     
       <CreatePost />
     </div>
   );

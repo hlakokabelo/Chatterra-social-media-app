@@ -1,8 +1,7 @@
 import * as React from "react";
 
 const PostItemSkeleton: React.FunctionComponent = () => {
- 
-    return (
+  return (
     <div className="w-full max-w-3xl mx-auto mb-6">
       <div className="rounded-2xl border border-slate-800 bg-linear-to-br from-slate-900/95 to-slate-900/80 backdrop-blur-sm p-6">
         {/* Header */}

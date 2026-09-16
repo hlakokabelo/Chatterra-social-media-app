@@ -2,7 +2,6 @@ import type { PostWithCommunity } from "../components/community/CommunityDisplay
 import { supabase } from "../config/supabase-client";
 import type { ICommunity, IMemberInfo } from "../types/community";
 
-
 export const getUserCommunities = async (): Promise<IMemberInfo[]> => {
   const { error, data } = await supabase.rpc("get_user_communities");
   if (error) throw new Error(error?.message);
@@ -55,7 +54,6 @@ export const leaveCommunity = async ({
   if (error) throw new Error(error.message);
 };
 
-
 export const fetchCommunityData = async (
   communityId: number,
 ): Promise<ICommunity> => {
@@ -92,5 +90,3 @@ export const checkMembership = async (
   if (error && error.code !== "PGRST116") throw new Error(error.message);
   return !!data;
 };
-
-
