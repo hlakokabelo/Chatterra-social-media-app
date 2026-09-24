@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { Link } from "react-router";
-import type { IPost } from "../posts/PostList";
 import { routeBuilder } from "../../utils/routes";
 import UserLikesSkeleton from "../Skeletons/UserLikesSkeleton";
+import type { IPost } from "../../types/post";
 
 interface Props {
   userId: string;

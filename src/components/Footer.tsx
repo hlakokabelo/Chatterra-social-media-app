@@ -1,4 +1,4 @@
-import { appName } from "../utils/appName";
+import { appName } from "../utils/appProperty";
 
 export interface IFooterProps {}
 

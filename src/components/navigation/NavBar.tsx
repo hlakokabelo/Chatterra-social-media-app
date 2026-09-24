@@ -7,7 +7,7 @@ import { ROUTES } from "../../utils/routes";
 import MobileMenu from "./MobileMenu";
 import { HiOutlineHome } from "react-icons/hi";
 import { LuPlus, LuUsersRound, LuUserPlus } from "react-icons/lu";
-import { appName } from "../../utils/appName";
+import { appName } from "../../utils/appProperty";
 import SearchBar from "./SearchBar";
 import HoverDropdown from "./HoverDropdown";
 import { CiLogout, CiLogin } from "react-icons/ci";

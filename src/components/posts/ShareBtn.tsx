@@ -2,9 +2,9 @@ import { BsReddit, BsTwitterX } from "react-icons/bs";
 import { routeBuilder } from "../../utils/routes";
 import { BiCopy } from "react-icons/bi";
 import React from "react";
-import type { IPost } from "./PostList";
 import { FaShare } from "react-icons/fa";
 import toast from "react-hot-toast";
+import type { IPost } from "../../types/post";
 
 export function ShareBtn({ post }: { post: IPost }) {
   const postUrl = `${window.location.origin}${routeBuilder.post(post.id, post.title)}`;

@@ -8,17 +8,15 @@ import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
 import LikeButton from "./LikeButton.tsx";
 import { encodeId } from "../../utils/idEncoder.ts";
-import type { IComment } from "../../services/comments.ts";
-
-type ICommentChild = IComment & { children?: IComment[] };
+import type {
+  IComment,
+  ICommentChild,
+  IReplyComment,
+} from "../../types/comment.ts";
 
 interface ICommentItemProps {
   comment: IComment & { children?: ICommentChild[] };
   postId: number;
-}
-interface IReplyComment {
-  content: string;
-  parent_comment_id: number | null;
 }
 
 const hashCommentId = (id: number): string => {

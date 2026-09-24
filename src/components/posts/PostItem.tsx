@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { IPost } from "./PostList";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
 import { FaUser, FaComment } from "react-icons/fa";
@@ -7,6 +6,7 @@ import { routeBuilder } from "../../utils/routes";
 import { ShareBtn } from "./ShareBtn";
 import LikeButton from "../postProperties/LikeButton";
 import { FormatContent } from "../FormatContent";
+import type { IPost } from "../../types/post";
 
 interface IPostItemProps {
   post: IPost & { community_name?: string; community_id?: number };

@@ -1,6 +1,5 @@
-import type { PostWithCommunity } from "../components/community/CommunityDisplay";
 import { supabase } from "../config/supabase-client";
-import type { ICommunity, IMemberInfo } from "../types/community";
+import type { ICommunity, IMemberInfo, PostWithCommunity } from "../types/community";
 
 export const getUserCommunities = async (): Promise<IMemberInfo[]> => {
   const { error, data } = await supabase.rpc("get_user_communities");

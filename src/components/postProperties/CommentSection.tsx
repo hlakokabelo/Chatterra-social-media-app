@@ -4,11 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import CommentItem from "./CommentItem";
 import CommentSectionSkeleton from "../Skeletons/CommentSectionSkeleton";
-import {
-  createComment,
-  type IComment,
-  type INewComment,
-} from "../../services/comments";
+import { type IComment, type INewComment } from "../../types/comment";
+import { createComment } from "../../services/comment";
 
 interface ICommentSectionProps {
   postId: number;

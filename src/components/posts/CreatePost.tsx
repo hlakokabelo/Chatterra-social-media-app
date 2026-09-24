@@ -1,70 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../../config/supabase-client";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes";
 import toast from "react-hot-toast";
 import type { ICommunity } from "../../types/community";
 import { fetchCommunities } from "../../services/community";
-import { submitVote } from "../../services/posts";
+import { createPost } from "../../services/posts";
 
 interface ICreatePostProps {}
-let postId: number = 0;
-
-interface IPostInput {
-  title: string;
-  content: string;
-  imageFiles: File[];
-  avatar_url: string | null;
-  community_id?: number | null;
-  user_id?: string | null;
-}
-
-const createPost = async (post: IPostInput) => {
-  const image_urls: string[] = [];
-
-  for (const imageFile of post.imageFiles) {
-    const filePath = `${crypto.randomUUID()}-${imageFile.name}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("post-images")
-      .upload(filePath, imageFile);
-
-    if (uploadError) {
-      throw new Error(uploadError.message);
-    }
-
-    const { data: imageData } = supabase.storage
-      .from("post-images")
-      .getPublicUrl(filePath);
-
-    image_urls.push(imageData.publicUrl);
-  }
-
-  const { imageFiles: _, ...payloadVariables } = post;
-
-  const payload = {
-    ...payloadVariables,
-    image_urls,
-  };
-
-  const { data, error } = await supabase
-    .from("posts")
-    .insert(payload)
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  postId = data.id;
-
-  submitVote(1, postId, false);
-
-  return data;
-};
 
 const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
   const { user } = useAuth();
@@ -99,9 +43,9 @@ const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
 
   const { mutate, isError, isPending } = useMutation({
     mutationFn: createPost,
-    onSuccess: () => {
+    onSuccess: (data) => {
       clearForm();
-      navigate(routeBuilder.post(postId, title));
+      navigate(routeBuilder.post(data.id, title));
     },
   });
 

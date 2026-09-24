@@ -1,3 +1,5 @@
+import type { IPost } from "./post";
+
 export interface ICommunity {
   name: string;
   description: string;
@@ -13,4 +15,10 @@ export interface IMemberInfo {
   joined_at: string;
   name: string;
   role: string;
+}
+
+export interface PostWithCommunity extends IPost {
+  communities: {
+    name: string;
+  };
 }

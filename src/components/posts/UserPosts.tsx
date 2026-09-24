@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../config/supabase-client";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
-import type { IPost } from "./PostList";
 import { routeBuilder } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";
 import UserPostsSkeleton from "../Skeletons/UserPostsSkeleton";
 import { FormatContent } from "../FormatContent";
+import type { IPost } from "../../types/post";
+import { fetchUserPosts } from "../../services/posts";
 
 interface Props {
   userId: string;
@@ -22,16 +22,6 @@ const timeStamp = (post: IPost) => {
     " " +
     stamp
   );
-};
-
-const fetchUserPosts = async (userId: string) => {
-  const { data, error } = await supabase.rpc("get_posts_with_user_id", {
-    p_user_id: userId,
-  });
-
-  if (error) throw new Error(error.message);
-
-  return data;
 };
 
 const UserPosts: React.FC<Props> = ({ userId }) => {

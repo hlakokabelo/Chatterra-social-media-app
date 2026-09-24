@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import { Link } from "react-router";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
-import type { IPost } from "../posts/PostList";
 import { routeBuilder } from "../../utils/routes";
 import UserRepliesSkeleton from "../Skeletons/UserRepliesSkeleton";
-import type { IComment } from "../../services/comments";
+import type { IComment } from "../../types/comment";
+import type { IPost } from "../../types/post";
 
 interface Props {
   userId: string;

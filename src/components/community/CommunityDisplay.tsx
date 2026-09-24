@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { IPost } from "../posts/PostList";
 import PostItem from "../posts/PostItem";
 import PostNotFoud from "../../pages/PageNotFound";
 import { formatTimeStamp } from "../../utils/formatTimeStamp";
@@ -14,18 +13,12 @@ import {
   joinCommunity,
   leaveCommunity,
 } from "../../services/community";
-import type { ICommunity } from "../../types/community";
+import type { ICommunity, PostWithCommunity } from "../../types/community";
 import CommunityDisplaySkeleton from "../Skeletons/CommunityDisplaySkeleton";
 
 interface ICommunityDisplayProps {
   communityId: number;
   slug: string | undefined;
-}
-
-export interface PostWithCommunity extends IPost {
-  communities: {
-    name: string;
-  };
 }
 
 const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({

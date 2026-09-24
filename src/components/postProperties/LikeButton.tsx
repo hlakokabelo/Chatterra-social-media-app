@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "../../config/supabase-client";
 import { useAuth } from "../../context/AuthContext";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -8,44 +7,16 @@ import { ROUTES } from "../../utils/routes";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { submitVote } from "../../services/posts";
+import type { IVote } from "../../types/comment";
+import { deleteComment, fetchVotes } from "../../services/comment";
 
 interface ILikeButtonProps {
   isComment?: boolean;
   item_id: number;
   user_id: string | undefined;
+  isDeleted?: boolean;
   refetchIntervalOn?: boolean;
 }
-interface IVote {
-  id: number;
-  post_id?: number;
-  comment_id?: number;
-  user_id: string;
-  vote: number;
-}
-
-const deleteComment = async (item_id: number) => {
-  const { error } = await supabase.rpc("delete_comment", {
-    p_comment_id: item_id,
-  });
-  if (error) throw new Error(error.message);
-};
-
-const fetchVotes = async (
-  item_id: number,
-  isComment: boolean,
-): Promise<IVote[]> => {
-  const table = isComment ? "comment_votes" : "votes";
-  const column = isComment ? "comment_id" : "post_id";
-
-  const { data, error } = await supabase
-    .from(table)
-    .select("*")
-    .eq(column, item_id);
-
-  if (error) throw new Error(error.message);
-
-  return data as IVote[];
-};
 
 /** Displays likes of an item either a comment or post */
 const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
@@ -53,6 +24,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
   user_id,
   isComment = false,
   refetchIntervalOn = true,
+  isDeleted = false,
 }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -125,6 +97,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
         <div className="flex flex-row items-center gap-0.5">
           <button
             onClick={() => submitLike(1)}
+            disabled={isDeleted}
             className={`p-1.5 cursor-pointer rounded-full transition-colors duration-150 ${
               userVote === 1
                 ? "text-orange-500 hover:text-orange-900 hover:bg-gray-100"
@@ -147,6 +120,7 @@ const LikeButton: React.FunctionComponent<ILikeButtonProps> = ({
           </span>
 
           <button
+            disabled={isDeleted}
             onClick={() => submitLike(-1)}
             className={`p-1.5 cursor-pointer rounded-full transition-colors duration-150 ${
               userVote === -1

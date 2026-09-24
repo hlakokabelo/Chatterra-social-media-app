@@ -314,7 +314,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
                 <button
                   type="button"
                   onClick={() => setEditing(true)}
-                  className="px-6 py-2  cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
+                  className="px-6 py-2  cursor-pointer bg-linear-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
                 >
                   Edit Profile
                 </button>
@@ -324,7 +324,7 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
                 <>
                   <button
                     type="submit"
-                    className="px-6 py-2  cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
+                    className="px-6 py-2  cursor-pointer bg-linear-to-r from-purple-500 to-pink-500 rounded-lg text-white font-medium hover:opacity-90 transition"
                   >
                     Save Changes
                   </button>

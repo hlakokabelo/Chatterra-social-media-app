@@ -5,25 +5,9 @@ import PostItem from "./PostItem";
 import { useAuth } from "../../context/AuthContext";
 import { formatErrorMessage } from "../../utils/formatErrorMessage";
 import PostItemSkeleton from "../Skeletons/PostItemSkeleton";
+import type { IPost } from "../../types/post";
 
 interface IPostListProps {}
-
-export interface IPost {
-  id: number;
-  title: string;
-  content: string;
-  image_url: string;
-  image_urls: string[];
-  avatar_url: string | null;
-  created_at: string;
-  comment_count?: number;
-  like_count?: number;
-  user_id?: string;
-  username?: string;
-  community_name?: string;
-  edited?: boolean;
-  is_deleted?: boolean;
-}
 
 const fetchPosts = async ({
   pageParam,
