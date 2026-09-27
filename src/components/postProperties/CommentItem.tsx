@@ -1,3 +1,4 @@
+import { FormatContent } from "../FormatContent";
 import * as React from "react";
 import { useAuth } from "../../context/AuthContext.tsx";
 import toast from "react-hot-toast";
@@ -143,7 +144,8 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
               {formatTimeStamp(comment?.created_at)}
             </span>
           </div>
-          <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
+
+                <FormatContent content={comment.content} />
 
           {/*   Like button    */}
           <LikeButton
