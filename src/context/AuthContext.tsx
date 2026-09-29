@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUserProfile(data);
     },
-    [],
+    [user?.id],
   );
 
   useEffect(() => {

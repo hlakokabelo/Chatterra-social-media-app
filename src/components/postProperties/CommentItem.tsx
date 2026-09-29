@@ -29,9 +29,18 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const [replyText, setReplyText] = React.useState<string>("");
 
   /**ensures that the first comments of root comment are shown */
+  const getInitialCollapsedState = () => {
+    if (window.location.hash && comment.parent_comment_id) {
+      return handleHashedComment(comment);
+    }
+
+    return !comment.parent_comment_id;
+  };
+
   const [isCollapsed, setIsCollapsed] = React.useState<boolean>(
-    comment.parent_comment_id ? false : true,
+    getInitialCollapsedState,
   );
+
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -56,14 +65,6 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   };
 
   const isHighlighted = window.location.hash === hashCommentId(comment.id);
-
-  React.useEffect(() => {
-    if (!window.location.hash || !comment.parent_comment_id) {
-      return;
-    }
-
-    setIsCollapsed(handleHashedComment(comment));
-  }, [comment]);
 
   const handleReply = () => {
     if (!user) {
