@@ -1,5 +1,5 @@
 import { supabase } from "../config/supabase-client";
-import type { INewComment, IVote } from "../types/comment";
+import type { INewComment, IReplyComment, IVote } from "../types/comment";
 import { submitVote } from "./posts";
 
 
@@ -26,6 +26,22 @@ export const createComment = async (
   submitVote(1, data.id, true);
 };
 
+export const createReply = async (
+  newReply: IReplyComment,
+  postId: number,
+  userId?: string,
+) => {
+  if (!userId) throw new Error("You must be logged in to reply");
+
+  const { error } = await supabase.from("comments").insert({
+    post_id: postId,
+    user_id: userId,
+    content: newReply.content,
+    parent_comment_id: newReply.parent_comment_id,
+  });
+
+  if (error) throw new Error(error.message);
+};
 
 
 export const deleteComment = async (item_id: number) => {

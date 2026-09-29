@@ -1,7 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import * as React from "react";
 import { Link } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { routeBuilder } from "../../utils/routes";
 
 interface IUserProfilePhotoProps {

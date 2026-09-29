@@ -1,9 +1,8 @@
 import * as React from "react";
-import { useAuth } from "../../context/AuthContext.tsx";
+import { useAuth } from "../../context/useAuth.ts";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../config/supabase-client.ts";
-import { formatTimeStamp } from "../../utils/formatTimeStamp.ts";
+import { formatTimeStamp } from "../../utils/formatting.ts";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes.ts";
 import LikeButton from "./LikeButton.tsx";
@@ -13,56 +12,15 @@ import type {
   ICommentChild,
   IReplyComment,
 } from "../../types/comment.ts";
+import { createReply } from "../../services/comment.ts";
+import { handleHashedComment, hashCommentId } from "../../utils/comment.ts";
+import { FormatContent } from "../FormatContent.tsx";
 
 interface ICommentItemProps {
   comment: IComment & { children?: ICommentChild[] };
   postId: number;
 }
 
-const hashCommentId = (id: number): string => {
-  return `#comment-${encodeId(id)}`;
-};
-
-/**
- * makes sure that if a comment is hashed, its parent comments are not collapsed.
- * It also ensures that the comment is highlighted by giving it a different style.
- */
-const handleHashedComment = (comment: ICommentChild): boolean => {
-  const isHighlighted = window.location.hash === hashCommentId(comment.id);
-
-  if (isHighlighted) return true;
-  else if (comment.children) {
-    let value = false;
-    for (const child of comment.children) {
-      value = window.location.hash === hashCommentId(child.id);
-
-      if (value) break;
-      else if (handleHashedComment(child)) {
-        value = true;
-      }
-    }
-    return value;
-    // Output: 1, 2
-  }
-
-  return false;
-};
-const createReply = async (
-  newReply: IReplyComment,
-  postId: number,
-  userId?: string,
-) => {
-  if (!userId) throw new Error("You must be logged in to reply");
-
-  const { error } = await supabase.from("comments").insert({
-    post_id: postId,
-    user_id: userId,
-    content: newReply.content,
-    parent_comment_id: newReply.parent_comment_id,
-  });
-
-  if (error) throw new Error(error.message);
-};
 const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   comment,
   postId,
@@ -93,18 +51,19 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
   const handleReplySubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (!replyText) return;
+    if (!replyText.trim()) return;
     mutate({ content: replyText, parent_comment_id: comment.id });
   };
 
   const isHighlighted = window.location.hash === hashCommentId(comment.id);
+
   React.useEffect(() => {
-    //parent comment collapse is true by default so ignore
-    if (window.location.hash && comment.parent_comment_id) {
-      const val = handleHashedComment(comment);
-      setIsCollapsed(val);
+    if (!window.location.hash || !comment.parent_comment_id) {
+      return;
     }
-  }, []);
+
+    setIsCollapsed(handleHashedComment(comment));
+  }, [comment]);
 
   const handleReply = () => {
     if (!user) {
@@ -143,8 +102,7 @@ const CommentItem: React.FunctionComponent<ICommentItemProps> = ({
               {formatTimeStamp(comment?.created_at)}
             </span>
           </div>
-          <p className="text-gray-300 wrap-anywhere">{comment.content}</p>
-
+          <FormatContent content={comment.content} />
           {/*   Like button    */}
           <LikeButton
             isComment={true}

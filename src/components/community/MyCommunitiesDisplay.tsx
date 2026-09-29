@@ -3,11 +3,12 @@ import { Link } from "react-router";
 import { FiSearch } from "react-icons/fi";
 import { routeBuilder } from "../../utils/routes";
 import type { ICommunity, IMemberInfo } from "../../types/community";
+import type { User } from "@supabase/supabase-js";
 
 interface IMyCommunitiesProps {
   communities: ICommunity[];
   userCommunities: IMemberInfo[];
-  user: any; // Replace 'any' with your User type
+  user: User | null;
   onLeaveCommunity: (e: React.MouseEvent, communityId: number) => void;
   onDiscoverClick: () => void;
   isJoinPending: boolean;

@@ -2,12 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../../config/supabase-client";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { ROUTES } from "../../utils/routes";
 import { validateCommunityName } from "../../utils/validations";
 import toast from "react-hot-toast";
-
-interface ICreateCommunityProps {}
 
 interface ICommunity {
   name: string;
@@ -33,7 +31,7 @@ const checkNameAvailability = async (name: string) => {
   return !data;
 };
 
-const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
+const CreateCommunity: React.FunctionComponent = () => {
   const { user } = useAuth();
   const [name, setName] = React.useState<string>("");
   const [debouncedUsername, setDebouncedUsername] = React.useState<string>("");
@@ -74,7 +72,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
     }, 250);
 
     return () => clearTimeout(timeout);
-  }, [name]);
+  }, [name, errorMessage]);
 
   React.useEffect(() => {
     const check = async () => {
@@ -92,7 +90,7 @@ const CreateCommunity: React.FunctionComponent<ICreateCommunityProps> = () => {
     };
 
     check();
-  }, [debouncedUsername]);
+  }, [debouncedUsername, errorMessage, name]);
 
   return (
     <form

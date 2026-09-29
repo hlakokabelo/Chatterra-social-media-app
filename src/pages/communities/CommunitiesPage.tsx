@@ -2,12 +2,10 @@ import * as React from "react";
 import { useEffect } from "react";
 import CommunityList from "../../components/community/CommunityList";
 
-interface ICommunitiesPageProps {}
-
-const CommunitiesPage: React.FunctionComponent<ICommunitiesPageProps> = () => {
+const CommunitiesPage: React.FunctionComponent = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, []);
 
   return (
     <div className="">

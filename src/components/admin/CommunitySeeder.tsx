@@ -6,19 +6,19 @@ import {
 } from "../../utils/communitySeeder";
 import Loading from "../Loading";
 
-interface ICommunitySeederProps {}
+type Result = {
+  user_id: string;
+  username: string;
+  communities_joined: number;
+};
 
-const CommunitySeeder: React.FunctionComponent<ICommunitySeederProps> = () => {
+const CommunitySeeder: React.FunctionComponent = () => {
   const [loading, setLoading] = React.useState(false);
-  const [results, setResults] = React.useState<any[]>([]);
+  const [results, setResults] = React.useState<Result[]>([]);
   const [userCount, setUserCount] = React.useState(10);
   const [maxPerUser, setMaxPerUser] = React.useState(3);
   const [emptyCommunities, setEmptyCommunities] = React.useState(0);
   const [lonelyUsers, setLonelyUsers] = React.useState(0);
-
-  React.useEffect(() => {
-    loadStats();
-  }, []);
 
   const loadStats = async () => {
     try {
@@ -32,6 +32,8 @@ const CommunitySeeder: React.FunctionComponent<ICommunitySeederProps> = () => {
       console.error("Error loading stats:", error);
     }
   };
+
+  loadStats();
 
   const handleSeed = async () => {
     setLoading(true);

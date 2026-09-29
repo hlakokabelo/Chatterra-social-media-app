@@ -1,167 +1,227 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
+
+import { AuthError, type User } from "@supabase/supabase-js";
+
 import { supabase } from "../config/supabase-client";
-import type { Session, User } from "@supabase/supabase-js";
+import type { IUserProfile } from "../types/profile";
 
-interface Isign {
-  success: boolean;
-  data?: {
-    user: User | null;
-    session?: Session | null;
-  };
-  error?: any;
+import { AuthContext, type FeedMode, type ISign } from "./AuthContext";
+
+interface AuthProviderProps {
+  children: ReactNode;
 }
 
-export interface IUserProfile {
-  username: string;
-  id: string;
-  display_name: string;
-  avatar_url: string;
-  bio: string;
-}
+const feedModes: FeedMode[] = [
+  "fresh",
+  "rising",
+  "discussion",
+  "rising_comments",
+];
 
-interface AuthContextType {
-  signInWithEmail: (email: string, password: string) => Promise<Isign>;
-  signInWithGoogle: () => Promise<Isign>;
-  signInWithGitHub: () => Promise<Isign>;
-  signUpWithEmail: (email: string, password: string) => Promise<Isign>;
-  user: User | null;
-  signOut: () => void;
-  getProfile: (user: User | null | undefined) => Promise<void>;
-  userProfile: IUserProfile | null;
-  feedMode: FeedMode;
-}
+const randomFeedMode = feedModes[Math.floor(Math.random() * feedModes.length)];
 
-type FeedMode = "fresh" | "rising" | "discussion" | "rising_comments";
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+
   const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
-  const feedModes: FeedMode[] = ["fresh", "rising", "discussion"];
 
-  const [feedMode] = useState(
-    feedModes[Math.floor(Math.random() * feedModes.length)],
+  const [feedMode] = useState<FeedMode>(randomFeedMode);
+
+  const getProfile = useCallback(
+    async (profileUser: User | null | undefined): Promise<void> => {
+      const id = profileUser?.id;
+
+      if (!id) {
+        setUserProfile(null);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user profile:", error);
+        setUserProfile(null);
+        return;
+      }
+
+      setUserProfile(data);
+    },
+    [],
   );
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      getProfile(session?.user);
-    });
+    const initializeAuth = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
 
-    //Listen to any changes in supabase.auth
-    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user ?? null);
-    });
+      if (error) {
+        console.error("Error getting session:", error);
+        return;
+      }
 
-    //prevents memory leaks
-    return () => {
-      listener.subscription.unsubscribe();
+      const currentUser = session?.user ?? null;
+
+      setUser(currentUser);
+
+      if (currentUser) {
+        await getProfile(currentUser);
+      } else {
+        setUserProfile(null);
+      }
     };
-  }, []);
 
-  //
-  const getProfile = async (
-    userProfile: User | null | undefined,
-  ): Promise<void> => {
-    const id = userProfile?.id || user?.id;
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .single();
-    setUserProfile(data);
-  };
+    initializeAuth();
 
-  // Sign up
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      const currentUser = session?.user ?? null;
+
+      setUser(currentUser);
+
+      if (currentUser) {
+        getProfile(currentUser);
+      } else {
+        setUserProfile(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [getProfile]);
+
   const signUpWithEmail = async (
     email: string,
     password: string,
-  ): Promise<Isign> => {
+  ): Promise<ISign> => {
     const { data, error } = await supabase.auth.signUp({
       email: email.toLowerCase(),
-      password: password,
+      password,
     });
 
     if (error) {
-      console.error("Error signing up: ", error);
-      return { success: false, error };
+      console.error("Error signing up:", error);
+
+      return {
+        success: false,
+        error,
+      };
     }
+
     setUser(data.user);
 
-    return { success: true, data };
+    if (data.user) {
+      await getProfile(data.user);
+    }
+
+    return {
+      success: true,
+      data,
+    };
   };
 
-  // Sign in
   const signInWithEmail = async (
     email: string,
     password: string,
-  ): Promise<Isign> => {
+  ): Promise<ISign> => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase(),
-        password: password,
+        password,
       });
 
-      // Handle Supabase error explicitly
       if (error) {
-        return { success: false, error: error.message }; // Return the error
+        return {
+          success: false,
+          error,
+        };
       }
 
       setUser(data.user);
-      return { success: true, data }; // Return the user data
-    } catch (error: any) {
-      // Handle unexpected issues
+      await getProfile(data.user);
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error: unknown) {
+      console.error("Unexpected sign-in error:", error);
+
       return {
         success: false,
-        error: "An unexpected error occurred. Please try again.",
+        error: {
+          message: "An unexpected error occurred. Please try again.",
+        } as AuthError,
       };
     }
   };
 
-  const signInWithGitHub = async (): Promise<Isign> => {
+  const signInWithGitHub = async (): Promise<ISign> => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
     });
 
-    if (error) return { success: false, error: error.message };
+    if (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
 
-    return { success: true };
+    return {
+      success: true,
+    };
   };
-  const signInWithGoogle = async (): Promise<Isign> => {
+
+  const signInWithGoogle = async (): Promise<ISign> => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-    if (error) return { success: false, error: error.message };
 
-    return { success: true };
+    if (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
+
+    return {
+      success: true,
+    };
   };
 
-  const signOut = () => {
-    supabase.auth.signOut();
+  const signOut = async (): Promise<void> => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error signing out:", error);
+      return;
+    }
+
+    setUser(null);
+    setUserProfile(null);
   };
 
   const contextValue = {
+    user,
     userProfile,
+    feedMode,
     signInWithEmail,
     signInWithGoogle,
-    signUpWithEmail,
-    user,
     signInWithGitHub,
+    signUpWithEmail,
     signOut,
-    feedMode,
     getProfile,
   };
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within the AuthProvider");
-  }
-  return context;
 };

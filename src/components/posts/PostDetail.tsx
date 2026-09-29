@@ -2,7 +2,7 @@ import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import LikeButton from "../postProperties/LikeButton";
 import CommentSection from "../postProperties/CommentSection";
-import { formatTimeStamp } from "../../utils/formatTimeStamp";
+import { formatTimeStamp } from "../../utils/formatting";
 import { Link, useNavigate } from "react-router";
 import { FaUser, FaComment } from "react-icons/fa";
 import PostNotFoud from "../../pages/PageNotFound";
@@ -26,10 +26,6 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  if (isNaN(postId)) {
-    return <PostNotFoud title="Post" />;
-  }
-
   const {
     data: post,
     error,
@@ -38,6 +34,7 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
   } = useQuery<IPostCommunity, Error>({
     queryKey: ["post", postId],
     queryFn: () => fetchPostById(postId),
+    enabled: !Number.isNaN(postId),
   });
 
   React.useEffect(() => {
@@ -49,6 +46,10 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
       });
     }
   }, [isSuccess, post, slug, postId, navigate]);
+
+  if (Number.isNaN(postId)) {
+    return <PostNotFoud title="Post" />;
+  }
 
   if (isLoading) return <PostDetailSkeleton />;
   if (error) return <PostNotFoud title="Post" />;

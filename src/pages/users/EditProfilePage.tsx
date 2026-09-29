@@ -1,20 +1,15 @@
 import * as React from "react";
 import { Link, Navigate } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import imageCompression from "browser-image-compression";
 import { routeBuilder } from "../../utils/routes";
 import { validateUsername } from "../../utils/validations";
+import { checkUsernameAvailability } from "../../services/profileService";
+import type { User } from "@supabase/supabase-js";
+import type { IUserProfile } from "../../types/profile";
 
-interface IEditProfilePageProps {}
-
-interface IUserProfile {
-  bio: string;
-  username: string;
-  display_name: string;
-  avatar_url?: string;
-}
 const upDateProfile = async (
   profile: IUserProfile,
   id: string | undefined,
@@ -39,17 +34,26 @@ const upDateProfile = async (
   await supabase.from("profiles").update(profile).eq("id", id);
 };
 
-const reFetchProfile = async (getProfile: any) => {
-  getProfile();
+const reFetchProfile = async (
+  getProfile: (user: User | null | undefined) => Promise<void>,
+) => {
+  getProfile(null);
 };
 
-const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
+const EditProfilePage: React.FunctionComponent = () => {
   const { user, userProfile, getProfile } = useAuth();
   const [editing, setEditing] = React.useState<boolean>(false);
   // const [password, setPassword] = React.useState<string>("-------");
-  const [display_name, setDisplayName] = React.useState<string>("-------");
-  const [bio, setBio] = React.useState<string>("my bio");
-  const [username, setUsername] = React.useState<string>("");
+
+  const [display_name, setDisplayName] = React.useState<string>(
+    userProfile ? userProfile.display_name : "-------",
+  );
+  const [bio, setBio] = React.useState<string>(
+    userProfile ? userProfile.bio : "my bio",
+  );
+  const [username, setUsername] = React.useState<string>(
+    userProfile ? userProfile.username : "",
+  );
   const [infoEdited, setInfoEdited] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [profilePic, setProfilePic] = React.useState<File | null>(null);
@@ -58,6 +62,33 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
   >(null);
   const [debouncedUsername, setDebouncedUsername] = React.useState("");
   const [availableUsername, setAvailableUsername] = React.useState<string>("");
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (username !== userProfile?.username) setDebouncedUsername(username);
+    }, 250); // delay (tweak if you want)
+
+    return () => clearTimeout(timeout);
+  }, [username, userProfile?.username]);
+
+  React.useEffect(() => {
+    const check = async () => {
+      if (!debouncedUsername) return;
+
+      const validationError = validateUsername(debouncedUsername);
+      setError(validationError);
+
+      if (validationError === "") {
+        const available = await checkUsernameAvailability(debouncedUsername);
+        setUsernameAvailable(available);
+        setAvailableUsername(debouncedUsername);
+      } else {
+        setUsernameAvailable(null);
+      }
+    };
+
+    check();
+  }, [debouncedUsername]);
 
   const inputStyle = editing
     ? "mt-1 w-full px-4 py-2 bg-slate-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -78,13 +109,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
 
     setInfoEdited(true);
   };
-  React.useEffect(() => {
-    if (userProfile) {
-      setDisplayName(userProfile.display_name);
-      setBio(userProfile.bio);
-      setUsername(userProfile.username);
-    }
-  }, []);
 
   const { mutate } = useMutation({
     mutationFn: (profile: IUserProfile) => {
@@ -92,16 +116,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
     },
     onSuccess: () => reFetchProfile(getProfile),
   });
-
-  const checkUsernameAvailability = async (name: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("username")
-      .ilike("username", name)
-      .maybeSingle();
-
-    return !data;
-  };
 
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -130,12 +144,13 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
     const value = e.target.value;
     setInfoEdited(true);
     switch (name) {
-      case "username":
+      case "username": {
         setUsername(value);
 
         const validationError = validateUsername(value);
         setError(validationError);
         break;
+      }
       case "bio":
         setBio(value);
         break;
@@ -162,33 +177,6 @@ const EditProfilePage: React.FunctionComponent<IEditProfilePageProps> = () => {
     setUsernameAvailable(null);
   };
   if (!user) return <Navigate to="/" />;
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (username !== userProfile?.username) setDebouncedUsername(username);
-    }, 250); // delay (tweak if you want)
-
-    return () => clearTimeout(timeout);
-  }, [username]);
-
-  React.useEffect(() => {
-    const check = async () => {
-      if (!debouncedUsername) return;
-
-      const validationError = validateUsername(debouncedUsername);
-      setError(validationError);
-
-      if (validationError === "") {
-        const available = await checkUsernameAvailability(debouncedUsername);
-        setUsernameAvailable(available);
-        setAvailableUsername(debouncedUsername);
-      } else {
-        setUsernameAvailable(null);
-      }
-    };
-
-    check();
-  }, [debouncedUsername]);
 
   return (
     <div className="flex justify-center">

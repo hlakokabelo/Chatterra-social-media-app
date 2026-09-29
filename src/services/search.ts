@@ -1,4 +1,5 @@
 import { supabase } from "../config/supabase-client";
+import type { IPost } from "../types/post";
 
 export interface SearchResult {
   id: number | string;
@@ -45,7 +46,7 @@ export const searchPosts = async (
     throw error;
   }
 
-  return data.map((post: any) => ({
+  return data.map((post: IPost) => ({
     ...post,
     type: "post" as const,
   }));

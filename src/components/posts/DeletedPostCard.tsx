@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { formatTimeStamp } from "../../utils/formatTimeStamp";
+import { formatTimeStamp } from "../../utils/formatting";
 import { routeBuilder } from "../../utils/routes";
 import { FaUser } from "react-icons/fa";
 import type { IPostCommunity } from "../../services/posts";

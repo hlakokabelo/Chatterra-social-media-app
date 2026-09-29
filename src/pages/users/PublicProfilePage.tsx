@@ -1,17 +1,18 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { supabase } from "../../config/supabase-client";
 import * as React from "react";
-import UserPosts from "../../components/posts/UserPosts";
+import UserPosts from "../../components/user/UserPosts";
 import UserReplies from "../../components/user/UserReplies";
 import UserLikes from "../../components/user/UserLikes";
 import { MdEdit } from "react-icons/md";
-import { useAuth, type IUserProfile } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { ROUTES } from "../../utils/routes";
-import { formatErrorMessage } from "../../utils/formatErrorMessage";
+import { formatErrorMessage } from "../../utils/formatting";
 import { useEffect } from "react";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import PublicProfileSkeleton from "../../components/Skeletons/PublicProfileSkeleton";
+import type { IUserProfile } from "../../types/profile";
 
 const PublicProfilePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,7 +37,7 @@ const PublicProfilePage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, []);
 
   React.useEffect(() => {
     const fetchProfile = async () => {
@@ -176,9 +177,13 @@ const PublicProfilePage = () => {
             </button>
           </div>
 
-          {tab === "posts" && <UserPosts userId={profile.id} />}
-          {tab === "replies" && <UserReplies userId={profile.id} />}
-          {tab === "likes" && <UserLikes userId={profile.id} />}
+          {profile.id && (
+            <>
+              {tab === "posts" && <UserPosts userId={profile.id} />}
+              {tab === "replies" && <UserReplies userId={profile.id} />}
+              {tab === "likes" && <UserLikes userId={profile.id} />}
+            </>
+          )}
         </div>
       )}
     </div>

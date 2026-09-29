@@ -1,19 +1,21 @@
 import * as React from "react";
 import MobileNavItem from "./MobileNavItem";
 import { routeBuilder, ROUTES } from "../../utils/routes";
+import type { IUserProfile } from "../../types/profile";
+import type { User } from "@supabase/supabase-js";
 
 interface IMobileMenuProps {
   items: {
     goToUrl: (destination: string) => void;
     menuOpen: boolean;
     mobileMenuClick: () => void;
-    user: any;
-    userProfile: any;
+    user: User | null;
+    userProfile: IUserProfile | null;
   };
 }
 
 const MobileMenu: React.FunctionComponent<IMobileMenuProps> = ({ items }) => {
-  let { goToUrl, menuOpen, mobileMenuClick, user, userProfile } = items;
+  const { goToUrl, menuOpen, mobileMenuClick, user, userProfile } = items;
 
   return (
     <>

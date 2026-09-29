@@ -1,7 +1,5 @@
 import { appName } from "../utils/appProperty";
 
-export interface IFooterProps {}
-
 export function Footer() {
   return (
     <div>

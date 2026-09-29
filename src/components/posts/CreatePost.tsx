@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router";
 import { routeBuilder } from "../../utils/routes";
 import toast from "react-hot-toast";
@@ -8,9 +8,7 @@ import type { ICommunity } from "../../types/community";
 import { fetchCommunities } from "../../services/community";
 import { createPost } from "../../services/posts";
 
-interface ICreatePostProps {}
-
-const CreatePost: React.FunctionComponent<ICreatePostProps> = () => {
+const CreatePost: React.FunctionComponent = () => {
   const { user } = useAuth();
   const [title, setTitle] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");

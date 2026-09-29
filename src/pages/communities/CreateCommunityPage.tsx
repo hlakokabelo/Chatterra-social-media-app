@@ -1,11 +1,7 @@
 import * as React from "react";
 import CreateCommunity from "../../components/community/CreateCommunity";
 
-interface ICreateCommunityPageProps {}
-
-const CreateCommunityPage: React.FunctionComponent<
-  ICreateCommunityPageProps
-> = () => {
+const CreateCommunityPage: React.FunctionComponent = () => {
   return (
     <div className="pt-20 sm:pt-0">
       <CreateCommunity />

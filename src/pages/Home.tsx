@@ -1,9 +1,7 @@
 import * as React from "react";
 import PostList from "../components/posts/PostList";
 
-interface IHomeProps {}
-
-const Home: React.FunctionComponent<IHomeProps> = () => {
+const Home: React.FunctionComponent = () => {
   return (
     <div className="max-w-screen">
       <div>

@@ -17,7 +17,7 @@ export interface IPost {
 export interface IPostInput {
   title: string;
   content: string;
-  imageFiles: File[];
+  imageFiles?: File[];
   avatar_url: string | null;
   community_id?: number | null;
   user_id?: string | null;

@@ -11,6 +11,7 @@ export type IPostCommunity = IPost & {
 export const createPost = async (post: IPostInput) => {
   const image_urls: string[] = [];
 
+  if(post.imageFiles)
   for (const imageFile of post.imageFiles) {
     const filePath = `${crypto.randomUUID()}-${imageFile.name}`;
 
@@ -29,7 +30,9 @@ export const createPost = async (post: IPostInput) => {
     image_urls.push(imageData.publicUrl);
   }
 
-  const { imageFiles: _, ...payloadVariables } = post;
+ const payloadVariables = { ...post };
+ if(payloadVariables.imageFiles)
+delete payloadVariables.imageFiles;
 
   const payload = {
     ...payloadVariables,

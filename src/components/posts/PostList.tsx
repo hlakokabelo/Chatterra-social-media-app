@@ -2,12 +2,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { supabase } from "../../config/supabase-client";
 import PostItem from "./PostItem";
-import { useAuth } from "../../context/AuthContext";
-import { formatErrorMessage } from "../../utils/formatErrorMessage";
+import { useAuth } from "../../context/useAuth";
+import { formatErrorMessage } from "../../utils/formatting";
 import PostItemSkeleton from "../Skeletons/PostItemSkeleton";
 import type { IPost } from "../../types/post";
-
-interface IPostListProps {}
 
 const fetchPosts = async ({
   pageParam,
@@ -51,7 +49,7 @@ const fetchPosts = async ({
   return data;
 };
 
-const PostList: React.FunctionComponent<IPostListProps> = () => {
+const PostList: React.FunctionComponent = () => {
   const { feedMode } = useAuth();
   const {
     data,
@@ -85,7 +83,7 @@ const PostList: React.FunctionComponent<IPostListProps> = () => {
     if (loadMoreRef.current) observer.observe(loadMoreRef.current);
 
     return () => observer.disconnect();
-  }, [hasNextPage]);
+  }, [hasNextPage, fetchNextPage]);
 
   const posts: IPost[] | undefined = data?.pages.flat();
 

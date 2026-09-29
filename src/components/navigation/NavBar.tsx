@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, NavLink, useNavigate } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import UserProfilePhoto from "../user/UserProfilePhoto";
 import image from "../../assets/icon3.svg";
 import { ROUTES } from "../../utils/routes";
@@ -12,9 +12,7 @@ import SearchBar from "./SearchBar";
 import HoverDropdown from "./HoverDropdown";
 import { CiLogout, CiLogin } from "react-icons/ci";
 
-interface INavBarProps {}
-
-const NavBar: React.FunctionComponent<INavBarProps> = () => {
+const NavBar: React.FunctionComponent = () => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const { user, signOut, userProfile } = useAuth();
 

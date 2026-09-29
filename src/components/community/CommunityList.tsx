@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { formatErrorMessage } from "../../utils/formatErrorMessage";
-import { useAuth } from "../../context/AuthContext";
+import { formatErrorMessage } from "../../utils/formatting";
+import { useAuth } from "../../context/useAuth";
 import DiscoverCommunities from "./DiscoverCommunities";
 import MyCommunities from "./MyCommunitiesDisplay";
 import {
@@ -13,11 +13,9 @@ import {
 import type { ICommunity, IMemberInfo } from "../../types/community";
 import CommunityListSkeleton from "../Skeletons/CommunityListSkeleton";
 
-interface ICommunityListProps {}
-
 type TabType = "my-communities" | "discover";
 
-const CommunityList: React.FunctionComponent<ICommunityListProps> = () => {
+const CommunityList: React.FunctionComponent = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = React.useState<TabType>("discover");

@@ -8,7 +8,7 @@ import {
   type SearchResult,
 } from "../services/search";
 import { routeBuilder } from "../utils/routes";
-import { formatTimeStamp } from "../utils/formatTimeStamp";
+import { formatTimeStamp } from "../utils/formatting";
 import SearchLoading from "../components/Skeletons/SearchLoading";
 import HighlightMatch from "../components/HighlightMatch";
 

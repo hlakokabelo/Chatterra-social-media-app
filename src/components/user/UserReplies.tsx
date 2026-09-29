@@ -2,7 +2,7 @@ import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import { Link } from "react-router";
-import { formatTimeStamp } from "../../utils/formatTimeStamp";
+import { formatTimeStamp } from "../../utils/formatting";
 import { routeBuilder } from "../../utils/routes";
 import UserRepliesSkeleton from "../Skeletons/UserRepliesSkeleton";
 import type { IComment } from "../../types/comment";

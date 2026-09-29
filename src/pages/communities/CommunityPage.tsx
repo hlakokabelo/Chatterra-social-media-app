@@ -4,14 +4,12 @@ import CommunityDisplay from "../../components/community/CommunityDisplay";
 import { decodeId } from "../../utils/idEncoder";
 import { useEffect } from "react";
 
-interface ICommunityPageProps {}
-
-const CommunityPage: React.FunctionComponent<ICommunityPageProps> = () => {
+const CommunityPage: React.FunctionComponent = () => {
   const { id, slug } = useParams<{ id: string; slug?: string }>();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, []);
 
   return (
     <div className="grid justify-evenly gap-y-16">

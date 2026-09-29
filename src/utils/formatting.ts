@@ -1,3 +1,10 @@
+export const formatErrorMessage = (message: string) => {
+  if (message.includes("Failed to fetch")) return "Network error";
+
+  return "";
+};
+
+
 export function formatTimeStamp(
   isoTimestamp: string,
   withMinutes: boolean = true,
@@ -66,3 +73,4 @@ export function formatTimeStamp(
 
   return `${datePart}, ${timeStr}`;
 }
+

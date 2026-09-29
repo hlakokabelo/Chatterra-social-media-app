@@ -2,10 +2,9 @@ import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PostItem from "../posts/PostItem";
 import PostNotFoud from "../../pages/PageNotFound";
-import { formatTimeStamp } from "../../utils/formatTimeStamp";
+import { formatTimeStamp } from "../../utils/formatting";
 import { useNavigate } from "react-router";
 import { routeBuilder, slugify } from "../../utils/routes";
-import { useAuth } from "../../context/AuthContext";
 import {
   checkMembership,
   fetchCommunityData,
@@ -15,6 +14,7 @@ import {
 } from "../../services/community";
 import type { ICommunity, PostWithCommunity } from "../../types/community";
 import CommunityDisplaySkeleton from "../Skeletons/CommunityDisplaySkeleton";
+import { useAuth } from "../../context/useAuth";
 
 interface ICommunityDisplayProps {
   communityId: number;
@@ -30,10 +30,6 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = React.useState<string>("");
 
-  if (isNaN(communityId)) {
-    return <PostNotFoud title="Community" />;
-  }
-
   const {
     data: CommunityData,
     error: CommunityError,
@@ -45,8 +41,8 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
 
   const { data: isMember, isLoading: isCheckingMembership } = useQuery({
     queryKey: ["isMember", communityId, user?.id],
-    queryFn: () => checkMembership(communityId, user?.id!),
-    enabled: !!user,
+    queryFn: () => checkMembership(communityId, user!.id),
+    enabled: !!user && !Number.isNaN(communityId),
   });
 
   const { data: posts, isLoading: postsLoading } = useQuery<
@@ -55,6 +51,7 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
   >({
     queryKey: ["communityPost", communityId],
     queryFn: () => fetchCommunityPost(communityId),
+    enabled: !Number.isNaN(communityId),
   });
 
   const joinMutation = useMutation({
@@ -96,6 +93,10 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
       }
     }
   }, [CommunityData, slug, communityId, navigate, postsLoading]);
+
+  if (Number.isNaN(communityId)) {
+    return <PostNotFoud title="Community" />;
+  }
 
   const handleJoinLeave = () => {
     if (!user) {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../config/supabase-client";
 import CommentItem from "./CommentItem";
@@ -32,7 +32,7 @@ const fetchComments = async (postId: number): Promise<IComment[]> => {
 const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   postId,
 }) => {
-  const [newComentText, setNewCommentText] = React.useState<string>("");
+  const [newCommentText, setNewCommentText] = React.useState<string>("");
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { mutate, isPending, isError } = useMutation({
@@ -47,8 +47,8 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (!newComentText) return;
-    mutate({ content: newComentText, parent_comment_id: null });
+    if (!newCommentText) return;
+    mutate({ content: newCommentText, parent_comment_id: null });
     setNewCommentText("");
   };
 
@@ -59,7 +59,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
   } = useQuery<IComment[], Error>({
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
-    refetchInterval: 15000, //10secs
+    refetchInterval: 15000, //15secs
   });
 
   const hasScrolled = React.useRef(false);
@@ -133,7 +133,7 @@ const CommentSection: React.FunctionComponent<ICommentSectionProps> = ({
           focus:outline-none focus:ring-1 focus:ring-slate-500
           resize-none"
             rows={3}
-            value={newComentText}
+            value={newCommentText}
             placeholder="Write a comment..."
             required
             onChange={(e) => setNewCommentText(e.target.value)}
