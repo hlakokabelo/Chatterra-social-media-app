@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const getProfile = useCallback(
     async (profileUser: User | null | undefined): Promise<void> => {
-      const id = profileUser?.id;
+      const id = profileUser?.id || user?.id;
 
       if (!id) {
         setUserProfile(null);
