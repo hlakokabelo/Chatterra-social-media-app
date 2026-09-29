@@ -1,3 +1,4 @@
+import { FormatContent } from "../FormatContent";
 import * as React from "react";
 import { useAuth } from "../../context/useAuth.ts";
 import toast from "react-hot-toast";
@@ -14,7 +15,6 @@ import type {
 } from "../../types/comment.ts";
 import { createReply } from "../../services/comment.ts";
 import { handleHashedComment, hashCommentId } from "../../utils/comment.ts";
-import { FormatContent } from "../FormatContent.tsx";
 
 interface ICommentItemProps {
   comment: IComment & { children?: ICommentChild[] };
