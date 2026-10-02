@@ -168,7 +168,7 @@ const NavBar: React.FunctionComponent = () => {
       {/* Mobile Profile Photo - Only show when menu is closed */}
       {user && !menuOpen && (
         <div className="md:hidden absolute right-16 top-4">
-          <UserProfilePhoto user={user} />
+          <UserProfilePhoto user={user} showUsername={false} />
         </div>
       )}
 
@@ -177,7 +177,7 @@ const NavBar: React.FunctionComponent = () => {
         items={{ mobileMenuClick, goToUrl, menuOpen, user, userProfile }}
       />
 
-      <div className="mt-3 w-90 sm:hidden flex justify-center ml-2">
+      <div className=" w-full mt-3  sm:hidden flex  justify-center items-center">
         {" "}
         <SearchBar />
       </div>

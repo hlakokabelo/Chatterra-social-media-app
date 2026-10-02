@@ -4,7 +4,7 @@ import { useAuth } from "../../context/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import imageCompression from "browser-image-compression";
 import { routeBuilder } from "../../utils/routes";
-import { validateUsername } from "../../utils/validations";
+import { isSameUsername, validateUsername } from "../../utils/validations";
 import {
   checkUsernameAvailability,
   upDateProfile,
@@ -12,6 +12,7 @@ import {
 import type { User } from "@supabase/supabase-js";
 import type { IUserProfile } from "../../types/profile";
 import { PhotoProvider, PhotoView } from "react-photo-view";
+import toast from "react-hot-toast";
 
 const reFetchProfile = async (
   getProfile: (user: User | null | undefined) => Promise<void>,
@@ -58,7 +59,13 @@ const EditProfilePage: React.FunctionComponent = () => {
       setError(validationError);
 
       if (validationError === "") {
-        const available = await checkUsernameAvailability(debouncedUsername);
+        const available = isSameUsername(
+          debouncedUsername,
+          userProfile?.username || "",
+        )
+          ? true
+          : await checkUsernameAvailability(debouncedUsername);
+
         setUsernameAvailable(available);
         setAvailableUsername(debouncedUsername);
       } else {
@@ -67,7 +74,7 @@ const EditProfilePage: React.FunctionComponent = () => {
     };
 
     check();
-  }, [debouncedUsername]);
+  }, [debouncedUsername, userProfile?.username]);
 
   const inputStyle = editing
     ? "mt-1 w-full px-4 py-2 bg-slate-800 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -98,7 +105,12 @@ const EditProfilePage: React.FunctionComponent = () => {
 
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (error !== "") return;
+
+    // if no error and username is available, proceed to update profile
+    if (error.trim() || usernameAvailable === false) {
+      toast.error("Please fix the errors before submitting.");
+      return;
+    }
 
     if (!infoEdited) {
       setEditing(false);
@@ -226,7 +238,9 @@ const EditProfilePage: React.FunctionComponent = () => {
                 </p>
               )}
               {error && (
-                <p className="text-center text-red-500 text-sm">{error}</p>
+                <p className="text-center text-red-500 text-sm">
+                  {error.trim()}
+                </p>
               )}
             </div>
 

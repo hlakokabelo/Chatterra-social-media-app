@@ -14,6 +14,11 @@ const validateName = (value: string, field: string): string => {
   return "";
 };
 
+
+export const isSameUsername = (username1: string, username2: string): boolean => {
+  return username1.toLowerCase() === username2.toLowerCase();
+};
+
 export const validateUsername = (value: string): string => {
   // Only letters, numbers, underscores
   const regex = /^[a-zA-Z0-9_]+$/;
