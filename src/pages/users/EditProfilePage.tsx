@@ -2,37 +2,16 @@ import * as React from "react";
 import { Link, Navigate } from "react-router";
 import { useAuth } from "../../context/useAuth";
 import { useMutation } from "@tanstack/react-query";
-import { supabase } from "../../config/supabase-client";
 import imageCompression from "browser-image-compression";
 import { routeBuilder } from "../../utils/routes";
 import { validateUsername } from "../../utils/validations";
-import { checkUsernameAvailability } from "../../services/profileService";
+import {
+  checkUsernameAvailability,
+  upDateProfile,
+} from "../../services/profileService";
 import type { User } from "@supabase/supabase-js";
 import type { IUserProfile } from "../../types/profile";
-
-const upDateProfile = async (
-  profile: IUserProfile,
-  id: string | undefined,
-  profilePic: File | null,
-) => {
-  let image_url = "";
-  if (profilePic) {
-    const filePath = `${profilePic.name}-4-4-${Date.now()}-3-3-${profilePic.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(filePath, profilePic);
-
-    if (uploadError) return new Error(uploadError.message);
-
-    //get imageUrl
-    const { data: ImageData } = await supabase.storage
-      .from("avatars")
-      .getPublicUrl(filePath);
-    image_url = ImageData.publicUrl;
-  }
-  if (image_url !== "") profile.avatar_url = image_url;
-  await supabase.from("profiles").update(profile).eq("id", id);
-};
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 const reFetchProfile = async (
   getProfile: (user: User | null | undefined) => Promise<void>,
@@ -130,6 +109,7 @@ const EditProfilePage: React.FunctionComponent = () => {
       bio,
       username,
       display_name,
+      avatar_url: userProfile?.avatar_url || "",
     };
 
     mutate(profile);
@@ -178,21 +158,28 @@ const EditProfilePage: React.FunctionComponent = () => {
   };
   if (!user) return <Navigate to="/" />;
 
+  const displayPic = profilePic
+    ? URL.createObjectURL(profilePic)
+    : userProfile?.avatar_url || "https://placehold.co/120x120?text=Avatar";
+
   return (
     <div className="flex justify-center">
       <div className="max-w-2xl w-full bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
         {" "}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            <img
-              src={
-                profilePic
-                  ? URL.createObjectURL(profilePic)
-                  : userProfile?.avatar_url ||
-                    "https://placehold.co/120x120?text=Avatar"
-              }
-              className="w-28 h-28 rounded-full object-cover border-4 border-purple-500 shadow-lg"
-            />
+            <PhotoProvider maskOpacity={0.9}>
+              <PhotoView src={displayPic}>
+                <img
+                  src={displayPic}
+                  className="w-28 h-28 rounded-full object-cover border-4 border-purple-500 cursor-zoom-in transition-transform duration-300 hover:scale-[1.03]"
+                  alt={`avatar`}
+                  onError={(e) => {
+                    e.currentTarget.src = "/images/image-fallback.jpg";
+                  }}
+                />
+              </PhotoView>
+            </PhotoProvider>
 
             {editing && (
               <label className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full cursor-pointer shadow-md">

@@ -13,8 +13,12 @@ export const createPost = async (post: IPostInput) => {
 
   if(post.imageFiles)
   for (const imageFile of post.imageFiles) {
-    const filePath = `${crypto.randomUUID()}-${imageFile.name}`;
+const timestamp = new Date()
+  .toISOString()
+  .replace(/[:.]/g, "-");
 
+
+    const filePath = `${post.user_id}/${timestamp}/${Date.now()}-${imageFile.name}`;
     const { error: uploadError } = await supabase.storage
       .from("post-images")
       .upload(filePath, imageFile);
