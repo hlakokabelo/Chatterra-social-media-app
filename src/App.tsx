@@ -32,27 +32,40 @@ const App = () => {
       <main className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="max-w-7xl mx-auto">
           <Routes>
+            {/* General Routes */}
             <Route path={ROUTES.HOME} element={<Home />} />
+            <Route path="/search" element={<SearchPage />} />
+
+            {/* Auth Routes */}
             <Route element={<PrivateRoutes />}>
               <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
               <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
             </Route>
-            <Route path="/community/:id/:slug?" element={<CommunityPage />} />
-            <Route path="/c/:id/:slug?" element={<CommunityPage />} />
+
+            {/* Community Routes */}
+            <Route path={ROUTES.COMMUNITIES} element={<CommunitiesPage />} />
             <Route
               path={ROUTES.CREATE_COMMUNITY}
               element={<CreateCommunityPage />}
             />
-            <Route path={ROUTES.COMMUNITIES} element={<CommunitiesPage />} />
-            <Route path="/post/:id/:slug?" element={<PostPage />} />
-            <Route path="/search" element={<SearchPage />} />
+            <Route path="/community/:id/:slug?" element={<CommunityPage />} />
+            <Route path="/c/:id/:slug?" element={<CommunityPage />} />
+
+            {/* Post Routes */}
             <Route path={ROUTES.CREATE_POST} element={<CreatePostPage />} />
+            <Route path="/post/:id/:slug?" element={<PostPage />} />
+            <Route path="/p/:id/:slug?" element={<PostPage />} />
+
+            {/* User Routes */}
+            <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
             <Route path="/user/:username" element={<PublicProfilePage />} />
             <Route path="/u/:username" element={<PublicProfilePage />} />
+
+            {/* Admin Routes */}
+            {/* <Route path="/admin" element={<CommunitySeeder />} /> */}
+
+            {/* Fallback */}
             <Route path="*" element={<PageNotFound />} />
-            {/*    <Route path="/admin" element={<CommunitySeeder/>} />
-             */}{" "}
-            <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
           </Routes>
         </div>
       </main>
