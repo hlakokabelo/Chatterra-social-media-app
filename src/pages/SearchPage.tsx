@@ -95,7 +95,7 @@ const SearchPage = () => {
             onClick={() =>
               setActiveTab(tab.key as "all" | "posts" | "communities" | "users")
             }
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 text-sm cursor-pointer font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.key
                 ? "text-blue-400 border-b-2 border-blue-400"
                 : "text-gray-400 hover:text-white"
@@ -265,7 +265,7 @@ const SearchPage = () => {
                   {/* Bio */}
                   {user.bio && (
                     <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-                      {user.bio}
+                      <HighlightMatch text={user.bio || ""} query={query} />
                     </p>
                   )}
                 </div>
