@@ -11,6 +11,7 @@ import {
 } from "../../services/profileService";
 import type { User } from "@supabase/supabase-js";
 import type { IUserProfile } from "../../types/profile";
+import { usePageTitle } from "../../hooks/usePageTitle";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import toast from "react-hot-toast";
 
@@ -51,6 +52,7 @@ const EditProfilePage: React.FunctionComponent = () => {
     return () => clearTimeout(timeout);
   }, [username, userProfile?.username]);
 
+  usePageTitle("Edit Profile | Chatterra");
   React.useEffect(() => {
     const check = async () => {
       if (!debouncedUsername) return;

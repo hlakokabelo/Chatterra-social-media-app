@@ -14,6 +14,7 @@ import { fetchPostById, type IPostCommunity } from "../../services/posts";
 import PostDetailSkeleton from "../Skeletons/PostDetailSkeleton";
 import { FormatContent } from "../FormatContent";
 import { DeletedPostState } from "./DeletedPostCard";
+  import { usePageTitle } from "../../hooks/usePageTitle";
 
 interface IPostDetailProps {
   postId: number;
@@ -37,6 +38,11 @@ const PostDetail: React.FunctionComponent<IPostDetailProps> = ({
     enabled: !Number.isNaN(postId),
   });
 
+usePageTitle(
+  post
+    ? `${post.title} | Chatterra`
+    : "Loading Post... | Chatterra"
+);
   React.useEffect(() => {
     if (isSuccess && post && slug !== slugify(post.title)) {
       const hash = window.location.hash;

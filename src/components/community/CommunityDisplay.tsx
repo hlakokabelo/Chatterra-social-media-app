@@ -15,6 +15,7 @@ import {
 import type { ICommunity, PostWithCommunity } from "../../types/community";
 import CommunityDisplaySkeleton from "../Skeletons/CommunityDisplaySkeleton";
 import { useAuth } from "../../context/useAuth";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 interface ICommunityDisplayProps {
   communityId: number;
@@ -38,6 +39,13 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
     queryKey: ["community", communityId],
     queryFn: () => fetchCommunityData(communityId),
   });
+
+  // display community Name
+  usePageTitle(
+  CommunityData?.name
+    ? `c/${CommunityData.name} | Chatterra`
+    : "Community | Chatterra"
+);
 
   const { data: isMember, isLoading: isCheckingMembership } = useQuery({
     queryKey: ["isMember", communityId, user?.id],
@@ -112,6 +120,8 @@ const CommunityDisplay: React.FunctionComponent<ICommunityDisplayProps> = ({
       joinMutation.mutate({ communityId, userId: user.id });
     }
   };
+
+   
 
   const isLoading = communityLoading || postsLoading || isCheckingMembership;
   if (isLoading) {

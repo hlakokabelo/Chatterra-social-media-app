@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../utils/routes";
-
+import { usePageTitle } from "../hooks/usePageTitle";
 interface IPostNotFoudProps {
   title?: string;
 }
@@ -10,6 +10,8 @@ const PostNotFoud: React.FunctionComponent<IPostNotFoudProps> = ({
   title = "Page",
 }) => {
   const navigate = useNavigate();
+  usePageTitle("404 Not Found | Chatterra");
+  
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-6">
       <div className="text-center max-w-md">

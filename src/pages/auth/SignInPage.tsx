@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { ROUTES } from "../../utils/routes";
 import { manageOAuthErrors } from "../../utils/manageAuthErrors";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
@@ -13,6 +14,8 @@ export default function SignInPage() {
   const { signInWithGitHub, signInWithGoogle, signInWithEmail } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
 
+
+  usePageTitle("Signin | Chatterra");
   const navigate = useNavigate();
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

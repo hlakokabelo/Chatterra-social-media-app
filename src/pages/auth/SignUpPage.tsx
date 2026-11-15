@@ -4,6 +4,7 @@ import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../utils/routes";
 import { manageOAuthErrors } from "../../utils/manageAuthErrors";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState<string>("");
@@ -14,6 +15,7 @@ export default function SignUpPage() {
   const { signInWithGitHub, signInWithGoogle, signUpWithEmail } = useAuth();
   const navigate = useNavigate();
 
+  usePageTitle("SignUp | Chatterra");
   const onSubmitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 

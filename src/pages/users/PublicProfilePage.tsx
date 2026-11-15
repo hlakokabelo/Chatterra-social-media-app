@@ -9,6 +9,7 @@ import { useAuth } from "../../context/useAuth";
 import { ROUTES } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatting";
 import { useEffect } from "react";
+import {usePageTitle} from '../../hooks/usePageTitle.ts'
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import PublicProfileSkeleton from "../../components/Skeletons/PublicProfileSkeleton";
@@ -26,6 +27,7 @@ const PublicProfilePage = () => {
   const { user } = useAuth();
 
   const legalTabs = ["posts", "replies", "likes"];
+  usePageTitle(username ? `${username} | Chatterra` : "Profile | Chatterra");
 
   const tab = legalTabs.includes(searchParams.get("tab") || "")
     ? searchParams.get("tab")

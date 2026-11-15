@@ -28,7 +28,7 @@ const CommunityList: React.FunctionComponent = () => {
     queryKey: ["communities"],
     queryFn: fetchCommunities,
   });
-
+usePageTitle("Communities | Chatterra");
   const { data: userCommunities, isLoading: isLoadingUserCommunities } =
     useQuery<IMemberInfo[], Error>({
       queryKey: ["memberInfo", user?.id],

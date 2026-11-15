@@ -11,11 +11,13 @@ import { routeBuilder } from "../utils/routes";
 import { formatTimeStamp } from "../utils/formatting";
 import SearchLoading from "../components/Skeletons/SearchLoading";
 import HighlightMatch from "../components/HighlightMatch";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get("q") || "";
+  usePageTitle(` ${query} | Chatterra Search`);
 
   const [activeTab, setActiveTab] = React.useState<
     "all" | "posts" | "communities" | "users"
