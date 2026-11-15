@@ -10,7 +10,7 @@ import { ROUTES } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatting";
 import { useEffect } from "react";
 import {usePageTitle} from '../../hooks/usePageTitle.ts'
-import { FormatContent } from "../FormatContent";
+import { FormatContent } from "../../components/FormatContent";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import PublicProfileSkeleton from "../../components/Skeletons/PublicProfileSkeleton";
