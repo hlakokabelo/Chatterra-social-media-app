@@ -12,6 +12,7 @@ import {
 } from "../../services/community";
 import type { ICommunity, IMemberInfo } from "../../types/community";
 import CommunityListSkeleton from "../Skeletons/CommunityListSkeleton";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 type TabType = "my-communities" | "discover";
 
@@ -28,7 +29,7 @@ const CommunityList: React.FunctionComponent = () => {
     queryKey: ["communities"],
     queryFn: fetchCommunities,
   });
-usePageTitle("Communities | Chatterra");
+  usePageTitle("Communities | Chatterra");
   const { data: userCommunities, isLoading: isLoadingUserCommunities } =
     useQuery<IMemberInfo[], Error>({
       queryKey: ["memberInfo", user?.id],
