@@ -27,8 +27,7 @@ const PublicProfilePage = () => {
   const { user } = useAuth();
 
   const legalTabs = ["posts", "replies", "likes"];
-  usePageTitle(username ? `${username} | Chatterra` : "Profile | Chatterra");
-
+  usePageTitle( profile?.display_name ? `${profile?.display_name} | Chatterra`: "Profile | Chatterra");
   const tab = legalTabs.includes(searchParams.get("tab") || "")
     ? searchParams.get("tab")
     : "posts";
