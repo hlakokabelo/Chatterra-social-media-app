@@ -10,6 +10,7 @@ import { ROUTES } from "../../utils/routes";
 import { formatErrorMessage } from "../../utils/formatting";
 import { useEffect } from "react";
 import {usePageTitle} from '../../hooks/usePageTitle.ts'
+import { FormatContent } from "../FormatContent";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import PublicProfileSkeleton from "../../components/Skeletons/PublicProfileSkeleton";
@@ -136,7 +137,10 @@ const PublicProfilePage = () => {
 
             <p className="text-zinc-400">@{profile?.username}</p>
 
-            <p className="mt-4 text-center text-zinc-300">{profile?.bio}</p>
+            <div className="mt-4 text-center text-wrap text-zinc-300">
+                              <FormatContent content={profile?.bio} />
+
+              </div>
           </div>
         </div>
       </div>
